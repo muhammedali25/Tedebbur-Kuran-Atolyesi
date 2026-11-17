@@ -1,0 +1,1702 @@
+<title>Mektûbât Okuyucu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<script>document.documentElement.lang="tr";</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Vazirmatn:wght@400;600&family=Noto+Nastaliq+Urdu:wght@400;600&family=Literata:opsz,wght@7..72,400;7..72,600&family=Cormorant+Garamond:wght@500;600;700&display=swap">
+<style>
+/* Düzen: üstte sabit şerit (gezinme + arama); altında üç görünüm: Nâmehâne (yazışma ağı), Mektup (nâme + paralel sütunlar), Atlas (kavram şeritleri) */
+:root{
+  --bg:#ece3cf; --paper:#f8f3e6; --ink:#2b241a; --muted:#6c6150; --line:#d8cbaf;
+  --lac:#22336b; --lac-ink:#ffffff; --gold:#7a571b; --gold-soft:#eadbb4; --mark:#f0d58a; --mark-ink:#2b241a; --warn:#94461a;
+  --f-ar:"Amiri","Noto Naskh Arabic","Times New Roman",serif;
+  --f-fa:"Vazirmatn","Tahoma","Segoe UI",sans-serif;
+  --f-nas:"Noto Nastaliq Urdu","Vazirmatn",serif;
+  --f-tr:"Literata",Georgia,"Times New Roman",serif;
+  --f-head:"Cormorant Garamond","Literata",Georgia,serif;
+  --f-ui:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --fs:1;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1330; --paper:#151d40; --ink:#ece5d3; --muted:#a39c8b; --line:#2b3566;
+  --lac:#a9bbff; --lac-ink:#0d1330; --gold:#d9b56a; --gold-soft:#36305a; --mark:#6f5620; --mark-ink:#fff6dc; --warn:#e8a06e; color-scheme:dark}}
+:root[data-theme="sepia"]{
+  --bg:#e8dcc1; --paper:#f3e8cf; --ink:#36291a; --muted:#5f4f38; --line:#d2bf96;
+  --lac:#5b3a17; --lac-ink:#fff8ea; --gold:#6e4c16; --gold-soft:#e3cf9f; --mark:#e9c977; --mark-ink:#36291a; --warn:#8a3e14; color-scheme:light}
+:root[data-theme="dark"]{
+  --bg:#0d1330; --paper:#151d40; --ink:#ece5d3; --muted:#a39c8b; --line:#2b3566;
+  --lac:#a9bbff; --lac-ink:#0d1330; --gold:#d9b56a; --gold-soft:#36305a; --mark:#6f5620; --mark-ink:#fff6dc; --warn:#e8a06e; color-scheme:dark}
+html,body{height:100%}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:20;background:var(--paper)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--lac)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.nas{font-family:var(--f-nas);line-height:2.3}
+
+/* ---------- üst şerit ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--paper);border-bottom:1px solid var(--line);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px}
+.trow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;max-width:1600px;margin:0 auto}
+#tmenu{display:none}
+@media (max-width:760px){.top{position:static}.tools .btn{padding:6px 8px}.brand b{font-size:1.35rem}
+  nav.index,.person,.terms{top:0}
+  #tmenu{display:inline-block;margin-left:auto}
+  .top:not(.open) .tools,.top:not(.open) .go{display:none}
+  .terms{flex-direction:row!important;flex-wrap:nowrap!important;overflow-x:auto;max-height:none}
+  .terms a{white-space:nowrap;flex:none}
+  .lede{font-size:1.02rem}}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.brand b{font-family:var(--f-head);font-size:1.6rem;font-weight:700;letter-spacing:.01em;color:var(--lac)}
+.brand span{font-family:var(--f-nas);font-size:1.05rem;color:var(--gold);line-height:1.6}
+.tabs{display:flex;gap:2px;background:var(--bg);border-radius:8px;padding:3px;overflow-x:auto;max-width:100%;scrollbar-width:none}
+.tabs a{white-space:nowrap}
+.tabs a{padding:6px 12px;border-radius:6px;text-decoration:none;color:var(--muted);font-size:.92rem}
+.tabs a[aria-current="page"]{background:var(--paper);color:var(--lac);font-weight:600;box-shadow:0 1px 0 var(--line)}
+.search{flex:1 1 240px;display:flex;gap:6px;min-width:0}
+.search input{flex:1;min-width:0;padding:8px 12px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.search select,.go input{padding:7px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.go{display:flex;gap:6px}
+.go input{width:6.6em}
+.tools{display:flex;gap:4px;flex-wrap:wrap}
+.btn{padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);text-decoration:none;color:var(--ink);display:inline-block;font-size:.9rem}
+.btn[aria-pressed="true"]{background:var(--gold-soft);border-color:var(--gold);color:var(--ink);font-weight:600}
+.btn[aria-pressed="false"]{color:var(--muted)}
+.loading{max-width:1600px;margin:6px auto 0;font-size:.78rem;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+.loading .ok{color:var(--lac)}
+
+.wrap{max-width:1600px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 60px}
+.view[hidden]{display:none}
+.lede{font-family:var(--f-head);font-size:1.15rem;color:var(--muted);max-width:70ch;margin:0 0 14px;line-height:1.5}
+h2.vt{font-family:var(--f-head);font-size:2rem;font-weight:700;margin:0 0 4px;color:var(--ink);text-wrap:balance}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:10px}
+
+/* ---------- Nâmehâne ---------- */
+.net{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
+@media (max-width:1050px){.net{grid-template-columns:1fr}}
+.netbox{padding:10px;position:relative}
+.netbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 4px 6px;font-size:.85rem;color:var(--muted)}
+.netbar .btn{padding:5px 10px}
+#netsvg{width:100%;height:auto;max-height:82vh;display:block;touch-action:manipulation}
+#netsvg text{font-family:var(--f-ui);fill:var(--ink)}
+#netsvg .lbl{font-size:calc(12px*var(--svgk,1));paint-order:stroke;stroke:var(--paper);stroke-width:3px}
+#netsvg .node{cursor:pointer}
+#netsvg .node circle{fill:var(--lac);stroke:var(--paper);stroke-width:1.5}
+#netsvg .node.sel circle{fill:var(--gold)}
+#netsvg .node:hover circle{fill:var(--gold)}
+#netsvg .edge{fill:none;stroke:var(--lac);stroke-opacity:.22}
+#netsvg .edge.sel{stroke:var(--gold);stroke-opacity:.9}
+#netsvg .co{fill:none;stroke:var(--gold);stroke-opacity:.35;stroke-dasharray:3 3}
+#netsvg .ring{fill:none;stroke:var(--line)}
+#netsvg .sector{stroke:var(--line);stroke-dasharray:2 4}
+#netsvg .sectxt{font-size:calc(13px*var(--svgk,1));fill:var(--muted);font-family:var(--f-head);font-weight:600;letter-spacing:.06em}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font-size:.8rem;padding:5px 8px;border-radius:5px;max-width:260px;z-index:3}
+.legendnet{font-size:.8rem;color:var(--muted);margin:6px 6px 2px;line-height:1.5}
+.person{padding:16px 18px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 80px);max-height:calc(100vh - 110px);overflow:auto}
+@media (max-width:1050px){.person{position:static;max-height:none}}
+.person h3{font-family:var(--f-head);font-size:1.5rem;margin:0;line-height:1.2;text-wrap:balance}
+.person .pfa{font-family:var(--f-nas);direction:rtl;color:var(--gold);font-size:1.15rem;margin:2px 0 6px;line-height:2.2}
+.person .meta{font-size:.85rem;color:var(--muted);margin-bottom:10px}
+.person .note{font-size:.8rem;color:var(--warn);margin-bottom:10px}
+.thread{list-style:none;margin:0;padding:0;border-left:2px solid var(--gold-soft);display:flex;flex-direction:column}
+.thread li a{display:grid;grid-template-columns:3.6em 1fr;gap:8px;padding:7px 8px 7px 10px;text-decoration:none;color:var(--ink);border-radius:0 6px 6px 0;font-size:.88rem;line-height:1.4}
+.thread li a:hover{background:var(--bg)}
+.thread .no{font-variant-numeric:tabular-nums;color:var(--lac);font-weight:600}
+.thread .with{display:block;font-size:.76rem;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:inline-block;font-size:.78rem;padding:3px 9px;border-radius:99px;background:var(--gold-soft);color:var(--ink);text-decoration:none}
+.toplist{columns:2 160px;font-size:.85rem;margin:8px 0 0;padding:0;list-style:none}
+.toplist li{break-inside:avoid;padding:2px 0}
+.toplist a{text-decoration:none;color:var(--ink)}
+.toplist b{color:var(--lac);font-variant-numeric:tabular-nums;margin-right:4px}
+
+/* ---------- Mektup ---------- */
+.letter{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px}
+@media (max-width:900px){.letter{grid-template-columns:1fr}}
+nav.index{padding:10px;align-self:start;position:sticky;top:calc(env(safe-area-inset-top,0px) + 80px);max-height:calc(100vh - 110px);overflow:auto}
+@media (max-width:900px){nav.index{position:static;max-height:240px;order:2}}
+.idx-head{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:4px 4px 8px}
+details.cilt summary{font-family:var(--f-head);font-weight:700;font-size:1.05rem;padding:5px 4px;cursor:pointer}
+details.cilt summary small{color:var(--muted);font-weight:500;font-family:var(--f-ui);font-size:.75rem}
+.ml{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:3px;padding:4px 2px 10px}
+.ml a{display:block;text-align:center;padding:5px 0;border-radius:4px;text-decoration:none;color:var(--ink);font-variant-numeric:tabular-nums;font-size:.8rem;background:var(--bg)}
+.ml a.cur{background:var(--lac);color:var(--lac-ink)}
+.ml a.part{box-shadow:inset 0 -2px 0 var(--warn)}
+.legend{font-size:.72rem;color:var(--muted);padding:4px;line-height:1.5}
+.legend i{display:inline-block;width:14px;height:10px;background:var(--bg);box-shadow:inset 0 -2px 0 var(--warn);vertical-align:middle;margin-right:4px}
+
+.name{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px;align-items:center;padding:16px 18px;margin-bottom:12px;
+  background:linear-gradient(180deg,var(--paper),var(--paper)) padding-box;position:relative;overflow:hidden}
+.name::before,.name::after{content:"";position:absolute;left:0;right:0;height:1px;background:var(--line)}
+.name::before{top:33%}.name::after{top:66%}
+.name > *{position:relative;z-index:1}
+.name canvas{width:96px;height:96px;display:block}
+.name .to{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.name h2{font-family:var(--f-head);font-size:1.8rem;margin:0;line-height:1.1;text-wrap:balance}
+.name .rfa{font-family:var(--f-nas);direction:rtl;color:var(--gold);font-size:1.25rem;line-height:2.2;margin:0}
+.name .rtr{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.name .rtr a{font-size:.85rem;color:var(--lac);text-decoration:none;border-bottom:1px dotted var(--lac)}
+.pager{display:flex;gap:6px;align-self:start}
+@media (max-width:640px){.name{grid-template-columns:auto minmax(0,1fr)}.pager{grid-column:1/-1}.name canvas{width:72px;height:72px}}
+.eq{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;font-size:.8rem;color:var(--muted);align-items:center}
+.eq span{background:var(--paper);border:1px solid var(--line);border-radius:99px;padding:2px 10px;font-variant-numeric:tabular-nums}
+.eq span b{color:var(--ink);font-weight:600}
+.eq .atl{background:var(--gold-soft);border-color:var(--gold)}
+.eq .atl button{border:0;background:none;padding:0 0 0 6px;color:var(--warn)}
+.bridgehint{font-size:.8rem;color:var(--muted);margin:0 0 10px}
+.cols{display:grid;gap:12px;grid-template-columns:repeat(var(--n,4),minmax(0,1fr))}
+@media (max-width:1250px){.cols{grid-template-columns:repeat(min(var(--n,4),2),minmax(0,1fr))}}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+.col{background:var(--paper);border:1px solid var(--line);border-radius:10px;min-width:0;display:flex;flex-direction:column}
+.ch{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:10px 16px 8px;border-bottom:1px solid var(--line);direction:ltr;text-align:left}
+.ch b{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--lac);font-family:var(--f-ui)}
+.ch small{font-size:.74rem;color:var(--muted);font-family:var(--f-ui);font-variant-numeric:tabular-nums}
+.cb{padding:12px 16px 16px;overflow:auto}
+@media (min-width:761px){.cb{max-height:calc(100vh - 290px)}}
+.col p{margin:0 0 .85em;overflow-wrap:anywhere}
+.col p.ttl{font-weight:700;color:var(--lac)}
+.col p.mz{font-style:italic;color:var(--muted)}
+.col p.nt{color:var(--warn);font-size:.92em}
+.col p.sep{text-align:center;color:var(--gold);letter-spacing:.4em}
+.col p.tm{font-size:.86em;color:var(--muted);border-right:2px solid var(--line);padding-right:10px}
+.col p.tm:first-letter{color:var(--muted)}
+.col p.vf{direction:rtl;text-align:center;font-family:var(--f-nas);font-size:1.05em;line-height:2.3;margin:.2em 0}
+.col p.vl{text-align:center;font-style:italic;color:var(--muted);margin:.2em 0}
+.col p.vm{text-align:center;margin:.2em 0 1em}
+.col.ar .cb{direction:rtl;text-align:right;font-family:var(--f-ar);font-size:calc(1.28rem*var(--fs));line-height:calc(1.95*var(--lh,1))}
+.col.fa .cb{direction:rtl;text-align:right;font-family:var(--f-fa);font-size:calc(1.02rem*var(--fs));line-height:calc(2*var(--lh,1))}
+.col.fa.nasm .cb{font-family:var(--f-nas);font-size:calc(1.02rem*var(--fs));line-height:2.6}
+.col.ak .cb,.col.hk .cb{font-family:var(--f-tr);font-size:calc(1rem*var(--fs));line-height:calc(1.75*var(--lh,1))}
+:root[data-trfont="sans"] .col.ak .cb,:root[data-trfont="sans"] .col.hk .cb{font-family:var(--f-ui)}
+.col .empty{color:var(--muted);font-style:italic;font-family:var(--f-ui);font-size:.9rem;direction:ltr;text-align:left}
+.s{cursor:pointer;border-radius:3px;transition:background-color .15s}
+.s:hover,.s:focus{background:var(--gold-soft);outline:none}
+.s.lit{background:var(--gold-soft);box-shadow:0 0 0 2px var(--gold-soft)}
+.s.lit.c2{background:color-mix(in srgb,var(--gold-soft) 60%,transparent)}
+.s.lit.c3{background:none;box-shadow:none;text-decoration:underline dotted var(--gold);text-underline-offset:4px}
+.s.src{background:var(--gold);color:var(--paper)}
+details.notes{margin-top:8px;border-top:1px dashed var(--line);padding-top:8px;font-size:.82em}
+details.notes summary{cursor:pointer;color:var(--muted);font-family:var(--f-ui);font-size:.8rem;direction:ltr;text-align:left}
+details.notes div{white-space:pre-line;margin:6px 0;color:var(--muted)}
+mark{background:var(--mark);color:var(--mark-ink);border-radius:2px;padding:0 1px}
+mark.at{background:none;color:inherit;box-shadow:inset 0 -.45em 0 var(--gold-soft);border-bottom:2px solid var(--gold)}
+
+.bridge{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--paper);border-top:2px solid var(--gold);box-shadow:0 -6px 24px rgba(0,0,0,.12);
+  padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));max-height:42vh;overflow:auto}
+.bridge .bh{display:flex;justify-content:space-between;align-items:center;gap:10px;max-width:1600px;margin:0 auto 6px;font-size:.78rem;color:var(--muted)}
+.bridge .bg{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));max-width:1600px;margin:0 auto}
+.bridge .bi{border-left:3px solid var(--gold-soft);padding:2px 10px}
+.bridge .bi b{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--lac);margin-bottom:2px}
+.bridge .bi .t{line-height:1.7}
+.bridge .bi.fa .t{direction:rtl;font-family:var(--f-fa)}
+.bridge .bi.ar .t{direction:rtl;font-family:var(--f-ar);font-size:1.15rem}
+.bridge .bi.ak .t,.bridge .bi.hk .t{font-family:var(--f-tr)}
+.conf{font-size:.7rem;padding:1px 7px;border-radius:99px;background:var(--bg);color:var(--muted);margin-left:6px;text-transform:none;letter-spacing:0}
+
+/* ---------- Atlas ---------- */
+.atlas{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.atlas{grid-template-columns:1fr}}
+.terms{padding:8px;display:flex;flex-direction:column;gap:2px;max-height:calc(100vh - 110px);overflow:auto;position:sticky;top:calc(env(safe-area-inset-top,0px) + 80px)}
+@media (max-width:900px){.terms{position:static;max-height:none;flex-direction:row;flex-wrap:wrap}}
+.terms a{display:flex;justify-content:space-between;gap:8px;padding:6px 10px;border-radius:6px;text-decoration:none;color:var(--ink);font-size:.9rem}
+.terms a:hover{background:var(--bg)}
+.terms a[aria-current="true"]{background:var(--lac);color:var(--lac-ink)}
+.terms a small{font-variant-numeric:tabular-nums;color:inherit}
+.heat{padding:12px 14px;overflow-x:auto;position:relative}
+.heat canvas{display:block}
+.heat .hl{font-size:.8rem;color:var(--muted);margin:0 0 8px}
+.tdet{padding:16px 18px;margin-top:14px}
+.tdet h3{font-family:var(--f-head);font-size:1.7rem;margin:0}
+.tdet .pat{font-size:.85rem;color:var(--muted);margin:4px 0 10px}
+.tdet .pat span{font-family:var(--f-fa);direction:rtl;unicode-bidi:isolate;color:var(--ink)}
+.stats{display:flex;flex-wrap:wrap;gap:18px;margin:6px 0 12px}
+.stats div{font-size:.8rem;color:var(--muted)}
+.stats b{display:block;font-family:var(--f-head);font-size:1.6rem;color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* ---------- Kur'ân yay haritası ---------- */
+.quran{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
+@media (max-width:1050px){.quran{grid-template-columns:1fr}}
+#qsvg{width:100%;height:auto;display:block}
+#qsvg .arc{fill:none;stroke:var(--lac);stroke-opacity:.16;stroke-width:1}
+#qsvg .arc.on{stroke:var(--gold);stroke-opacity:.95;stroke-width:1.6}
+#qsvg .tick{fill:var(--lac);cursor:pointer}
+#qsvg .tick.on{fill:var(--gold)}
+#qsvg .lt{fill:var(--muted)}
+#qsvg text{font-family:var(--f-ui);fill:var(--muted);font-size:calc(11px*var(--svgk,1))}
+#qsvg .qh{font-family:var(--f-head);font-weight:700;font-size:calc(14px*var(--svgk,1));fill:var(--ink)}
+#qsvg .sl{font-size:calc(10.5px*var(--svgk,1));fill:var(--ink)}
+.qpanel{padding:16px 18px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 80px);max-height:calc(100vh - 110px);overflow:auto}
+@media (max-width:1050px){.qpanel{position:static;max-height:none}}
+.qpanel h3{font-family:var(--f-head);font-size:1.5rem;margin:0}
+.qref{border-top:1px solid var(--line);padding:10px 0}
+.qref .ay{font-family:var(--f-ar);direction:rtl;font-size:1.15rem;line-height:1.9;color:var(--ink)}
+.qref .no{font-size:.8rem;color:var(--lac);font-weight:600;font-variant-numeric:tabular-nums}
+
+/* ---------- Seyr daireleri ---------- */
+.seyr{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}
+@media (max-width:1050px){.seyr{grid-template-columns:1fr}}
+#ssvg{width:100%;height:auto;display:block;max-height:86vh}
+#ssvg .ring{fill:none;stroke:var(--lac);cursor:pointer;transition:stroke .2s}
+#ssvg .ring:hover,#ssvg .ring.on{stroke:var(--gold)}
+#ssvg .rl{font-family:var(--f-head);font-weight:700;font-size:calc(15px*var(--svgk,1));fill:var(--ink);pointer-events:none}
+#ssvg .rc{font-family:var(--f-ui);font-size:calc(11px*var(--svgk,1));fill:var(--muted);pointer-events:none}
+
+/* ---------- Tercüme tayfı ---------- */
+.tayf{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.tayf{grid-template-columns:1fr}}
+.spec{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:1100px){.spec{grid-template-columns:1fr}}
+.spec .sc{padding:14px 16px}
+.spec h4{margin:0 0 2px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--lac)}
+.spec .sub{font-size:.78rem;color:var(--muted);margin-bottom:10px}
+.bar{display:grid;grid-template-columns:minmax(0,9em) 1fr 3.2em;gap:8px;align-items:center;padding:4px 6px;border-radius:6px;cursor:pointer;font-size:.9rem;width:100%;background:none;border:0;text-align:left}
+.bar:hover,.bar.on{background:var(--bg)}
+.bar .w{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--f-tr)}
+.bar.ar .w{font-family:var(--f-ar);font-size:1.1rem;direction:rtl;text-align:right}
+.bar i{display:block;height:9px;border-radius:5px;background:var(--lac);opacity:.8}
+.bar.on i{background:var(--gold)}
+.bar small{font-variant-numeric:tabular-nums;color:var(--muted);text-align:right}
+.exm{margin-top:10px;border-left:3px solid var(--gold);padding:6px 10px;font-size:.88rem;line-height:1.7}
+.exm .f{direction:rtl;font-family:var(--f-fa)}
+.exm .a{direction:rtl;font-family:var(--f-ar);font-size:1.05rem}
+.exm .t{font-family:var(--f-tr)}
+
+/* ---------- Beyit divanı ---------- */
+.divan{columns:3 300px;column-gap:14px}
+.beyit{break-inside:avoid;margin:0 0 14px;padding:16px 18px 12px;background:var(--paper);border:1px solid var(--line);border-radius:10px;position:relative}
+.beyit::before{content:"";position:absolute;inset:6px;border:1px solid var(--gold-soft);border-radius:6px;pointer-events:none}
+.beyit .fa{font-family:var(--f-nas);direction:rtl;text-align:center;font-size:1.25rem;line-height:2.5;color:var(--ink);white-space:pre-line}
+.beyit .ok{font-style:italic;color:var(--muted);text-align:center;font-family:var(--f-tr);font-size:.9rem;white-space:pre-line;margin-top:4px}
+.beyit .ml{font-family:var(--f-tr);text-align:center;font-size:.92rem;margin-top:6px;white-space:pre-line;display:block;padding:0;grid-template-columns:none}
+.beyit a{display:block;text-align:center;font-size:.76rem;margin-top:8px;color:var(--lac);text-decoration:none}
+.beyit .nofa{font-size:.74rem;color:var(--warn);text-align:center;margin-top:6px}
+.dfilter{display:flex;gap:8px;align-items:center;margin:0 0 14px;flex-wrap:wrap}
+.dfilter input{padding:8px 12px;border:1px solid var(--line);border-radius:6px;background:var(--paper);min-width:0;flex:1 1 220px;max-width:420px}
+
+/* ---------- Günün cümlesi ---------- */
+.today{border:1px solid var(--gold);border-radius:10px;padding:12px 14px;margin-bottom:14px;background:var(--bg);position:relative}
+.today b{display:block;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.today .f{font-family:var(--f-nas);direction:rtl;line-height:2.3;font-size:1.02rem}
+.today .t{font-family:var(--f-tr);font-size:.92rem;line-height:1.6;margin-top:4px}
+.today a{font-size:.78rem;color:var(--lac)}
+
+/* ---------- mürekkep ve mühür ---------- */
+.inkname{display:block;max-width:100%;height:auto;margin:0}
+.inkname text{font-family:var(--f-nas);fill:var(--gold);stroke:var(--gold);stroke-width:.5}
+.ink-run .inkname text{fill:transparent;stroke-dasharray:420;stroke-dashoffset:420;animation:inkdraw 2.4s ease forwards, inkfill .9s ease 1.9s forwards}
+@keyframes inkdraw{to{stroke-dashoffset:0}}
+@keyframes inkfill{to{fill:var(--gold)}}
+/* kalem sağdan sola yazar */
+.ink-run .inkname{animation:sweep 2.2s cubic-bezier(.4,.1,.3,1) both}
+@keyframes sweep{from{clip-path:inset(0 0 0 100%)}to{clip-path:inset(0 0 0 0)}}
+.seal{width:96px;height:96px;display:block}
+.seal text{font-family:var(--f-nas)}
+.unfold .name,.unfold .eq,.unfold .cols{animation:unfold .9s cubic-bezier(.2,.7,.2,1) both;transform-origin:50% 0}
+.unfold .eq{animation-delay:.25s}.unfold .cols{animation-delay:.45s}
+@keyframes unfold{from{opacity:0;transform:perspective(900px) rotateX(-75deg)}to{opacity:1;transform:none}}
+.unfold .seal{animation:stamp .7s cubic-bezier(.3,1.6,.5,1) .2s both}
+@keyframes stamp{from{opacity:0;transform:scale(1.8) rotate(-18deg)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.unfold *,.ink-run *{animation:none!important}.ink-run .inkname text{fill:var(--gold)}}
+
+/* ---------- Murâkabe ---------- */
+.mur{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;color:#efe6cf;background:#0b1029;transition:background-color 1.2s ease;
+  padding:calc(14px + env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px))}
+.mur .mh{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.8rem;color:#b9ad8f}
+.mur .mh button{background:none;border:1px solid #3a4277;color:#efe6cf;border-radius:6px;padding:6px 12px}
+.mur .prog{height:2px;background:#232a57;margin:10px 0 0;border-radius:2px;overflow:hidden}
+.mur .prog i{display:block;height:100%;background:#d9b56a;transition:width .4s ease}
+.mur .stage{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px;max-width:900px;width:100%;margin:0 auto;overflow:auto;padding:16px 0}
+.mur .m-fa{font-family:var(--f-nas);direction:rtl;text-align:center;font-size:calc(1.5rem*var(--fs));line-height:2.4;color:#f3d999}
+.mur .m-ar{font-family:var(--f-ar);direction:rtl;text-align:center;font-size:calc(1.3rem*var(--fs));line-height:2;color:#c8cff5}
+.mur .m-tr{font-family:var(--f-tr);text-align:center;font-size:calc(1.15rem*var(--fs));line-height:1.75}
+.mur .stage > *{animation:fadeup .6s ease both}
+.mur .stage > *:nth-child(2){animation-delay:.12s}.mur .stage > *:nth-child(3){animation-delay:.24s}
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.mur .stage > *{animation:none}}
+.mur .mf{display:flex;justify-content:center;gap:12px}
+.mur .mf button{background:#1a2150;border:1px solid #3a4277;color:#efe6cf;border-radius:99px;padding:10px 22px;font-size:1rem}
+.mur .mf button:disabled{opacity:.35}
+.mur .hint{text-align:center;font-size:.75rem;color:#8d86a8;margin-top:6px}
+
+/* ---------- okuma ilerlemesi, altı çizili, kelime açıklaması, sesli okuma ---------- */
+.ml a.read{position:relative;background:color-mix(in srgb,var(--lac) 16%,var(--bg))}
+.ml a.read::after{content:"";position:absolute;right:3px;top:3px;width:5px;height:5px;border-radius:50%;background:var(--lac)}
+.ml a.cur.read{background:var(--lac)}
+.ml a.cur.read::after{background:var(--lac-ink)}
+.prog-ring{vertical-align:-3px;margin-left:6px}
+.s.hl{background:linear-gradient(transparent 58%,var(--mark) 58%);border-radius:0}
+.s.hl.lit,.s.hl.src{background:var(--gold-soft)}
+.s.speaking{outline:2px solid var(--gold);outline-offset:2px;border-radius:3px}
+.gl{border-bottom:1px dotted var(--gold);cursor:help}
+.gl:focus-visible{outline:2px solid var(--gold)}
+.glpop{position:absolute;z-index:30;max-width:280px;background:var(--ink);color:var(--paper);padding:8px 10px;border-radius:8px;font:13px/1.45 var(--f-ui);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.glpop b{display:block;font-size:.95rem;margin-bottom:2px}
+.glpop small{display:block;opacity:.75;margin-top:4px;font-size:.72rem}
+.bact{display:flex;flex-wrap:wrap;gap:6px;max-width:1600px;margin:8px auto 0}
+.bact .btn{padding:5px 10px;font-size:.82rem}
+.bnote{max-width:1600px;margin:8px auto 0;display:flex;gap:6px}
+.bnote textarea{flex:1;min-width:0;min-height:56px;border:1px solid var(--line);border-radius:6px;background:var(--bg);padding:6px 8px;font:inherit}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:99px;font-size:.88rem;z-index:50;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.resume{border:1px solid var(--lac);border-radius:10px;padding:10px 12px;margin-bottom:12px;display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.resume b{font-family:var(--f-head);font-size:1.1rem}
+.resume small{color:var(--muted);display:block}
+.lacts{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.lacts .btn[aria-pressed="true"]{background:var(--lac);color:var(--lac-ink);border-color:var(--lac)}
+/* ---------- notlar ---------- */
+.notes-list{display:flex;flex-direction:column;gap:12px}
+.nitem{padding:12px 14px}
+.nitem .nh{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.82rem;color:var(--muted);margin-bottom:6px}
+.nitem .f{font-family:var(--f-nas);direction:rtl;line-height:2.3}
+.nitem .a{font-family:var(--f-ar);direction:rtl;font-size:1.08rem;line-height:1.8}
+.nitem .t{font-family:var(--f-tr);line-height:1.6}
+.nitem textarea{width:100%;box-sizing:border-box;min-height:52px;margin-top:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);padding:6px 8px;font:inherit}
+.nitem .na{display:flex;gap:6px;margin-top:6px}
+/* ---------- karşılaştırma ---------- */
+.kars{display:flex;flex-direction:column;gap:8px}
+.krow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,.8fr);gap:12px;padding:10px 14px}
+.krow .kak,.krow .khk{font-family:var(--f-tr);line-height:1.65}
+.krow .kfa{font-family:var(--f-fa);direction:rtl;font-size:.9rem;line-height:1.9;color:var(--muted)}
+.khead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,.8fr);gap:12px;padding:0 14px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--lac)}
+.krow .same{border-bottom:2px solid var(--gold-soft)}
+@media (max-width:760px){.krow,.khead{grid-template-columns:1fr}.khead{display:none}.krow .kak::before{content:"Akçiçek · ";color:var(--lac);font-size:.75rem}.krow .khk::before{content:"Hakikat · ";color:var(--lac);font-size:.75rem}}
+/* ---------- kavram birlikteliği ---------- */
+#chord{width:100%;max-width:640px;height:auto;display:block;margin:0 auto}
+#chord text{font-family:var(--f-ui);font-size:calc(11px*var(--svgk,1));fill:var(--ink);cursor:pointer}
+#chord text.on{fill:var(--gold);font-weight:700}
+#chord path{fill:none;stroke:var(--lac);stroke-opacity:.18}
+#chord path.on{stroke:var(--gold);stroke-opacity:.85}
+/* ---------- ağın büyümesi, mürekkep yolu ---------- */
+#netsvg .inkflow{fill:none;stroke:var(--gold);stroke-width:3.5;stroke-linecap:round}
+.playinfo{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
+/* ---------- murâkabe girih ---------- */
+.mur canvas.girih{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.mur > *:not(canvas){position:relative;z-index:1}
+/* ---------- ayarlar ---------- */
+.setgrid{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;align-items:center}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button[aria-pressed="true"]{background:var(--lac);color:var(--lac-ink);border-color:var(--lac)}
+.cardimg{max-width:100%;height:auto;border:1px solid var(--line);border-radius:8px}
+.exp textarea{width:100%;box-sizing:border-box;min-height:240px;border:1px solid var(--line);border-radius:6px;background:var(--bg);padding:8px;font:12px/1.5 ui-monospace,monospace}
+.sfilters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.sfilters select{padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--paper)}
+.res3{margin-top:8px;border-left:3px solid var(--gold);padding:4px 10px;display:flex;flex-direction:column;gap:4px;font-size:.92rem}
+.res3 .f{font-family:var(--f-fa);direction:rtl}
+.res3 .a{font-family:var(--f-ar);direction:rtl}
+.res3 .t{font-family:var(--f-tr)}
+.resrow{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.resrow .rt{display:flex;gap:10px;align-items:baseline;font-size:.85rem;color:var(--muted);margin-bottom:4px;flex-wrap:wrap}
+.resrow .rt a{color:var(--ink);font-weight:600;text-decoration:none;font-variant-numeric:tabular-nums}
+.resrow .rt .btn{margin-left:auto;padding:3px 9px;font-size:.78rem}
+
+/* ---------- arama ---------- */
+.rsum{color:var(--muted);margin:0 0 10px;font-size:.92rem}
+.results{display:flex;flex-direction:column;gap:8px}
+.res{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;text-decoration:none;color:var(--ink);display:block}
+.res:hover{border-color:var(--gold)}
+.res .rt{display:flex;gap:10px;align-items:baseline;font-size:.85rem;color:var(--muted);margin-bottom:4px;flex-wrap:wrap}
+.res .rt b{color:var(--ink);font-variant-numeric:tabular-nums}
+.snip{line-height:1.8}
+.snip.ar{direction:rtl;font-family:var(--f-ar);font-size:1.16rem}
+.snip.fa{direction:rtl;font-family:var(--f-fa)}
+.snip.ak,.snip.hk{font-family:var(--f-tr)}
+.notice{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:8px;padding:12px 14px;line-height:1.55;font-size:.92rem}
+
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);max-width:min(760px,92vw);padding:0}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.dlg{padding:18px 20px;display:flex;flex-direction:column;gap:10px;line-height:1.55;font-size:.92rem}
+.dlg h2{margin:0;font-family:var(--f-head);font-size:1.6rem}
+.dlg h3{margin:6px 0 0;font-size:.95rem}
+.dlg ul{margin:0;padding-left:1.2em}
+.dlg .row{display:flex;justify-content:flex-end}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="top">
+  <div class="trow">
+    <a class="brand" href="#ag"><b>Mektûbât</b><span lang="fa">مکتوبات امام ربانی</span></a>
+    <button class="btn" id="tmenu" aria-expanded="false" aria-controls="ttools">Ayarlar</button>
+    <nav class="tabs" aria-label="Görünümler">
+      <a href="#ag" id="tab-ag">Nâmehâne</a>
+      <a href="#m-1-1" id="tab-m">Mektuplar</a>
+      <a href="#atlas" id="tab-atlas">Atlas</a>
+      <a href="#kuran" id="tab-kuran">Kur'ân</a>
+      <a href="#seyr" id="tab-seyr">Seyr</a>
+      <a href="#tayf" id="tab-tayf">Tayf</a>
+      <a href="#divan" id="tab-divan">Divan</a>
+      <a href="#notlar" id="tab-notlar">Notlarım</a>
+    </nav>
+    <form class="search" id="sform" role="search">
+      <input id="q" type="search" placeholder="Ara: kelime, &quot;tam ifade&quot;, فنا, عروج" aria-label="Metinde ara" autocomplete="off">
+      <select id="slang" aria-label="Arama dili">
+        <option value="all">Tüm metinler</option><option value="fa">Farsça</option><option value="ar">Arapça</option>
+        <option value="ak">Türkçe (Akçiçek)</option><option value="hk">Türkçe (Hakikat)</option>
+      </select>
+    </form>
+    <form class="go" id="gform">
+      <input id="go" placeholder="3/40 · 451" aria-label="Mektuba git: defter/no ya da Akçiçek sıra numarası">
+      <button class="btn" type="submit">Git</button>
+    </form>
+    <div class="tools" id="ttools">
+      <button class="btn" id="t-fa" aria-pressed="true" title="Farsça asıl metin">FA</button>
+      <button class="btn" id="t-ar" aria-pressed="true" title="Arapça tercüme">AR</button>
+      <button class="btn" id="t-ak" aria-pressed="true" title="Türkçe, Akçiçek">TR</button>
+      <button class="btn" id="t-hk" aria-pressed="false" title="Türkçe, Hakikat Kitabevi">TR²</button>
+      <button class="btn" id="t-nas" aria-pressed="false" title="Farsça metni nesta'lik ile göster">نستعلیق</button>
+      <button class="btn" id="t-anim" aria-pressed="true" title="Mektup açılırken mürekkep ve mühür animasyonu">Açılış</button>
+      <button class="btn" id="fsm" aria-label="Yazıyı küçült">A−</button>
+      <button class="btn" id="fsp" aria-label="Yazıyı büyüt">A+</button>
+      <button class="btn" id="openSet">Okuma ayarları</button>
+      <button class="btn" id="openAbout">Kaynaklar</button>
+    </div>
+  </div>
+  <div class="loading" id="loading"></div>
+</div>
+
+<div class="wrap">
+  <section class="view" id="v-ag">
+    <h2 class="vt">Nâmehâne</h2>
+    <p class="lede">İmâm-ı Rabbânî'nin mektup yazdığı kişiler. Kişinin açısı, ona yazılan ilk mektubun derlemedeki yerini gösterir. Merkeze yakınlığı, ona kaç mektup yazıldığını. Bir kişiye dokunun, mektuplaşmayı sırasıyla okuyun.</p>
+    <div class="net">
+      <div class="panel netbox" id="netbox">
+        <div class="netbar"><span>Defter:</span>
+          <button class="btn" data-def="0" aria-pressed="true">Hepsi</button>
+          <button class="btn" data-def="1" aria-pressed="false">1. Defter</button>
+          <button class="btn" data-def="2" aria-pressed="false">2. Defter</button>
+          <button class="btn" data-def="3" aria-pressed="false">3. Defter</button>
+          <button class="btn" id="netplay" aria-pressed="false" title="Ağı derlemedeki sırayla mektup mektup büyüt">▶ Oynat</button>
+          <span class="playinfo" id="playinfo" aria-live="polite"></span>
+        </div>
+        <svg id="netsvg" viewBox="0 0 1000 1000" role="group" aria-label="Mektup alıcılarının ağı"></svg>
+        <div class="tip" id="tip" hidden></div>
+        <div class="legendnet">Çizgi kalınlığı mektup sayısı. Kesikli altın çizgiler, aynı mektubu birlikte alan kişileri bağlar. Alıcılar Farsça başlıklardan çıkarıldı; adı başlıkta yazmayan 20 mektup şeyhi Bâkîbillah'a yazılmıştır ("pîr-i büzürgvâr").</div>
+      </div>
+      <aside class="panel person" id="person" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section class="view" id="v-m" hidden>
+    <div class="letter">
+      <nav class="panel index" aria-label="Mektup dizini">
+        <div class="idx-head">Farsça aslın defterleri</div>
+        <div id="idx"></div>
+        <div class="legend"><i></i>Bazı tercümelerde karşılığı olmayan mektup</div>
+      </nav>
+      <div id="lbody" style="min-width:0"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-atlas" hidden>
+    <h2 class="vt">Kavram atlası</h2>
+    <p class="lede">Tasavvuf terimlerinin 536 mektuptaki dağılımı. Her satır bir kavram, her sütun bir mektup; renk koyulaştıkça o mektupta daha sık geçer. Sayım Farsça asılda yapıldı; Arapça tercümenin sayıları karşılaştırma için ayrıca gösterilir.</p>
+    <div class="atlas">
+      <nav class="panel terms" id="terms" aria-label="Kavramlar"></nav>
+      <div style="min-width:0">
+        <div class="panel heat" id="heat" tabindex="0" aria-label="Kavram şeritleri: satırlar kavram, sütunlar mektup"><p class="hl">Bir hücreye dokunun: o mektup, kavram vurgulanmış olarak açılır.</p><canvas id="heatc"></canvas><div class="tip" id="htip" hidden></div></div>
+        <div class="panel tdet" id="tdet"></div>
+        <div class="panel tdet" id="chordhost"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="v-kuran" hidden>
+    <h2 class="vt">Kur'ân ile mektuplar</h2>
+    <p class="lede" id="qlede">Farsça metindeki âyet atıfları. Üstte 536 mektup, altta 114 sûre; her yay bir atıftır. Bir sûreye ya da yaya dokunun.</p>
+    <div class="quran">
+      <div class="panel" style="padding:10px"><svg id="qsvg" viewBox="0 0 1000 620" role="img" aria-label="Mektuplardan sûrelere âyet atıfları"></svg><div class="tip" id="qtip" hidden></div></div>
+      <aside class="panel qpanel" id="qpanel"></aside>
+    </div>
+  </section>
+
+  <section class="view" id="v-seyr" hidden>
+    <h2 class="vt">Seyr daireleri</h2>
+    <p class="lede">Mücaddidî seyrin makamları iç içe daireler olarak. Dışta dâire-i imkân, merkezde lâ ta'ayyün. Halkanın kalınlığı, o makamın kaç mektupta adıyla geçtiğini gösterir. Dairelerin sırası Mücaddidî geleneğinden alındı, metinden çıkarılmadı. Haritada yalnız Farsça metinde adı geçen makamlar var; kemâlât-ı risâlet, hakîkat-i salât ve hubb-i sırf metinde bu adlarla geçmediği için yok.</p>
+    <div class="seyr">
+      <div class="panel" style="padding:10px"><svg id="ssvg" viewBox="0 0 1000 1000" role="group" aria-label="Seyr daireleri"></svg></div>
+      <aside class="panel qpanel" id="spanel"></aside>
+    </div>
+  </section>
+
+  <section class="view" id="v-tayf" hidden>
+    <h2 class="vt">Tercüme tayfı</h2>
+    <p class="lede">Bir kavram Farsça aslında geçtiğinde, üç tercüme onu hangi kelimelerle karşılamış? Sonuçlar, cümle köprüsünün hizaladığı bütün cümle çiftlerinden istatistikle çıkarıldı (birlikte geçme sıklığı). Çubuk, kavramın geçtiği cümlelerin yüzde kaçında o karşılığın bulunduğunu gösterir. Bir satıra dokunun, örnek cümleyi görün.</p>
+    <div class="tayf">
+      <nav class="panel terms" id="tterms" aria-label="Kavramlar"></nav>
+      <div id="tmain" style="min-width:0"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-divan" hidden>
+    <h2 class="vt">Beyit divanı</h2>
+    <p class="lede" id="dlede">Mektuplarda geçen Farsça ve Arapça beyitler: Akçiçek tercümesindeki okunuş ve mealleriyle.</p>
+    <div class="dfilter"><input id="dq" type="search" placeholder="Beyitlerde ara" aria-label="Beyitlerde ara"><span id="dcount" style="color:var(--muted);font-size:.85rem"></span></div>
+    <div class="divan" id="divan"></div>
+  </section>
+
+  <section class="view" id="v-notlar" hidden>
+    <h2 class="vt">Notlarım</h2>
+    <p class="lede">Altını çizdiğiniz cümleler, notlarınız ve işaretlediğiniz hatalı eşleşmeler. Hepsi yalnız bu cihazda, bu tarayıcıda saklanır.</p>
+    <div class="lacts"><button class="btn" id="nexp">Notları dışa aktar</button><button class="btn" id="rexp">Eşleşme bildirimlerini dışa aktar</button></div>
+    <div id="notes"></div>
+  </section>
+
+  <section class="view" id="v-kars" hidden></section>
+
+  <section class="view" id="v-s" hidden></section>
+</div>
+
+<div class="bridge" id="bridge" hidden></div>
+<div class="mur" id="mur" hidden role="dialog" aria-label="Murâkabe okuması"></div>
+<div class="glpop" id="glpop" hidden role="tooltip"></div>
+<div class="toast" id="toast" hidden role="status"></div>
+<dialog id="setdlg"><div class="dlg">
+  <h2>Okuma ayarları</h2>
+  <div class="setgrid">
+    <span>Tema</span><div class="seg" data-set="theme"><button class="btn" data-v="system">Sistem</button><button class="btn" data-v="light">Açık</button><button class="btn" data-v="sepia">Sepya</button><button class="btn" data-v="dark">Koyu</button></div>
+    <span>Satır aralığı</span><div class="seg" data-set="lh"><button class="btn" data-v="0.88">Sık</button><button class="btn" data-v="1">Normal</button><button class="btn" data-v="1.18">Geniş</button></div>
+    <span>Farsça yazı</span><div class="seg" data-set="nas"><button class="btn" data-v="false">Nesih</button><button class="btn" data-v="true">Nesta'lik</button></div>
+    <span>Türkçe yazı</span><div class="seg" data-set="trfont"><button class="btn" data-v="serif">Kitap</button><button class="btn" data-v="sans">Düz</button></div>
+    <span>Kelime açıklamaları</span><div class="seg" data-set="gloss"><button class="btn" data-v="true">Açık</button><button class="btn" data-v="false">Kapalı</button></div>
+    <span>Senkron kaydırma</span><div class="seg" data-set="sync"><button class="btn" data-v="true">Açık</button><button class="btn" data-v="false">Kapalı</button></div>
+    <span>Açılış animasyonu</span><div class="seg" data-set="anim"><button class="btn" data-v="true">Açık</button><button class="btn" data-v="false">Kapalı</button></div>
+    <span>Sesler</span><div class="seg" data-set="sound"><button class="btn" data-v="true">Açık</button><button class="btn" data-v="false">Kapalı</button></div>
+  </div>
+  <p style="color:var(--muted);font-size:.82rem;margin:4px 0 0">Senkron kaydırma, sütunların yan yana durduğu geniş ekranlarda çalışır: bir sütunu kaydırınca ötekiler karşılık gelen cümleye gelir. Sesler, mühür basılırken ve murâkabede sayfa çevrilirken çalar.</p>
+  <div class="row"><button class="btn" id="setclose">Kapat</button></div>
+</div></dialog>
+<dialog id="expdlg"><div class="dlg exp">
+  <h2 id="exptitle">Dışa aktar</h2>
+  <div id="expbody"></div>
+  <div class="row" style="gap:6px"><button class="btn" id="expcopy">Kopyala</button><button class="btn" id="expsave">Kaydet / paylaş</button><button class="btn" id="expclose">Kapat</button></div>
+</div></dialog>
+
+<dialog id="about">
+  <div class="dlg">
+    <h2>Kaynaklar ve yöntem</h2>
+    <div><b>Android:</b> <a href="https://github.com/muhammedali25/Tedebbur-Kuran-Atolyesi/releases/download/mektubat-apk/Mektubat.apk" target="_blank" rel="noopener">Mektubat.apk dosyasını indirin</a> ve açın. <b>iPhone ve iPad:</b> bu sayfayı Safari'de açıp Paylaş menüsünden Ana Ekrana Ekle'yi seçin.</div>
+    <div>Numaralama Farsça aslı esas alır: 1. defter 313, 2. defter 99, 3. defter 124 mektup (toplam 536). Arapça tercümede ve Akçiçek tercümesinde 534 mektup vardır.</div>
+    <h3>Metinler</h3>
+    <ul>
+      <li><b>Farsça asıl:</b> Mektûbât-ı İmâm-ı Rabbânî, tahkik: Nur Ahmed Amritsarî, Amritsar 1908–1915. Şamile için hazırlayan: Mücahid Sagir Ahmed. <a href="https://archive.org/details/Sagirahmadchawdhury_gmail_maktubatImamRabbani" target="_blank" rel="noopener">archive.org</a></li>
+      <li><b>Arapça:</b> ed-Dürerü'l-meknûnâtü'n-nefîse, mütercim Muhammed Murad el-Menzelevî (ö. 1934), Mektebetü'n-Nîl, Kahire. Sayfa numaraları baskıyla aynı. <a href="https://archive.org/details/maktubat_as-sarhandi" target="_blank" rel="noopener">archive.org</a></li>
+      <li><b>Türkçe:</b> Abdülkadir Akçiçek tercümesi (534) ve Hakikat Kitabevi tercümesi (313, yalnız 1. defter), Dr. Necati Aksu'nun düzenlediği <a href="https://www.necatiaksu.net/mektubat/mektubat.htm" target="_blank" rel="noopener">necatiaksu.net/mektubat</a> sayfalarından. Bu tercümeler telif hakkı taşır; bu sayfa kişisel okuma içindir.</li>
+    </ul>
+    <h3>Mektup eşleştirmesi</h3>
+    <div>1. ve 2. defterde metinler sırayla birebir karşılıktır. 3. defterde Arapça 39 ile 40, Farsçada 40 ile 39'dur. Farsça 3/115 ve 3/124 tercümelerde yoktur. Eşleştirme başlıklar, alıcı adları ve mektup uzunluklarıyla sınandı (uzunluk korelasyonu her defterde 0,99).</div>
+    <h3>Cümle köprüsü</h3>
+    <div>Bir cümleye dokunduğunuzda öteki metinlerdeki karşılığı yanar. Eşleştirme üç işarete dayanır: cümle uzunlukları; metinlerin kendisinden öğrenilmiş bir Farsça→Türkçe ve Farsça→Arapça sözlük (ortak Arapça kökenli kelimeler dahil); ve Akçiçek'teki "(sûre/âyet)" atıflarının Farsçadaki "[sûre: âyet]" atıflarıyla buluştuğu kesin noktalar. Ölçülen doğruluk: âyet içeren cümlelerde atıflar hiç kullanılmadığında bile Akçiçek için %86 tam isabet (±1 cümle %96); Arapça âyet metinlerinde %88 tam, %99 ±1. Âyet ve beyit içermeyen sıradan cümlelerden elle denetlenen rastgele örneklerde "güçlü" ve "orta" eşleşmelerin hemen hepsi doğru, "zayıf" olanların çoğu doğru ya da bir cümle kaymış çıktı. Eşleşmeler yine de <b>yaklaşıktır</b>.</div>
+    <h3>Farsça metindeki eklemeler</h3>
+    <div>Amritsar baskısı, Arapça yazılmış pasajlardan sonra "[ترجمه از مصحح]" başlığıyla musahhihin Farsça tercümesini verir. Bu tercümeler İmâm-ı Rabbânî'nin metni değildir; soluk ve kenar çizgili gösterilir, eşleştirmeye girmez. Hakikat Kitabevi tercümesinin her mektubun başındaki "Bu mektûb, … yazılmışdır" girişi de tercümanındır ve aynı şekilde ayrı tutulur.</div>
+    <h3>Notlar, okuma ilerlemesi ve bildirimler</h3>
+    <div>Okundu işaretleri, altı çizili cümleler, notlar ve hatalı eşleşme bildirimleri yalnız bu cihazda, bu tarayıcının (ya da uygulamanın) belleğinde durur; hiçbir yere gönderilmez. Tarayıcı verisi silinirse kaybolur; Notlarım sayfasından dışa aktarabilirsiniz.</div>
+    <h3>Kelime açıklamaları</h3>
+    <div>Türkçe sütunlarda noktalı altı çizili kelimelerin kısa açıklamaları (136 terim) bu uygulama için yazıldı; bir sözlükten alınmadı ve sözlük maddesi yerine geçmez. Her sütunda bir kelimenin yalnız ilk geçtiği yer işaretlenir.</div>
+    <h3>Alıcılar</h3>
+    <div>Alıcı adları Farsça başlıklardan bir ad sözlüğüyle çıkarıldı. Sözlükte olmayan kişilerin Türkçe adı Akçiçek'in "bu mektubu … yazmıştır" notundan alınır; bu notlar birkaç yerde Farsça başlıktan farklı bir ad verir (ör. 1/245, 1/301). Kişi sayfasında Farsça ad her zaman gösterilir.</div>
+    <h3>Kavram atlası</h3>
+    <div>Sayım, harekeler ve harf varyantları silinmiş metinde, her kavramın Farsça ve Arapça kalıplarıyla kelime sınırında yapılır; kalıplar kavram sayfasında yazar. Bağlama bakılmaz: "nefs" Arapçada "kendisi" anlamıyla, "zikir" "anılan" anlamıyla da sayılabilir.</div>
+    <div class="row"><button class="btn" id="closeAbout">Kapat</button></div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+const SRC = {
+  fa:{name:"Farsça · asıl", file:"data/fa.json", pg:"Amritsar"},
+  ar:{name:"Arapça · Menzelevî", file:"data/ar.json", pg:"Kahire"},
+  ak:{name:"Türkçe · Akçiçek", file:"data/ak.json"},
+  hk:{name:"Türkçe · Hakikat Kitabevi", file:"data/hk.json"}
+};
+const ORDER=["fa","ar","ak","hk"];
+const DEFTER={1:"1. Defter · Dürrü'l-ma'rife",2:"2. Defter · Nûru'l-halâik",3:"3. Defter · Ma'rifetü'l-hakâik"};
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const LANGTAG=k=>k==="ak"||k==="hk"?"tr":k;
+
+/* ================= normalleştirme ================= */
+const MAPCH={"أ":"ا","إ":"ا","آ":"ا","ٱ":"ا","ى":"ي","ی":"ي","ئ":"ي","ک":"ك","ة":"ه","ۀ":"ه","ؤ":"و","â":"a","î":"i","û":"u","Â":"a","Î":"i","Û":"u","‌":" ","’":"'"};
+const DROP=/[ً-ٰٟـۖ-ۭؐ-ؚ‏‎]/;
+function normChar(c){ if(DROP.test(c)) return ""; const m=MAPCH[c]; if(m!==undefined) return m; return c.toLocaleLowerCase("tr"); }
+function norm(s){ let o=""; for(const c of s) o+=normChar(c); return o; }
+function normMap(s){ let n="",map=[]; for(let i=0;i<s.length;i++){ const r=normChar(s[i]); for(let k=0;k<r.length;k++){ n+=r[k]; map.push(i);} } map.push(s.length); return {n,map}; }
+function parseQuery(q){ const t=[],re=/"([^"]+)"|(\S+)/g; let m; while((m=re.exec(q))){ const x=norm((m[1]||m[2]).trim()); if(x) t.push(x);} return t; }
+
+/* metin içinde arama terimlerini ve atlas kavramını işaretle */
+function marked(text, lang){
+  const atl = atlasActive && (lang==="fa"||lang==="ar") ? atlasRx[lang] : null;
+  if(!terms.length && !atl) return esc(text);
+  const {n,map}=normMap(text), R=[];
+  for(const t of terms){ let i=0; while((i=n.indexOf(t,i))!==-1){ R.push([map[i],map[i+t.length-1]+1,"q"]); i+=t.length; } }
+  if(atl){ atl.lastIndex=0; let m; while((m=atl.exec(n))){ if(!m[0].length){atl.lastIndex++;continue;} R.push([map[m.index],map[m.index+m[0].length-1]+1,"at"]); } }
+  if(!R.length) return esc(text);
+  R.sort((a,b)=>a[0]-b[0]); const M=[];
+  for(const r of R){ const l=M[M.length-1]; if(l&&r[0]<l[1]){ l[1]=Math.max(l[1],r[1]); if(r[2]==="q") l[2]="q"; } else M.push(r.slice()); }
+  let o="",p=0; for(const [a,b,c] of M){ o+=esc(text.slice(p,a))+(c==="at"?'<mark class="at">':'<mark>')+esc(text.slice(a,b))+"</mark>"; p=b; } return o+esc(text.slice(p));
+}
+
+/* ================= durum ================= */
+let IDX=null, PEOPLE=null, ATLAS=null; const DATA={}, NIDX={}, loadState={};
+let show={fa:true,ar:true,ak:true,hk:false}, fs=1, nas=false, terms=[];
+let atlasActive=null, atlasRx={}, atlLabel=""; let netDef=0, selPerson=null, curLetter=null, curTerm=null;
+let QURAN=null, SPEC=null, VERSES=null, WIDGET=null, selSura=null, curStation=null, curTayf=null, tayfSel=null, anim=true, lastAnim=null;
+try{ const s=JSON.parse(localStorage.getItem("mk3-ui")||"{}"); if(s.show) show=Object.assign(show,s.show); if(s.fs) fs=s.fs; if(s.nas) nas=true; if(s.anim===false) anim=false; }catch(e){}
+function saveUi(){ try{ localStorage.setItem("mk3-ui",JSON.stringify({show,fs,nas,anim})); }catch(e){} }
+const FADIG=n=>String(n).replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[d]);
+const reduceMotion=()=>matchMedia("(prefers-reduced-motion: reduce)").matches;
+function renderLoading(){
+  const items=ORDER.map(k=>`<span class="${loadState[k]==="ok"?"ok":""}">${SRC[k].name}: ${loadState[k]==="ok"?"hazır":loadState[k]==="err"?"yüklenemedi":"yükleniyor…"}</span>`);
+  $("#loading").innerHTML=items.join("");
+  $("#loading").hidden = ORDER.every(k=>loadState[k]==="ok");
+}
+const pById=id=>PEOPLE.byId[id];
+const shortName=s=>s.replace(/\s*\([^)]*\)\s*$/,"");
+
+/* ================= çizim yazılarını ekrana göre ölçekle ================= */
+function svgK(id){ const el=$("#"+id); const w=el&&el.clientWidth; const k=w?Math.min(2.6,Math.max(1,560/w)):1; if(el) el.style.setProperty("--svgk",k); return k; }
+
+/* ================= Nâmehâne ================= */
+function personStats(def){
+  const out=[];
+  for(const p of PEOPLE.people){
+    let L=def?p.L.filter(k=>k.startsWith(def+"-")):p.L;
+    if(playN!=null) L=L.filter(k=>IDX.pos[k]<playN);
+    if(!L.length) continue;
+    out.push({p,L,first:IDX.pos[L[0]]});
+  }
+  return out;
+}
+function renderNet(){
+  const svg=$("#netsvg"), W=1000, C=500, R0=95, R1=455;
+  const S=personStats(netDef); const total=IDX.order.length;
+  const cmax=Math.max(...S.map(s=>s.L.length));
+  // açı: ilk mektubun derlemedeki yeri; aynı noktaya düşenleri hafifçe ayır
+  const used={};
+  const pos={};
+  const startAng=-Math.PI/2;
+  for(const s of S){
+    let a=startAng+2*Math.PI*(s.first+0.5)/total;
+    const r=R0+(R1-R0)*(1-Math.log(s.L.length)/Math.log(Math.max(cmax,2)))**0.9;
+    const key=Math.round(a*60)+":"+Math.round(r/14);
+    const k=used[key]=(used[key]||0)+1;
+    const rr=r+(k-1)*13;
+    pos[s.p.id]={x:C+rr*Math.cos(a),y:C+rr*Math.sin(a),a,r:rr,s};
+  }
+  let h="";
+  // halkalar ve defter dilimleri
+  for(const rr of [R0,R0+(R1-R0)/3,R0+2*(R1-R0)/3,R1]) h+=`<circle class="ring" cx="${C}" cy="${C}" r="${rr.toFixed(1)}"/>`;
+  const bounds=[0,313,412,536];
+  for(let d=0; d<3; d++){
+    const a=startAng+2*Math.PI*bounds[d]/total, am=startAng+2*Math.PI*(bounds[d]+bounds[d+1])/2/total;
+    h+=`<line class="sector" x1="${C+R0*0.8*Math.cos(a)}" y1="${C+R0*0.8*Math.sin(a)}" x2="${C+(R1+30)*Math.cos(a)}" y2="${C+(R1+30)*Math.sin(a)}"/>`;
+    const tx=C+(R1+28)*Math.cos(am), ty=C+(R1+28)*Math.sin(am);
+    h+=`<text class="sectxt" x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="middle" opacity="${!netDef||netDef==d+1?1:.35}">${d+1}. DEFTER</text>`;
+  }
+  // ortak mektup bağları
+  const co={};
+  for(const k of IDX.order){ const ids=(PEOPLE.by[k]||[]).filter(i=>pos[i]); if(netDef&&!k.startsWith(netDef+"-")) continue;
+    for(let i=0;i<ids.length;i++) for(let j=i+1;j<ids.length;j++){ const key=[ids[i],ids[j]].sort().join("|"); co[key]=(co[key]||0)+1; } }
+  for(const key in co){ const [a,b]=key.split("|"), A=pos[a], B=pos[b];
+    h+=`<path class="co" d="M${A.x.toFixed(1)},${A.y.toFixed(1)} Q${C},${C} ${B.x.toFixed(1)},${B.y.toFixed(1)}"/>`; }
+  // kenarlar
+  for(const id in pos){ const P=pos[id], c=P.s.L.length;
+    const mx=C+(P.r*0.5)*Math.cos(P.a+0.18), my=C+(P.r*0.5)*Math.sin(P.a+0.18);
+    h+=`<path class="edge ${id===selPerson?"sel":""}" data-id="${id}" d="M${C},${C} Q${mx.toFixed(1)},${my.toFixed(1)} ${P.x.toFixed(1)},${P.y.toFixed(1)}" stroke-width="${(0.6+Math.sqrt(c)*0.9).toFixed(2)}"/>`; }
+  // düğümler
+  const ids=Object.keys(pos).sort((a,b)=>pos[a].s.L.length-pos[b].s.L.length);
+  // etiket çakışmalarını önle: büyükten küçüğe yerleştir, çakışanı dikeyde kaydır, yer yoksa etiketi gizle
+  const KN=svgK("netsvg"), boxes=[], labPos={};
+  for(const id of [...ids].reverse()){ const P=pos[id], c=P.s.L.length; if(!(c>=5||id===selPerson)) continue;
+    const rad=2.6+Math.sqrt(c)*2.1, right=Math.cos(P.a)>=0, txt=shortName(P.s.p.tr)+" · "+c, w=txt.length*6.3*KN;
+    let placed=null;
+    // önce düğümün dış yanına, sığmazsa iç yanına yaz; çizim sınırından (0-1000) taşan etiket yazılmaz
+    for(const side of [right,!right]){
+      const x0=side?P.x+rad+4:P.x-rad-4-w;
+      if(x0<4||x0+w>996) continue;
+      for(const dy of [0,13,-13,26,-26,39,-39].map(v=>v*KN)){ const y=P.y+4+dy, b={x:x0,y:y-11*KN,w,h:14*KN};
+        if(!boxes.some(o=>b.x<o.x+o.w&&b.x+b.w>o.x&&b.y<o.y+o.h&&b.y+b.h>o.y) && Math.hypot((side?x0:x0+w)-C,y-C)>78){ placed={x:side?x0:x0+w,y,right:side,txt}; boxes.push(b); break; } }
+      if(placed) break;
+    }
+    const x0=right?P.x+rad+4:P.x-rad-4-w;
+    if(placed||id===selPerson) labPos[id]=placed||{x:right?x0:x0+w,y:P.y+4,right,txt};
+  }
+  for(const id of ids){ const P=pos[id], c=P.s.L.length, rad=2.6+Math.sqrt(c)*2.1, L=labPos[id];
+    h+=`<g class="node ${id===selPerson?"sel":""}" data-id="${id}" tabindex="0" role="button" aria-label="${esc(P.s.p.tr)}, ${c} mektup"><circle cx="${P.x.toFixed(1)}" cy="${P.y.toFixed(1)}" r="${rad.toFixed(1)}"/>${
+      L?`<text class="lbl" x="${L.x.toFixed(1)}" y="${L.y.toFixed(1)}" text-anchor="${L.right?"start":"end"}">${esc(L.txt)}</text>`:""}</g>`; }
+  // merkez madalyon
+  h+=`<circle cx="${C}" cy="${C}" r="70" fill="var(--paper)" stroke="var(--gold)" stroke-width="2"/>
+      <circle cx="${C}" cy="${C}" r="62" fill="none" stroke="var(--gold)" stroke-opacity=".5" stroke-dasharray="2 3"/>
+      <text x="${C}" y="${C-6}" text-anchor="middle" style="font-family:var(--f-nas);font-size:20px;fill:var(--gold)">احمد سرهندی</text>
+      <text x="${C}" y="${C+26}" text-anchor="middle" style="font-family:var(--f-head);font-size:17px;font-weight:700;fill:var(--ink)">İmâm-ı Rabbânî</text>`;
+  svg.innerHTML=h;
+  svg._pos=pos;
+}
+function netEvents(){
+  const svg=$("#netsvg"), tip=$("#tip"), box=$("#netbox");
+  svg.addEventListener("mousemove",e=>{
+    const g=e.target.closest(".node"); if(!g){ tip.hidden=true; return; }
+    const P=svg._pos[g.dataset.id]; const r=box.getBoundingClientRect();
+    tip.innerHTML=`<b>${esc(P.s.p.tr)}</b><br>${P.s.L.length} mektup`; tip.hidden=false;
+    tip.style.left=(e.clientX-r.left+12)+"px"; tip.style.top=(e.clientY-r.top+12)+"px";
+  });
+  svg.addEventListener("mouseleave",()=>tip.hidden=true);
+  const open=g=>{ location.hash="k-"+g.dataset.id; };
+  svg.addEventListener("click",e=>{ const g=e.target.closest(".node"); if(g) open(g); });
+  svg.addEventListener("keydown",e=>{ const g=e.target.closest(".node"); if(g&&(e.key==="Enter"||e.key===" ")){ e.preventDefault(); open(g);} });
+  $$(".netbar [data-def]").forEach(b=>b.onclick=()=>{ if(playT) playNet(); netDef=+b.dataset.def; $$(".netbar [data-def]").forEach(x=>x.setAttribute("aria-pressed",x===b)); renderNet(); renderPerson(); });
+}
+function letterLabel(k){
+  const a=DATA.ak&&DATA.ak.L[k];
+  if(a&&a.m&&a.m.length) return a.m[0].split("\n")[0];
+  const f=DATA.fa&&DATA.fa.L[k]; if(f) return (f.p[0]||f.t).slice(0,120);
+  return "";
+}
+function renderPerson(){
+  const el=$("#person");
+  if(!selPerson||!pById(selPerson)){
+    const top=[...PEOPLE.people].sort((a,b)=>b.L.length-a.L.length).slice(0,16);
+    el.innerHTML=resumeCard()+todayCard()+`<h3>${PEOPLE.people.length} alıcı, ${IDX.order.length} mektup</h3>
+      <p class="meta">En çok mektup alanlar. Bir ada ya da ağdaki bir noktaya dokunun.</p>
+      <ul class="toplist">${top.map(p=>`<li><a href="#k-${p.id}"><b>${p.L.length}</b>${esc(shortName(p.tr))}</a></li>`).join("")}</ul>`;
+    return;
+  }
+  const p=pById(selPerson);
+  const L=netDef?p.L.filter(k=>k.startsWith(netDef+"-")):p.L;
+  const per=[1,2,3].map(d=>p.L.filter(k=>k.startsWith(d+"-")).length);
+  const coIds={}; for(const k of p.L) for(const i of PEOPLE.by[k]) if(i!==p.id) coIds[i]=(coIds[i]||0)+1;
+  el.innerHTML=`<h3>${esc(p.tr)}</h3>
+    <div class="pfa" lang="fa">${esc(p.fa)}</div>
+    <div class="meta">${p.L.length} mektup · 1. defter ${per[0]} · 2. defter ${per[1]} · 3. defter ${per[2]}${netDef?` · şimdi ${netDef}. defter gösteriliyor`:""}</div>
+    ${p.auto?`<div class="note">Ad sözlükte yok; Farsça ad başlıktan, Türkçe ad Akçiçek'in notundan alındı.</div>`:""}
+    ${Object.keys(coIds).length?`<div class="meta">Birlikte yazılanlar: <span class="chips">${Object.keys(coIds).map(i=>`<a class="chip" href="#k-${i}">${esc(shortName(pById(i).tr))}</a>`).join("")}</span></div>`:""}
+    <ol class="thread">${L.map(k=>{ const [v,n]=k.split("-"); const others=PEOPLE.by[k].filter(i=>i!==p.id);
+      return `<li><a href="#m-${k}"><span class="no">${v}/${n}</span><span>${esc(letterLabel(k))}${others.length?`<span class="with">birlikte: ${others.map(i=>esc(shortName(pById(i).tr))).join(", ")}</span>`:""}</span></a></li>`; }).join("")}</ol>`;
+}
+
+/* ================= tezhip (her mektuba özgü) ================= */
+function rosette(canvas, seed){
+  const dpr=window.devicePixelRatio||1, S=96; canvas.width=S*dpr; canvas.height=S*dpr;
+  const g=canvas.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0);
+  const cs=getComputedStyle(document.documentElement);
+  const gold=cs.getPropertyValue("--gold").trim(), lac=cs.getPropertyValue("--lac").trim(), paper=cs.getPropertyValue("--paper").trim(), soft=cs.getPropertyValue("--gold-soft").trim();
+  const n=6+(seed%5)*2;                // 6..14 kollu
+  const k2=2+((seed>>3)%3);            // iç halka katsayısı
+  const tw=((seed*37)%100)/100;        // petal eğrisi
+  const cx=48, cy=48;
+  g.clearRect(0,0,S,S);
+  g.beginPath(); g.arc(cx,cy,46,0,Math.PI*2); g.fillStyle=soft; g.fill();
+  g.lineWidth=1.2; g.strokeStyle=gold; g.stroke();
+  // dış petaller
+  for(let i=0;i<n;i++){
+    const a=i*2*Math.PI/n, b=a+Math.PI/n;
+    g.beginPath(); g.moveTo(cx+18*Math.cos(a-Math.PI/n),cy+18*Math.sin(a-Math.PI/n));
+    g.quadraticCurveTo(cx+(30+tw*10)*Math.cos(a-Math.PI/n*0.4),cy+(30+tw*10)*Math.sin(a-Math.PI/n*0.4),cx+42*Math.cos(a),cy+42*Math.sin(a));
+    g.quadraticCurveTo(cx+(30+tw*10)*Math.cos(a+Math.PI/n*0.4),cy+(30+tw*10)*Math.sin(a+Math.PI/n*0.4),cx+18*Math.cos(a+Math.PI/n),cy+18*Math.sin(a+Math.PI/n));
+    g.closePath(); g.fillStyle=i%2?paper:lac; g.globalAlpha=i%2?1:.85; g.fill(); g.globalAlpha=1; g.strokeStyle=gold; g.lineWidth=.8; g.stroke();
+    g.beginPath(); g.arc(cx+44*Math.cos(b),cy+44*Math.sin(b),1.4,0,Math.PI*2); g.fillStyle=gold; g.fill();
+  }
+  // iç yıldız
+  const m=n*k2/2|0||n;
+  g.beginPath();
+  for(let i=0;i<=m*2;i++){ const a=i*Math.PI/m, r=i%2?9:17; const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a); i?g.lineTo(x,y):g.moveTo(x,y); }
+  g.closePath(); g.fillStyle=gold; g.fill();
+  g.beginPath(); g.arc(cx,cy,6,0,Math.PI*2); g.fillStyle=paper; g.fill(); g.strokeStyle=lac; g.lineWidth=1; g.stroke();
+}
+
+/* ================= cümle bölme ve hizalama ================= */
+const ABBR=/(?:^|[\s(])(?:Hz|s\.a\.v|s\.a|a\.s|r\.a|k\.s|rh\.a|b|bkz|vb|vs|Dr|Mev|Hâc|Şeyh|[A-ZÇĞİÖŞÜ])\.$/;
+function splitSents(text, lang){
+  const out=[]; let re;
+  if(lang==="fa"||lang==="ar") re=/[^.!?؟]+(?:[.!?؟]+["»”)\]}]*|$)/g;
+  else re=/[^.!?…]+(?:[.!?…]+["”’»)\]]*|$)/g;
+  let m, buf="";
+  while((m=re.exec(text))){ if(!m[0]) {re.lastIndex++; continue;}
+    let s=m[0];
+    if(lang!=="fa"&&lang!=="ar"){
+      const next=text.slice(re.lastIndex).trimStart()[0]||"";
+      buf+=s;
+      // "(59/22)" gibi âyet atfı, önündeki meal cümlesine aittir
+      if(ABBR.test(buf.trimEnd()) || (next && /[a-zçğıöşüâîû0-9]/.test(next)) || /^\(\s*\d{1,3}\s*\/\s*\d{1,3}/.test(text.slice(re.lastIndex).trimStart())) continue;
+      s=buf; buf="";
+    }
+    if(s.trim()) out.push(s);
+  }
+  if(buf.trim()) out.push(buf);
+  // Arapça ve Farsçada nokta seyrek: uzun cümleleri önce noktalamadan, sonra "و" bağlacından böl (align_lib.py ile aynı)
+  if(lang==="fa"||lang==="ar"){
+    const lim=lang==="ar"?200:280;
+    const greedy=(s,pat)=>{ const fine=[]; let cur="";
+      for(const p of s.split(pat)){ cur+=(cur?" ":"")+p; if(cur.length>=lim*0.55){ fine.push(cur+" "); cur=""; } }
+      if(cur){ if(fine.length&&cur.length<40) fine[fine.length-1]+=cur; else fine.push(cur); }
+      return fine; };
+    const fine=[];
+    for(const s of out){
+      if(s.length<=lim){ fine.push(s); continue; }
+      for(const q of greedy(s,/(?<=[،؛:,])\s+/)){ if(q.length>2*lim) fine.push(...greedy(q,/\s+(?=و\S)/)); else fine.push(q); }
+    }
+    out.length=0; out.push(...fine);
+  }
+  // çok kısa parçaları öncekine kat
+  const merged=[]; for(const s of out){ if(merged.length && s.trim().length<6) merged[merged.length-1]+=s; else merged.push(s); }
+  return merged;
+}
+const FA_HINT=/(?<![؀-ۿ])(است|كه|که|را|اين|آن|مى|مي|نمى|شد|بود)(?![؀-ۿ])/g;
+const isPersian=x=>/[پچژگ]/.test(x) || (x.match(FA_HINT)||[]).length>=2;
+function units(k, lang){
+  const L=DATA[lang]&&DATA[lang].L[k]; if(!L) return null;
+  const paras=[]; const flat=[];
+  const add=(text,cls)=>{ const sents=splitSents(text,lang); const ids=[]; for(const s of sents){ ids.push(flat.length); flat.push(s.replace(/§v[flm]§/g,"")); } paras.push({cls,sents,ids}); };
+  if(lang==="ak"){
+    (L.m||[]).forEach(x=>paras.push({cls:"mz",raw:x}));
+    if(L.not) paras.push({cls:"nt",raw:L.not});
+    for(const x of L.p){ if(x==="***"){ paras.push({cls:"sep",raw:"✦ ✦ ✦"}); continue; }
+      const m=x.match(/^§(v[flm])§/); add(m?x.slice(4):x, m?m[1]:""); }
+  } else {
+    paras.push({cls:"ttl",raw:L.t});
+    let body=L.p;
+    // Hakikat Kitabevi'nin "Bu mektûb, … yazılmışdır." girişi tercümanındır: ayrı gösterilir, hizalamaya girmez (align_lib.py ile aynı)
+    if(lang==="hk" && body.length && /^["“”\s]*Bu mekt[uû][bp]/.test(body[0])){ paras.push({cls:"mz",raw:body[0]}); body=body.slice(1); }
+    // Amritsar baskısında başlık iki satırdır: "مکتوب اول" + konusu (kısaysa). Uzunsa gövdeyle birleşik yazılmıştır.
+    if(lang==="fa" && L.t.length<40 && body.length>1 && body[0].length<300){ paras.push({cls:"ttl",raw:body[0]}); body=body.slice(1); }
+    // "[ترجمه از مصحح]" ve ardındaki Farsça tercüme musahhihin eklemesidir: ayrı gösterilir, hizalamaya girmez (align_lib.py ile aynı)
+    const skip=new Set();
+    if(lang==="fa") body.forEach((x,i)=>{ if(x.trim().startsWith("[ترجمه")){ skip.add(i); if(i+1<body.length && isPersian(body[i+1])) skip.add(i+1); } });
+    body.forEach((x,i)=>{ if(skip.has(i)){ paras.push({cls:"tm",raw:x}); return; } const m=x.match(/^§(v[flm])§/); add(m?x.slice(4):x, m?m[1]:""); });
+  }
+  return {paras,flat};
+}
+function phi(x){ const t=1/(1+0.2316419*x), d=0.3989423*Math.exp(-x*x/2); return 1-d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274)))); }
+const PRI={"11":0.5,"10":0.004,"01":0.004,"21":0.14,"12":0.14,"31":0.06,"13":0.06,"41":0.025,"14":0.025,"22":0.03,"32":0.015,"23":0.015};
+function galeChurch(A,B){
+  const la=A.map(s=>s.length), lb=B.map(s=>s.length), n=la.length, m=lb.length;
+  const c=(lb.reduce((x,y)=>x+y,0)||1)/(la.reduce((x,y)=>x+y,0)||1), s2=6.8;
+  const cost=(a,b)=>{ const mean=(a+b/c)/2||1; const d=(b/c-a)/Math.sqrt(mean*s2); const p=Math.max(2*(1-phi(Math.abs(d))),1e-12); return {c:-Math.log(p),p}; };
+  const INF=1e18, D=new Float64Array((n+1)*(m+1)).fill(INF), BK=new Int8Array((n+1)*(m+1)); D[0]=0;
+  const mv=[[1,1],[1,0],[0,1],[2,1],[1,2],[2,2],[3,1],[1,3],[4,1],[1,4],[3,2],[2,3]];
+  // diyagonal etrafında bant
+  const band=Math.max(30,Math.abs(n-m)+30);
+  for(let i=0;i<=n;i++){ const jc=Math.round(i*m/(n||1)); for(let j=Math.max(0,jc-band);j<=Math.min(m,jc+band);j++){ if(!i&&!j) continue;
+    let best=INF,bk=-1;
+    for(let t=0;t<mv.length;t++){ const [di,dj]=mv[t]; if(i<di||j<dj) continue; const prev=D[(i-di)*(m+1)+(j-dj)]; if(prev>=INF) continue;
+      let a=0,b=0; for(let x=1;x<=di;x++) a+=la[i-x]; for(let y=1;y<=dj;y++) b+=lb[j-y];
+      const v=prev+cost(a,b).c-Math.log(PRI[""+di+dj]); if(v<best){best=v;bk=t;} }
+    D[i*(m+1)+j]=best; BK[i*(m+1)+j]=bk; } }
+  const beads=[]; let i=n,j=m;
+  while(i>0||j>0){ const t=BK[i*(m+1)+j]; if(t<0||D[i*(m+1)+j]>=INF) break; const [di,dj]=mv[t];
+    const a=[],b=[]; for(let x=i-di;x<i;x++) a.push(x); for(let y=j-dj;y<j;y++) b.push(y);
+    let sa=0,sb=0; a.forEach(x=>sa+=la[x]); b.forEach(y=>sb+=lb[y]);
+    beads.push({a,b,p:(a.length&&b.length)?cost(sa,sb).p:0}); i-=di; j-=dj; }
+  return beads.reverse();
+}
+let BR=null; // {k, U:{lang:units}, beads:{lang:[...]}, fa2b:{lang:Map}, t2b:{lang:Map}}
+let ALIGNDATA=null;
+const rng=(s,n)=>n>0?Array.from({length:n},(_,i)=>s+i):[];
+function computeBridge(k){
+  const U={}; for(const l of ORDER) U[l]=units(k,l);
+  const beads={}, fa2b={}, t2b={};
+  const AJ=ALIGNDATA&&ALIGNDATA[k];
+  if(U.fa) for(const l of ["ar","ak","hk"]){ if(!U[l]) continue;
+    // Önceden hesaplanmış hizalama (uzunluk + sözlük + âyet atıfları); cümle sayıları tutmazsa yalnız uzunlukla hesapla
+    let B;
+    if(AJ&&AJ[l]&&AJ.n.fa===U.fa.flat.length&&AJ.n[l]===U[l].flat.length) B=AJ[l].map(([a0,na,b0,nb,c,p])=>({a:rng(a0,na),b:rng(b0,nb),p,c}));
+    else B=galeChurch(U.fa.flat,U[l].flat).map(bd=>({...bd,c:confOf(bd.p,bd.a.length,bd.b.length)}));
+    beads[l]=B; fa2b[l]=new Map(); t2b[l]=new Map();
+    B.forEach((bd,bi)=>{ bd.a.forEach(i=>fa2b[l].set(i,bi)); bd.b.forEach(j=>t2b[l].set(j,bi)); }); }
+  return {k,U,beads,fa2b,t2b};
+}
+function buildBridge(k){ BR=computeBridge(k); }
+/* bir cümlenin öteki dillerdeki karşılığı: {dil:{ids,conf,src}} (ekrana dokunmaz) */
+function mapFrom(B, lang, idx){
+  let S=new Set();
+  if(lang==="fa") S.add(idx);
+  else { const bi=B.t2b[lang]&&B.t2b[lang].get(idx); if(bi!=null) B.beads[lang][bi].a.forEach(i=>S.add(i)); }
+  const res={}; res[lang]={ids:[idx],conf:0,src:true};
+  if(lang!=="fa") res.fa={ids:[...S].sort((a,b)=>a-b),conf:null};
+  for(const l of ["ar","ak","hk"]){ if(l===lang||!B.beads[l]) continue;
+    const ids=new Set(); let worst=1;
+    for(const i of S){ const bi=B.fa2b[l].get(i); if(bi==null) continue; const bd=B.beads[l][bi]; bd.b.forEach(j=>ids.add(j)); worst=Math.max(worst,bd.c||3); }
+    res[l]={ids:[...ids].sort((a,b)=>a-b),conf:ids.size?worst:null}; }
+  if(lang!=="fa"){ const bi=B.t2b[lang].get(idx); const bd=bi!=null?B.beads[lang][bi]:null; res.fa.conf=bd&&bd.a.length?(bd.c||3):null;
+    if(bd) res[lang].ids=bd.b.slice(); }
+  return res;
+}
+function confOf(p,a,b){ if(!a||!b) return 3; if(p>=0.45) return 1; if(p>=0.12) return 2; return 3; }
+const CONFTXT={1:"güçlü eşleşme",2:"orta eşleşme",3:"zayıf eşleşme"};
+let CURSEL=null;
+function bridgeFrom(lang, idx){
+  if(!BR) return;
+  const res=mapFrom(BR, lang, idx);
+  CURSEL={k:BR.k, lang, idx, res}; syncLock=Date.now()+900;
+  // işaretle
+  $$(".s.lit,.s.src").forEach(e=>e.classList.remove("lit","src","c1","c2","c3"));
+  for(const l in res){ const col=$(`.col.${l}`); if(!col) continue;
+    let first=null;
+    for(const id of res[l].ids){ const e=col.querySelector(`.s[data-i="${id}"]`); if(!e) continue; e.classList.add(l===lang?"src":"lit"); if(l!==lang) e.classList.add("c"+(res[l].conf||3)); first=first||e; }
+    if(first && l!==lang){ const cb=col.querySelector(".cb"); if(cb.scrollHeight>cb.clientHeight+4){ cb.scrollTo({top:first.offsetTop-cb.offsetTop-cb.clientHeight/3,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); } }
+  }
+  // panel
+  const items=ORDER.filter(l=>show[l]&&BR.U[l]).map(l=>{
+    const r=res[l]; const txt=r&&r.ids.length?r.ids.map(i=>BR.U[l].flat[i]).join(" "):"";
+    const cf=r&&!r.src&&r.conf?`<span class="conf">${CONFTXT[r.conf]}</span>`:"";
+    return `<div class="bi ${l}"><b>${SRC[l].name}${r&&r.src?' <span class="conf">seçilen</span>':cf}</b><div class="t" lang="${LANGTAG(l)}">${txt?esc(txt.trim()):'<i style="color:var(--muted)">Karşılık bulunamadı</i>'}</div></div>`; }).join("");
+  const hlOn=hlFind(CURSEL)>=0;
+  const b=$("#bridge"); b.innerHTML=`<div class="bh"><span>Cümle köprüsü · yaklaşık eşleşme (uzunluk, sözlük ve âyet atıfları)</span><button class="btn" id="bclose">Kapat</button></div><div class="bg">${items}</div>
+    <div class="bact"><button class="btn" data-a="hl" aria-pressed="${hlOn}">${hlOn?"Altı çizili · kaldır":"Altını çiz"}</button><button class="btn" data-a="note">Not ekle</button><button class="btn" data-a="card">Kart</button><button class="btn" data-a="say">Dinle</button><button class="btn" data-a="rep">Hatalı eşleşme</button></div>
+    <div class="bnote" id="bnote" hidden><textarea id="bnotet" aria-label="Not" placeholder="Bu cümle hakkında notunuz"></textarea><button class="btn" id="bnotes">Kaydet</button></div>`;
+  b.hidden=false; $("#bclose").onclick=closeBridge;
+  b.querySelectorAll(".bact [data-a]").forEach(x=>x.onclick=()=>bridgeAction(x.dataset.a));
+}
+function closeBridge(){ $("#bridge").hidden=true; $$(".s.lit,.s.src").forEach(e=>e.classList.remove("lit","src","c1","c2","c3")); }
+addEventListener("keydown",e=>{ if(e.key==="Escape") closeBridge(); });
+
+/* ================= Mektup ================= */
+function partial(id){ const m=IDX.map[id]; return !(m.ar&&m.ak); }
+function renderIndex(cur){
+  const by={1:[],2:[],3:[]}; for(const id of IDX.order) by[id.split("-")[0]].push(id);
+  const cv=cur?cur.split("-")[0]:null;
+  $("#idx").innerHTML=[1,2,3].map(v=>{ const rd=by[v].filter(id=>READ[id]).length;
+    return `<details class="cilt" ${!cur||cv==v?"open":""}><summary>${DEFTER[v]} <small>(${rd}/${by[v].length} okundu)</small>${ring(rd/by[v].length)}</summary><div class="ml">${
+    by[v].map(id=>`<a href="#m-${id}" class="${id===cur?"cur":""} ${partial(id)?"part":""} ${READ[id]?"read":""}" ${READ[id]?'aria-label="'+id.split("-")[1]+', okundu"':""}>${id.split("-")[1]}</a>`).join("")}</div></details>`; }).join("");
+  const c=$("#idx .cur"); if(c) c.scrollIntoView({block:"nearest"});
+}
+function colHtml(k,id){
+  const L=DATA[k]&&DATA[k].L[id], m=IDX.map[id];
+  let pg=""; if((k==="fa"||k==="ar")&&L&&L.pg) pg=`${SRC[k].pg} ${L.pg}`; if(k==="ak"&&m.ak) pg=`sıra ${m.ak}`; if(k==="hk"&&m.hk) pg=`sıra ${m.hk}`;
+  const head=`<div class="ch"><b>${SRC[k].name}</b><small>${esc(pg)}</small></div>`;
+  const cls=`col ${k}${k==="fa"&&nas?" nasm":""}`;
+  if(!DATA[k]) return `<article class="${cls}">${head}<div class="cb"><div class="empty">Yükleniyor…</div></div></article>`;
+  if(!L){ const why=k==="ar"||k==="ak"?"Bu mektup bu tercümede yok. Tercümelerde 534 mektup var; Farsça 3/115 ve 3/124 tercüme edilmemiş.":k==="hk"?"Hakikat Kitabevi tercümesi yalnız 1. defteri kapsıyor.":"Metin yok.";
+    return `<article class="${cls}">${head}<div class="cb"><div class="empty">${why}</div></div></article>`; }
+  const U=BR&&BR.k===id?BR.U[k]:units(id,k);
+  const hs=hlSet(id,k);
+  let body=U.paras.map(p=>{
+    if(p.raw!==undefined) return `<p class="${p.cls}">${marked(p.raw,k)}</p>`;
+    return `<p class="${p.cls}">${p.sents.map((s,j)=>`<span class="s${hs.has(p.ids[j])?" hl":""}" tabindex="-1" data-i="${p.ids[j]}">${marked(s,k)}</span>`).join("")}</p>`;
+  }).join("");
+  if(L.n&&L.n.length) body+=`<details class="notes"><summary>Dipnotlar (${L.n.length} sayfa)</summary>${L.n.map(([p,t])=>`<div><b>s.${esc(p)}</b>\n${marked(t,k)}</div>`).join("")}</details>`;
+  return `<article class="${cls}" lang="${LANGTAG(k)}" data-l="${k}">${head}<div class="cb" tabindex="0" aria-label="${SRC[k].name} metni. Cümleler arasında ok tuşlarıyla gezinin, Enter ile karşılığını görün.">${body}</div></article>`;
+}
+let quoteFor=null;
+function renderLetter(id){
+  curLetter=id; closeBridge();
+  if(atlasActive==="__q" && quoteFor!==id){ atlasActive=null; atlasRx={}; }
+  if(ORDER.every(k=>!DATA[k]||DATA[k])) buildBridge(id);
+  const i=IDX.order.indexOf(id), prev=IDX.order[i-1], next=IDX.order[i+1], m=IDX.map[id];
+  const [v,n]=id.split("-");
+  const rec=(PEOPLE.by[id]||[]).map(pById);
+  const langs=ORDER.filter(k=>show[k]);
+  const atl=atlasActive?ATLAS.byId[atlasActive]:null;
+  $("#lbody").innerHTML=`
+    <div class="panel name">
+      <canvas id="ros" aria-hidden="true"></canvas>
+      <div>
+        <div class="to">${v}. Defter · ${n}. Mektup</div>
+        <h2>${rec.length?rec.map(p=>esc(shortName(p.tr))).join(" ve "):"Alıcı belirtilmemiş"}</h2>
+        ${rec.length?`<div id="inkhost" lang="fa" role="img" aria-label="${esc("به "+rec.map(p=>p.fa).join(" و "))}"></div>`:""}
+        <div class="rtr">${rec.map(p=>`<a href="#k-${p.id}">${esc(shortName(p.tr))} ile yazışma (${p.L.length})</a>`).join("")}</div>
+      </div>
+      <div class="pager" style="flex-direction:column;align-items:flex-end;gap:8px">
+        ${rec.length?sealSvg(rec[0],v,n):""}
+        <div style="display:flex;gap:6px">${prev?`<a class="btn" href="#m-${prev}" aria-label="Önceki mektup">‹</a>`:""}<button class="btn" id="murbtn" title="Cümle cümle, üç dilde okuma">Murâkabe</button>${next?`<a class="btn" href="#m-${next}" aria-label="Sonraki mektup">›</a>`:""}</div>
+      </div>
+    </div>
+    <div class="eq"><span>Farsça <b>${v}/${n}</b></span><span>Arapça <b>${m.ar||"yok"}</b></span><span>Akçiçek <b>${m.ak||"yok"}</b></span><span>Hakikat <b>${m.hk||"yok"}</b></span>
+      ${atl?`<span class="atl">Atlas: <b>${esc(atl.tr)}</b> vurgulanıyor (FA ${ATLAS.counts[atl.id].fa[IDX.pos[id]]} · AR ${ATLAS.counts[atl.id].ar[IDX.pos[id]]})<button id="atloff" aria-label="Vurguyu kaldır">✕</button></span>`:""}
+      ${atlasActive==="__q"?`<span class="atl">${esc(atlLabel)} vurgulanıyor<button id="atloff" aria-label="Vurguyu kaldır">✕</button></span>`:""}</div>
+    <div class="lacts"><button class="btn" id="readbtn" aria-pressed="${!!READ[id]}">${READ[id]?"Okundu ✓":"Okudum"}</button>${m.hk?`<a class="btn" href="#kars-${id}">Akçiçek ↔ Hakikat</a>`:""}<button class="btn" id="saybtn" aria-pressed="false">Sesli oku</button></div>
+    <p class="bridgehint">Bir cümleye dokunun: öteki metinlerdeki karşılığı yanar (yaklaşık eşleşme). Noktalı altı çizili kelimelere dokunursanız kısa açıklaması çıkar.</p>
+    <div class="cols" style="--n:${Math.max(langs.length,1)}">${langs.map(k=>colHtml(k,id)).join("")||`<div class="col"><div class="cb empty">Gösterilecek metni seçin.</div></div>`}</div>`;
+  rosette($("#ros"), i*2654435761>>>0);
+  renderIndex(id);
+  const fresh=lastAnim!==id; lastAnim=id;
+  const doAnim=fresh&&anim&&!reduceMotion();
+  const lb=$("#lbody"); lb.classList.remove("unfold","ink-run"); if(doAnim){ void lb.offsetWidth; lb.classList.add("unfold","ink-run"); }
+  if(rec.length) inkName("به "+rec.map(p=>p.fa).join(" و "));
+  const mb=$("#murbtn"); if(mb) mb.onclick=()=>openMur(id);
+  store.set("mk-last",id);
+  $("#readbtn").onclick=()=>{ if(READ[id]) delete READ[id]; else READ[id]=1; store.set("mk-read",READ); renderIndex(id); const b=$("#readbtn"); b.setAttribute("aria-pressed",!!READ[id]); b.textContent=READ[id]?"Okundu ✓":"Okudum"; };
+  $("#saybtn").onclick=()=>readAloud(id);
+  if(SET.gloss&&GLOSS) $$("#lbody .col.ak .cb, #lbody .col.hk .cb").forEach(applyGloss);
+  if(doAnim) setTimeout(()=>sfx("stamp"),250);
+  setupSync();
+  const off=$("#atloff"); if(off) off.onclick=()=>{ atlasActive=null; renderLetter(id); };
+  const fm=$("#lbody .col mark"); if(fm && (terms.length||atl)){ const cb=fm.closest(".cb"); if(cb.scrollHeight>cb.clientHeight) cb.scrollTop=fm.offsetTop-cb.offsetTop-60; }
+}
+$("#lbody").addEventListener("click",e=>{ const g=e.target.closest(".gl"); if(g){ e.stopPropagation(); showGloss(g); return; } const s=e.target.closest(".s"); if(!s) return; const col=s.closest(".col"); bridgeFrom(col.dataset.l,+s.dataset.i); });
+// klavye: sütunda ↑/↓ cümleler arasında gezinir, Enter ya da boşluk köprüyü açar
+$("#lbody").addEventListener("keydown",e=>{
+  const cb=e.target.closest(".cb"); if(!cb) return;
+  const ss=[...cb.querySelectorAll(".s")]; if(!ss.length) return;
+  const cur=e.target.classList.contains("s")?ss.indexOf(e.target):-1;
+  if(e.key==="ArrowDown"||e.key==="ArrowUp"){ e.preventDefault(); const n=Math.max(0,Math.min(ss.length-1,cur<0?0:cur+(e.key==="ArrowDown"?1:-1))); ss[n].focus(); ss[n].scrollIntoView({block:"nearest"}); }
+  else if((e.key==="Enter"||e.key===" ")&&cur>=0){ e.preventDefault(); bridgeFrom(cb.closest(".col").dataset.l,+ss[cur].dataset.i); }
+});
+
+/* ================= Atlas ================= */
+function heatColor(v,max){ // kâğıttan lâcivarda
+  if(!v) return null; const t=Math.sqrt(v/max); return t; }
+function renderAtlas(){
+  const T=ATLAS.terms.filter(t=>!t.group);
+  $("#terms").innerHTML=T.map(t=>`<a href="#atlas-${t.id}" aria-current="${t.id===curTerm}"><span>${esc(t.tr)}</span><small>${t.tfa}</small></a>`).join("");
+  const at=$("#terms [aria-current=true]"); if(at) at.scrollIntoView({inline:"center",block:"nearest"});
+  drawHeat(); renderTerm(); renderChord();
+}
+function drawHeat(){
+  const T=ATLAS.terms.filter(t=>!t.group), N=IDX.order.length, cv=$("#heatc"), box=$("#heat");
+  const cw=Math.max(2,Math.floor((box.clientWidth-28-150)/N)), rh=16, lw=150, top=18;
+  const W=lw+cw*N, H=top+rh*T.length+4, dpr=window.devicePixelRatio||1;
+  cv.width=W*dpr; cv.height=H*dpr; cv.style.width=W+"px"; cv.style.height=H+"px";
+  const g=cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0);
+  const cs=getComputedStyle(document.documentElement), lac=cs.getPropertyValue("--lac").trim(), ink=cs.getPropertyValue("--ink").trim(), muted=cs.getPropertyValue("--muted").trim(), gold=cs.getPropertyValue("--gold").trim(), bg=cs.getPropertyValue("--bg").trim();
+  g.clearRect(0,0,W,H); g.font="12px system-ui, sans-serif"; g.textBaseline="middle";
+  // defter etiketleri
+  const bounds=[0,313,412,536]; g.fillStyle=muted;
+  for(let d=0;d<3;d++){ g.fillText(`${d+1}. defter`, lw+bounds[d]*cw+2, 8); }
+  T.forEach((t,r)=>{
+    const y=top+r*rh, arr=ATLAS.counts[t.id].fa, max=Math.max(...arr)||1;
+    g.fillStyle=t.id===curTerm?gold:ink; g.font=(t.id===curTerm?"600 ":"")+"12px system-ui, sans-serif"; g.fillText(t.tr,4,y+rh/2);
+    g.fillStyle=bg; g.fillRect(lw,y+1,cw*N,rh-2);
+    for(let i=0;i<N;i++){ const v=arr[i]; if(!v) continue; g.globalAlpha=0.15+0.85*Math.sqrt(v/max); g.fillStyle=lac; g.fillRect(lw+i*cw,y+1,cw,rh-2); }
+    g.globalAlpha=1;
+  });
+  g.strokeStyle=muted; g.globalAlpha=.6;
+  for(const b of [313,412]){ g.beginPath(); g.moveTo(lw+b*cw+.5,top-2); g.lineTo(lw+b*cw+.5,H); g.stroke(); }
+  g.globalAlpha=1;
+  if(curLetter && IDX.pos[curLetter]!=null){ const x=lw+IDX.pos[curLetter]*cw; g.strokeStyle=gold; g.lineWidth=2; g.strokeRect(x-.5,top,cw+1,rh*T.length); g.lineWidth=1; }
+  cv._geo={lw,cw,rh,top,N};
+}
+function heatHit(e){
+  const cv=$("#heatc"), G=cv._geo, r=cv.getBoundingClientRect();
+  const x=e.clientX-r.left, y=e.clientY-r.top; const i=Math.floor((x-G.lw)/G.cw), row=Math.floor((y-G.top)/G.rh);
+  const T=ATLAS.terms.filter(t=>!t.group);
+  if(i<0||i>=G.N||row<0||row>=T.length) return null;
+  return {i,row,t:T[row],k:IDX.order[i]};
+}
+function heatEvents(){
+  const cv=$("#heatc"), tip=$("#htip"), box=$("#heat");
+  cv.addEventListener("mousemove",e=>{ const h=heatHit(e); if(!h){tip.hidden=true;return;}
+    const [v,n]=h.k.split("-"); const c=ATLAS.counts[h.t.id]; const r=box.getBoundingClientRect();
+    const who=(PEOPLE.by[h.k]||[]).map(i=>shortName(pById(i).tr)).join(", ");
+    tip.innerHTML=`<b>${esc(h.t.tr)}</b> · ${v}/${n}<br>Farsça ${c.fa[h.i]} · Arapça ${c.ar[h.i]}${who?`<br>${esc(who)}`:""}`; tip.hidden=false;
+    tip.style.left=Math.min(e.clientX-r.left+12,box.clientWidth-200)+"px"; tip.style.top=(e.clientY-r.top+14)+"px"; });
+  cv.addEventListener("mouseleave",()=>tip.hidden=true);
+  cv.addEventListener("click",e=>{ const h=heatHit(e); if(!h) return; atlasActive=h.t.id; setAtlasRx(); location.hash="m-"+h.k; });
+}
+function setAtlasRx(){ const t=atlasActive&&ATLAS.byId[atlasActive]; atlasRx= t?{fa:new RegExp(t.rxfa,"g"),ar:new RegExp(t.rxar,"g")}:{}; }
+function renderTerm(){
+  const el=$("#tdet");
+  const t=curTerm&&ATLAS.byId[curTerm];
+  if(!t){ el.innerHTML=`<h3>Bir kavram seçin</h3><p class="meta" style="color:var(--muted)">Soldaki listeden bir kavrama dokunun: sayıları, en yoğun geçtiği mektupları ve alıcılara göre dağılımını görün.</p>`; return; }
+  const c=ATLAS.counts[t.id]; const idx=IDX.order.map((k,i)=>({k,i,v:c.fa[i]})).filter(x=>x.v).sort((a,b)=>b.v-a.v);
+  const per=[1,2,3].map(d=>IDX.order.reduce((s,k,i)=>s+(k.startsWith(d+"-")?c.fa[i]:0),0));
+  const byP={}; IDX.order.forEach((k,i)=>{ if(!c.fa[i]) return; for(const p of PEOPLE.by[k]||[]) byP[p]=(byP[p]||0)+c.fa[i]; });
+  const topP=Object.entries(byP).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  el.innerHTML=`<h3>${esc(t.tr)}</h3><div style="color:var(--muted)">${esc(t.desc)}</div>
+    <div class="pat">Sayılan kalıplar · Farsça: <span lang="fa">${esc(t.fa.replace(/\(\?!.*?\)\)/g,"").replace(/\\s\*/g," ").replace(/[()?:\\]/g,"").split("|").join(" · "))}</span> · Arapça: <span lang="ar">${esc(t.ar.replace(/\(\?!.*?\)\)/g,"").replace(/\\s\*/g," ").replace(/[()?:\\]/g,"").split("|").join(" · "))}</span></div>
+    <div class="stats"><div><b>${t.tfa}</b>Farsça geçiş</div><div><b>${t.tar}</b>Arapça geçiş</div><div><b>${idx.length}</b>mektupta</div><div><b>${per.join(" / ")}</b>defterlere göre (FA)</div></div>
+    <h4 style="margin:6px 0 4px;font-size:.9rem">En yoğun geçtiği mektuplar</h4>
+    <ul class="toplist">${idx.slice(0,12).map(x=>{ const [v,n]=x.k.split("-"); const who=(PEOPLE.by[x.k]||[]).map(i=>shortName(pById(i).tr)).join(", "); return `<li><a href="#m-${x.k}" data-atl="${t.id}"><b>${x.v}</b>${v}/${n} · ${esc(who)}</a></li>`; }).join("")}</ul>
+    <h4 style="margin:12px 0 4px;font-size:.9rem">Kime yazılan mektuplarda geçiyor</h4>
+    <div class="chips">${topP.map(([p,v])=>`<a class="chip" href="#k-${p}">${esc(shortName(pById(p).tr))} · ${v}</a>`).join("")}</div>`;
+  el.querySelectorAll("a[data-atl]").forEach(a=>a.addEventListener("click",()=>{ atlasActive=a.dataset.atl; setAtlasRx(); }));
+}
+
+/* ================= mühür ve mürekkep ================= */
+function hashStr(s){ let h=2166136261; for(const c of s){ h^=c.charCodeAt(0); h=Math.imul(h,16777619); } return h>>>0; }
+function sealSvg(p,v,n){
+  const h=hashStr(p.id), k=10+(h%6)*2, id=`sp${v}x${n}`;
+  const name=p.fa.split(" ").slice(-3).join(" ");
+  // noktalar yalnız alt yarıda; üst yarıda halka yazısı durur
+  let dots=""; for(let i=0;i<k;i++){ const a=(0.12+0.76*i/(k-1))*Math.PI; dots+=`<circle cx="${(48+40*Math.cos(a)).toFixed(1)}" cy="${(48+40*Math.sin(a)).toFixed(1)}" r="${1.1+(h>>i&1)*0.6}" fill="var(--warn)"/>`; }
+  return `<svg class="seal" viewBox="0 0 96 96" aria-hidden="true">
+    <circle cx="48" cy="48" r="46" fill="none" stroke="var(--warn)" stroke-width="2"/>
+    <circle cx="48" cy="48" r="33" fill="none" stroke="var(--warn)" stroke-width="1"/>
+    ${dots}
+    <path id="${id}" d="M 11 48 A 37 37 0 0 1 85 48" fill="none"/>
+    <text font-size="7.5" fill="var(--warn)" text-anchor="middle"><textPath href="#${id}" startOffset="50%">مکتوب ${FADIG(n)} · دفتر ${FADIG(v)}</textPath></text>
+    <text x="48" y="60" font-size="${name.length>12?9:11}" fill="var(--warn)" text-anchor="middle" direction="rtl">${esc(name)}</text>
+  </svg>`;
+}
+let inkSeq=0;
+async function inkName(txt){
+  const host=$("#inkhost"); if(!host) return;
+  try{ await document.fonts.load('28px "Noto Nastaliq Urdu"', txt); }catch(e){}
+  if(!document.body.contains(host) || host.firstChild) return;
+  const NS="http://www.w3.org/2000/svg", svg=document.createElementNS(NS,"svg"), t=document.createElementNS(NS,"text");
+  svg.setAttribute("class","inkname"); svg.setAttribute("aria-hidden","true");
+  t.setAttribute("x","0"); t.setAttribute("y","0"); t.setAttribute("font-size","28"); t.setAttribute("direction","rtl"); t.textContent=txt;
+  svg.appendChild(t); host.appendChild(svg);
+  const b=t.getBBox(), pad=8, mid="ink"+(++inkSeq);
+  svg.setAttribute("viewBox",`${b.x-pad} ${b.y-pad} ${b.width+2*pad} ${b.height+2*pad}`);
+  svg.setAttribute("width",Math.min(b.width+2*pad,(host.clientWidth||500))); svg.style.maxHeight="70px";
+}
+
+/* ================= Murâkabe ================= */
+let MUR=null;
+function openMur(id){
+  if(!BR||BR.k!==id) buildBridge(id);
+  const U=BR.U, base=BR.beads.ak?"ak":(BR.beads.ar?"ar":null);
+  let steps=[];
+  if(base){ steps=BR.beads[base].map(bd=>{
+      const fa=bd.a.map(i=>U.fa.flat[i]).join(" ").trim();
+      let ar="", tr="";
+      if(base==="ak") tr=bd.b.map(j=>U.ak.flat[j]).join(" ").trim();
+      if(base==="ar") ar=bd.b.map(j=>U.ar.flat[j]).join(" ").trim();
+      else if(BR.beads.ar){ const ids=new Set(); bd.a.forEach(i=>{ const bi=BR.fa2b.ar.get(i); if(bi!=null) BR.beads.ar[bi].b.forEach(j=>ids.add(j)); }); ar=[...ids].sort((a,b)=>a-b).map(j=>U.ar.flat[j]).join(" ").trim(); }
+      return {fa,ar,tr}; }).filter(s=>s.fa||s.tr); }
+  else if(U.fa) steps=U.fa.flat.map(s=>({fa:s.trim(),ar:"",tr:""}));
+  if(!steps.length) return;
+  MUR={id,steps,i:0}; girihStart(IDX.pos[id]+3); $("#mur").hidden=false; document.body.style.overflow="hidden"; drawMur();
+}
+function drawMur(){
+  const {id,steps,i}=MUR, s=steps[i], [v,n]=id.split("-"), t=i/(Math.max(steps.length-1,1));
+  const el=$("#mur");
+  // ilerledikçe gece derinleşir: lâcivertten mürdüm geceye
+  const c0=[11,16,41], c1=[30,14,46], mix=c0.map((x,j)=>Math.round(x+(c1[j]-x)*t));
+  el.style.backgroundColor=`rgb(${mix.join(",")})`;
+  const prevAr=i>0?steps[i-1].ar:null;
+  el.innerHTML=`<div class="mh"><span>Murâkabe · ${v}. Defter, ${n}. Mektup · ${i+1} / ${steps.length}</span><button id="murx">Kapat</button></div>
+    <div class="prog"><i style="width:${((i+1)/steps.length*100).toFixed(1)}%"></i></div>
+    <div class="stage">
+      ${show.fa&&s.fa?`<div class="m-fa" lang="fa">${esc(s.fa)}</div>`:""}
+      ${show.ar&&s.ar?`<div class="m-ar" lang="ar" style="${s.ar===prevAr?"opacity:.45":""}">${esc(s.ar)}</div>`:""}
+      ${(show.ak||show.hk)&&s.tr?`<div class="m-tr" lang="tr">${esc(s.tr)}</div>`:""}
+    </div>
+    <div class="mf"><button id="murp" ${i===0?"disabled":""}>‹ Önceki</button><button id="murn">${i===steps.length-1?"Bitir":"Sonraki ›"}</button></div>
+    <div class="hint">Kaydırın ya da ← → tuşlarını kullanın. Eşleşmeler yaklaşıktır.</div>`;
+  girihAttach();
+  $("#murx").onclick=closeMur; $("#murp").onclick=()=>stepMur(-1); $("#murn").onclick=()=>stepMur(1);
+}
+function stepMur(d){ if(!MUR) return; const j=MUR.i+d; if(j<0) return; if(j>=MUR.steps.length){ closeMur(); return; } MUR.i=j; sfx("page"); drawMur(); }
+function closeMur(){ girihStop(); MUR=null; $("#mur").hidden=true; document.body.style.overflow=""; }
+addEventListener("keydown",e=>{ if(!MUR) return; if(e.key==="ArrowRight"||e.key===" "){ e.preventDefault(); stepMur(1);} else if(e.key==="ArrowLeft"){ e.preventDefault(); stepMur(-1);} else if(e.key==="Escape") closeMur(); });
+(()=>{ let x0=null; const el=$("#mur");
+  el.addEventListener("touchstart",e=>{ x0=e.touches[0].clientX; },{passive:true});
+  el.addEventListener("touchend",e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0; x0=null; if(Math.abs(dx)>50) stepMur(dx<0?1:-1); }); })();
+
+/* ================= Kur'ân yay haritası ================= */
+function quoteHighlight(k,s,a1,quote){
+  const q=norm(quote).replace(/[^ء-ۓ\s]/g," ").trim().split(/\s+/).slice(0,5).join(" ");
+  atlasActive="__q"; quoteFor=k; atlLabel=`${QURAN.suras[s-1]} ${a1}`;
+  atlasRx= q.length>6 ? {fa:new RegExp(q.split(" ").map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("\\s+"),"g")} : {};
+}
+function renderQuran(){
+  if(!QURAN){ $("#qpanel").innerHTML=`<p class="meta" style="color:var(--muted)">Atıflar yükleniyor…</p>`; return; }
+  const R=QURAN.refs, N=IDX.order.length, x0=24, x1=976, yT=86, yB=470;
+  const lx=k=>x0+(x1-x0)*(IDX.pos[k]+0.5)/N, sx=s=>x0+(x1-x0)*(s-0.5)/114;
+  const perS={}, perL={}; for(const r of R){ perS[r[1]]=(perS[r[1]]||0)+1; perL[r[0]]=(perL[r[0]]||0)+1; }
+  const maxS=Math.max(...Object.values(perS)), maxL=Math.max(...Object.values(perL));
+  let h="";
+  const bounds=[0,313,412,536];
+  for(let d=0;d<3;d++){ const xa=x0+(x1-x0)*bounds[d]/N, xb=x0+(x1-x0)*bounds[d+1]/N;
+    h+=`<text class="qh" x="${((xa+xb)/2).toFixed(1)}" y="24" text-anchor="middle">${d+1}. Defter</text><line x1="${xa.toFixed(1)}" y1="32" x2="${xb.toFixed(1)}" y2="32" stroke="var(--line)"/>`; }
+  h+=`<text class="qh" x="${x1}" y="${yB-10}" text-anchor="end">114 sûre, Fâtiha'dan Nâs'a →</text>`;
+  for(const r of R){ const a=lx(r[0]), b=sx(r[1]), my=(yT+yB)/2;
+    h+=`<path class="arc${selSura===r[1]?" on":""}" data-s="${r[1]}" data-k="${r[0]}" d="M${a.toFixed(1)},${yT} C${a.toFixed(1)},${my} ${b.toFixed(1)},${my} ${b.toFixed(1)},${yB}"/>`; }
+  for(const k in perL){ const x=lx(k), hh=3+perL[k]/maxL*34;
+    h+=`<rect class="tick lt" data-k="${k}" x="${(x-.9).toFixed(1)}" y="${(yT-hh).toFixed(1)}" width="1.8" height="${hh.toFixed(1)}"/>`; }
+  // sûre etiketleri: önce en çok atıf alanlar, birbirine 13 birimden yakın olanlar atlanır
+  const xs=[], labeled=new Set(); const order=Object.keys(perS).map(Number).sort((a,b)=>perS[b]-perS[a]);
+  if(selSura) order.unshift(selSura);
+  for(const s of order){ if((perS[s]||0)<6 && s!==selSura) continue; const x=sx(s); if(xs.some(o=>Math.abs(o-x)<20*svgK("qsvg"))) continue; xs.push(x); labeled.add(s); }
+  for(let s=1;s<=114;s++){ const c=perS[s]||0, x=sx(s), hh=c?4+c/maxS*46:2;
+    h+=`<rect class="tick${selSura===s?" on":""}" data-s="${s}" x="${(x-3).toFixed(1)}" y="${yB}" width="6" height="${hh.toFixed(1)}" rx="1.5" opacity="${c?1:.25}"/>`;
+    if(labeled.has(s)) h+=`<text class="sl" transform="translate(${(x+3).toFixed(1)},${(yB+hh+8).toFixed(1)}) rotate(50)">${esc(QURAN.suras[s-1])} ${c}</text>`; }
+  $("#qsvg").innerHTML=h;
+  $("#qlede").textContent=`Farsça metinde ${R.length} âyet atfı var: ${Object.keys(perS).length} sûreden, ${Object.keys(perL).length} mektupta. Üstte 536 mektup, altta 114 sûre; her yay bir atıftır. Bir sûreye ya da yaya dokunun.`;
+  renderQPanel(perS);
+}
+function renderQPanel(perS){
+  const el=$("#qpanel"), R=QURAN.refs;
+  if(!selSura){
+    const top=Object.entries(perS).sort((a,b)=>b[1]-a[1]).slice(0,14);
+    const ay={}; for(const r of R){ const key=r[1]+":"+r[2]; ay[key]=(ay[key]||{n:0,r}); ay[key].n++; }
+    const topA=Object.values(ay).sort((a,b)=>b.n-a.n).slice(0,6);
+    el.innerHTML=`<h3>En çok atıf yapılan sûreler</h3><div class="chips" style="margin:8px 0 14px">${top.map(([s,c])=>`<a class="chip" href="#kuran-${s}">${esc(QURAN.suras[s-1])} · ${c}</a>`).join("")}</div>
+      <h3 style="font-size:1.2rem">En sık alıntılanan âyetler</h3>${topA.map(x=>`<div class="qref"><div class="no">${esc(QURAN.suras[x.r[1]-1])} ${x.r[2]} · ${x.n} kez</div><div class="ay" lang="ar">${esc(x.r[4])}</div></div>`).join("")}`;
+    return;
+  }
+  const s=selSura, mine=R.filter(r=>r[1]===s).sort((a,b)=>a[2]-b[2]||IDX.pos[a[0]]-IDX.pos[b[0]]);
+  const groups=[]; for(const r of mine){ const g=groups[groups.length-1]; if(g&&g.a===r[2]) g.L.push(r); else groups.push({a:r[2],a2:r[3],L:[r]}); }
+  el.innerHTML=`<h3>${esc(QURAN.suras[s-1])} <span class="nas" style="color:var(--gold);font-size:1.1rem" lang="ar">${esc(QURAN.surasAr[s-1])}</span></h3>
+    <div class="meta" style="color:var(--muted);font-size:.85rem">${s}. sûre · ${mine.length} atıf · ${new Set(mine.map(r=>r[0])).size} mektup · <a href="#kuran">tümü</a></div>
+    ${groups.map(g=>`<div class="qref"><div class="no">${s}:${g.a}${g.a2!==g.a?"–"+g.a2:""}</div><div class="ay" lang="ar">${esc(g.L[0][4])}</div>
+      <div class="chips" style="margin-top:6px">${g.L.map(r=>{ const [v,n]=r[0].split("-"); const who=(PEOPLE.by[r[0]]||[]).map(i=>shortName(pById(i).tr)).join(", "); return `<a class="chip" href="#m-${r[0]}" data-q="${esc(JSON.stringify([r[0],r[1],r[2],r[4]]))}" title="${esc(who)}">${v}/${n}</a>`; }).join("")}</div></div>`).join("")}`;
+  el.querySelectorAll("a[data-q]").forEach(a=>a.addEventListener("click",()=>{ const [k,s2,a1,q]=JSON.parse(a.dataset.q); quoteHighlight(k,s2,a1,q); }));
+}
+(()=>{ const svg=$("#qsvg"), tip=$("#qtip");
+  svg.addEventListener("mousemove",e=>{ const t=e.target; if(!QURAN||!(t.dataset&&(t.dataset.s||t.dataset.k))){ tip.hidden=true; return; }
+    const box=svg.parentElement.getBoundingClientRect(); let html="";
+    if(t.classList.contains("arc")){ const [v,n]=t.dataset.k.split("-"); html=`${v}/${n} → ${esc(QURAN.suras[t.dataset.s-1])}`; }
+    else if(t.dataset.s){ const c=QURAN.refs.filter(r=>r[1]==t.dataset.s).length; html=`<b>${esc(QURAN.suras[t.dataset.s-1])}</b> · ${c} atıf`; }
+    else { const [v,n]=t.dataset.k.split("-"); const c=QURAN.refs.filter(r=>r[0]===t.dataset.k).length; html=`<b>${v}/${n}</b> · ${c} atıf`; }
+    tip.innerHTML=html; tip.hidden=false; tip.style.left=Math.min(e.clientX-box.left+12,box.width-180)+"px"; tip.style.top=(e.clientY-box.top+12)+"px"; });
+  svg.addEventListener("mouseleave",()=>tip.hidden=true);
+  svg.addEventListener("click",e=>{ const t=e.target; if(!t.dataset) return;
+    if(t.dataset.s){ location.hash="kuran-"+t.dataset.s; }
+    else if(t.dataset.k){ location.hash="m-"+t.dataset.k; } }); })();
+
+/* ================= Seyr daireleri ================= */
+function renderSeyr(){
+  svgK("ssvg");
+  const S=ATLAS.terms.filter(t=>t.group==="seyr"), C=500, R0=470, R1=58, step=(R0-R1)/(S.length-1);
+  let h=`<defs>${S.map((t,i)=>{ const r=R0-i*step, a0=(-100+i*27)*Math.PI/180;
+    const x1=C+r*Math.cos(a0), y1=C+r*Math.sin(a0), x2=C+r*Math.cos(a0+Math.PI*1.2), y2=C+r*Math.sin(a0+Math.PI*1.2);
+    return `<path id="rp${i}" d="M${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 1 1 ${x2.toFixed(1)},${y2.toFixed(1)}"/>`; }).join("")}</defs>`;
+  S.forEach((t,i)=>{ const r=R0-i*step, L=ATLAS.counts[t.id].fa.filter(x=>x).length, w=1.5+L*1.05;
+    h+=`<circle class="ring${curStation===t.id?" on":""}" data-id="${t.id}" cx="${C}" cy="${C}" r="${r.toFixed(1)}" stroke-width="${w.toFixed(1)}" stroke-opacity="${curStation&&curStation!==t.id?.35:.85}" tabindex="0" role="button" aria-label="${esc(t.tr)}, ${L} mektup"/>`;
+    h+=`<text dy="-${(w/2+5).toFixed(1)}"><textPath href="#rp${i}" startOffset="2%"><tspan class="rl">${esc(t.tr)}</tspan><tspan class="rc"> · ${L} mektup</tspan></textPath></text>`; });
+  h+=`<g pointer-events="none"><circle cx="${C}" cy="${C}" r="34" fill="var(--gold)"/><text x="${C}" y="${C+8}" text-anchor="middle" style="font-family:var(--f-nas);font-size:18px;fill:var(--paper)">لا تعیّن</text></g>`;
+  $("#ssvg").innerHTML=h;
+  const el=$("#spanel"), t=curStation&&ATLAS.byId[curStation];
+  if(!t){ el.innerHTML=`<h3>Bir daireye dokunun</h3><p style="color:var(--muted);font-size:.9rem">Her daire, Farsça metinde adı geçen bir makamdır. Dokununca o makamın anlatıldığı mektuplar listelenir; mektubu açtığınızda makamın adı metinde vurgulanır.</p>
+    <ul class="toplist">${S.map(s=>`<li><a href="#seyr-${s.id}"><b>${ATLAS.counts[s.id].fa.filter(x=>x).length}</b>${esc(s.tr)}</a></li>`).join("")}</ul>`; return; }
+  const c=ATLAS.counts[t.id], L=IDX.order.map((k,i)=>({k,v:c.fa[i]})).filter(x=>x.v).sort((a,b)=>b.v-a.v);
+  el.innerHTML=`<h3>${esc(t.tr)}</h3><div style="color:var(--muted)">${esc(t.desc)}</div>
+    <div class="pat" style="font-size:.85rem;color:var(--muted);margin:6px 0">Farsça kalıp: <span lang="fa" style="font-family:var(--f-fa)">${esc(t.fa.replace(/\(\?:ال\)\?/g,"").split("|").join(" · "))}</span></div>
+    <div class="stats"><div><b>${t.tfa}</b>Farsça geçiş</div><div><b>${t.tar}</b>Arapça geçiş</div><div><b>${L.length}</b>mektup</div></div>
+    <ol class="thread">${L.map(x=>{ const [v,n]=x.k.split("-"); const who=(PEOPLE.by[x.k]||[]).map(i=>shortName(pById(i).tr)).join(", ");
+      return `<li><a href="#m-${x.k}" data-atl="${t.id}"><span class="no">${v}/${n}</span><span>${esc(who)} <span class="with">${x.v} kez geçiyor</span></span></a></li>`; }).join("")}</ol>`;
+  el.querySelectorAll("a[data-atl]").forEach(a=>a.addEventListener("click",()=>{ atlasActive=a.dataset.atl; setAtlasRx(); }));
+}
+$("#ssvg").addEventListener("click",e=>{ const r=e.target.closest(".ring"); if(r) location.hash="seyr-"+r.dataset.id; });
+$("#ssvg").addEventListener("keydown",e=>{ const r=e.target.closest(".ring"); if(r&&(e.key==="Enter"||e.key===" ")){ e.preventDefault(); location.hash="seyr-"+r.dataset.id; } });
+
+/* ================= Tercüme tayfı ================= */
+let TAYFROWS={ak:[],hk:[],ar:[]};
+const TCOL={ak:"Türkçe · Akçiçek",hk:"Türkçe · Hakikat Kitabevi",ar:"Arapça · Menzelevî"};
+function renderTayf(){
+  if(!SPEC){ $("#tmain").innerHTML=`<div class="notice">Tayf verisi yükleniyor…</div>`; return; }
+  $("#tterms").innerHTML=SPEC.terms.map(t=>`<a href="#tayf-${t.id}" aria-current="${t.id===curTayf}"><span>${esc(t.tr)}</span><small lang="fa">${esc(t.fa.split("|")[0].replace(/[()?:\\]/g,""))}</small></a>`).join("");
+  const at=$("#tterms [aria-current=true]"); if(at) at.scrollIntoView({inline:"center",block:"nearest"});
+  const t=curTayf&&SPEC.terms.find(x=>x.id===curTayf);
+  if(!t){ $("#tmain").innerHTML=`<div class="panel" style="padding:16px 18px"><h3 style="font-family:var(--f-head);font-size:1.5rem;margin:0">Bir kavram seçin</h3><p style="color:var(--muted)">Soldan bir kavram seçin: Akçiçek, Hakikat Kitabevi ve Menzelevî'nin onu nasıl karşıladığını yan yana görün.</p></div>`; return; }
+  // Başka bir kavramın adı olan kelimeler (fenâ yanında "beka" gibi) tercüme değil, eşlik eden kavramdır: çıkar
+  const stem=w=>norm(w).replace(/[^a-zçğıöşü]/g,"").slice(0,4);
+  const other=new Set(SPEC.terms.filter(x=>x.id!==t.id).map(x=>stem(x.tr.split(/[\s(-]/)[0])).filter(s=>s.length>=3));
+  const own=stem(t.tr.split(/[\s(-]/)[0]);
+  const core=x=>norm(x.fa.split("|")[0].replace(/\(\?[^)]*\)|[()?:\\]/g,"")).replace(/ء$/,"");
+  const otherAr=new Set(SPEC.terms.filter(x=>x.id!==t.id).map(core)), ownAr=core(t);
+  const D={}; for(const l of ["ak","hk","ar"]){ const C=SPEC.data[t.id][l];
+    D[l]={beads:C.beads,rows:l==="ar"
+      ?C.rows.filter(r=>{ const w=norm(r.w).replace(/ء$/,""); return w===ownAr || !otherAr.has(w); })
+      :C.rows.filter(r=>!r.w.split(" ").some(w=>{ const s=stem(w); return s!==own && other.has(s); }))}; }
+  $("#tmain").innerHTML=`<h3 style="font-family:var(--f-head);font-size:1.8rem;margin:0 0 4px">${esc(t.tr)} <span class="nas" style="color:var(--gold);font-size:1.2rem" lang="fa">${esc(t.fa.split("|")[0].replace(/[()?:\\]/g,""))}</span></h3>
+    <div class="spec">${["ak","hk","ar"].map(l=>{ const C=D[l]; const mx=Math.max(...C.rows.map(r=>r.share),0.01);
+      return `<div class="panel sc"><h4>${TCOL[l]}</h4><div class="sub">Kavramın geçtiği ${C.beads} cümle grubu${l==="hk"?" · yalnız 1. defter":""}</div>
+        ${C.rows.length?C.rows.map((r,i)=>`<button class="bar ${l==="ar"?"ar":""} ${tayfSel===l+i?"on":""}" data-l="${l}" data-i="${i}"><span class="w" lang="${l==="ar"?"ar":"tr"}">${esc(r.w)}</span><i style="width:${(r.share/mx*100).toFixed(0)}%"></i><small>%${Math.round(r.share*100)}</small></button>`).join(""):`<div class="sub">Yeterli veri yok.</div>`}
+        <div class="exw" data-l="${l}"></div></div>`; }).join("")}</div>
+    <p style="color:var(--muted);font-size:.8rem;margin-top:10px">Kelimeler 6 harflik köklere indirgenip sayıldı; "w" en sık görülen biçimdir. Yüzde, kavramın geçtiği hizalanmış cümle gruplarından kaçında o karşılığın da bulunduğudur. İstatistiksel bir çıkarımdır, sözlük değildir.</p>`;
+  TAYFROWS={ak:D.ak.rows,hk:D.hk.rows,ar:D.ar.rows};
+  $$("#tmain .bar").forEach(b=>b.onclick=()=>{ tayfSel=b.dataset.l+b.dataset.i; $$("#tmain .bar").forEach(x=>x.classList.toggle("on",x===b)); showExample(t,b.dataset.l,+b.dataset.i); });
+  if(tayfSel){ const l=tayfSel.slice(0,2), i=+tayfSel.slice(2); if(D[l]&&D[l].rows[i]) showExample(t,l,i); }
+}
+function showExample(t,l,i){
+  $$("#tmain .exw").forEach(x=>x.innerHTML="");
+  const r=TAYFROWS[l][i], host=$(`#tmain .exw[data-l="${l}"]`);
+  if(!r.ex){ host.innerHTML=`<div class="exm" style="color:var(--muted)">Kısa ve güçlü eşleşen bir örnek cümle bulunamadı.</div>`; return; }
+  const [k,fa,tg]=r.ex, [v,n]=k.split("-");
+  host.innerHTML=`<div class="exm"><div class="f" lang="fa">${esc(fa)}</div><div class="${l==="ar"?"a":"t"}" lang="${l==="ar"?"ar":"tr"}">${esc(tg)}</div><a href="#m-${k}" data-atl="${t.id}">${v}/${n} mektubunda aç</a></div>`;
+  host.querySelector("a").addEventListener("click",()=>{ atlasActive=t.id; setAtlasRx(); });
+}
+
+/* ================= Beyit divanı ================= */
+function renderDivan(){
+  if(!VERSES){ $("#divan").innerHTML=`<div class="notice">Beyitler yükleniyor…</div>`; return; }
+  const q=norm($("#dq").value.trim());
+  const list=VERSES.filter(x=>!q||norm(x.fa+" "+x.ok+" "+x.meal).includes(q));
+  const inFa=VERSES.filter(x=>x.asil!==false).length;
+  $("#dlede").textContent=`Akçiçek tercümesinde geçen ${VERSES.length} Farsça ve Arapça beyit, okunuş ve mealleriyle. Bunların ${inFa} tanesi Farsça asılda (Amritsar baskısı) aynı mektupta bulunuyor; bulunamayanlar kartta belirtilir.`;
+  $("#dcount").textContent=q?`${list.length} beyit`:"";
+  $("#divan").innerHTML=list.map(x=>{ const [v,n]=x.k.split("-"); const who=(PEOPLE.by[x.k]||[]).map(i=>shortName(pById(i).tr)).join(", ");
+    return `<figure class="beyit"><div class="fa" lang="fa">${esc(x.fa)}</div>${x.ok?`<div class="ok">${esc(x.ok)}</div>`:""}${x.meal?`<div class="ml">${esc(x.meal)}</div>`:""}${x.asil===false?`<div class="nofa">Farsça asılda (Amritsar baskısı) bu mektupta bulunamadı; Akçiçek tercümesindeki biçimdir.</div>`:""}<a href="#m-${x.k}">${v}/${n}${who?" · "+esc(who):""}</a></figure>`; }).join("");
+}
+$("#dq").addEventListener("input",()=>{ clearTimeout(tmr); tmr=setTimeout(renderDivan,200); });
+
+/* ================= Günün cümlesi ================= */
+function todayCard(){
+  if(!WIDGET||!WIDGET.length) return "";
+  const day=Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5), w=WIDGET[day%WIDGET.length], [v,n]=w.k.split("-");
+  return `<div class="today"><b>Günün cümlesi</b><div class="f" lang="fa">${esc(w.fa)}</div><div class="t">${esc(w.tr)}</div><a href="#m-${w.k}">${v}/${n}${w.who?" · "+esc(w.who):""} mektubunu aç</a></div>`;
+}
+
+/* ================= saklama, okuma ilerlemesi ================= */
+const store={ get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }, set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} } };
+let READ=store.get("mk-read",{}), HL=store.get("mk-hl",[]), REP=store.get("mk-rep",[]);
+let SET=Object.assign({theme:"system",lh:1,trfont:"serif",gloss:true,sync:true,sound:false},store.get("mk-set",{}));
+let GLOSS=null, GLRX=null;
+const NATIVE=window.MKNative||null;
+function ring(f){ const c=2*Math.PI*7; return `<svg class="prog-ring" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7" fill="none" stroke="var(--line)" stroke-width="3"/><circle cx="9" cy="9" r="7" fill="none" stroke="var(--lac)" stroke-width="3" stroke-dasharray="${(c*f).toFixed(2)} ${c.toFixed(2)}" transform="rotate(-90 9 9)"/></svg>`; }
+let toastT; function toast(t){ const el=$("#toast"); el.textContent=t; el.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>el.hidden=true,2600); }
+function resumeCard(){
+  const last=store.get("mk-last",null), n=Object.keys(READ).length;
+  if(!last||!IDX.map[last]) return "";
+  const [v,no]=last.split("-"), who=(PEOPLE.by[last]||[]).map(i=>shortName(pById(i).tr)).join(", ");
+  return `<div class="resume"><div><b>Kaldığınız yer: ${v}/${no}</b><small>${esc(who)} · ${n}/${IDX.order.length} mektup okundu</small></div><a class="btn" href="#m-${last}">Devam et</a></div>`;
+}
+
+/* ================= altını çizme, not, bildirim ================= */
+const selKey=sel=>sel.k+"|"+((sel.res.fa&&sel.res.fa.ids.length)?"fa:"+sel.res.fa.ids.join(","):sel.lang+":"+sel.idx);
+function hlFind(sel){ if(!sel) return -1; const key=selKey(sel); return HL.findIndex(h=>h.key===key); }
+function hlSet(id,lang){ const S=new Set(); for(const h of HL) if(h.k===id&&h.ids[lang]) h.ids[lang].forEach(i=>S.add(i)); return S; }
+function selSnapshot(sel){
+  const ids={}, txt={}; const B=BR&&BR.k===sel.k?BR:computeBridge(sel.k);
+  for(const l of ORDER){ const r=sel.res[l]; if(!r||!r.ids.length||!B.U[l]) continue; ids[l]=r.ids.slice(); txt[l]=r.ids.map(i=>B.U[l].flat[i]).join(" ").trim(); }
+  return {ids,txt};
+}
+function saveHL(){ store.set("mk-hl",HL); }
+function refreshHl(){ if(!curLetter) return; for(const l of ORDER){ const col=$(`.col.${l}`); if(!col) continue; const S=hlSet(curLetter,l); col.querySelectorAll(".s").forEach(e=>e.classList.toggle("hl",S.has(+e.dataset.i))); } }
+function bridgeAction(a){
+  const sel=CURSEL; if(!sel) return;
+  if(a==="hl"){ const i=hlFind(sel); if(i>=0) HL.splice(i,1); else { const sn=selSnapshot(sel); HL.push({key:selKey(sel),k:sel.k,t:Date.now(),note:"",ids:sn.ids,txt:sn.txt}); }
+    saveHL(); refreshHl(); const b=$('.bact [data-a="hl"]'); const on=hlFind(sel)>=0; b.setAttribute("aria-pressed",on); b.textContent=on?"Altı çizili · kaldır":"Altını çiz"; toast(on?"Altı çizildi; karşılıkları da işaretlendi":"Çizgi kaldırıldı"); }
+  else if(a==="note"){ let i=hlFind(sel); if(i<0){ bridgeAction("hl"); i=hlFind(sel); }
+    const box=$("#bnote"); box.hidden=false; const ta=$("#bnotet"); ta.value=HL[i].note||""; ta.focus();
+    $("#bnotes").onclick=()=>{ const j=hlFind(sel); if(j>=0){ HL[j].note=ta.value.trim(); saveHL(); toast("Not kaydedildi"); box.hidden=true; } }; }
+  else if(a==="card") openCard(sel);
+  else if(a==="say"){ const sn=selSnapshot(sel); const t=sn.txt.ak||sn.txt.hk; if(!t){ toast("Bu cümlenin Türkçe karşılığı yok"); return; } speak(t); }
+  else if(a==="rep"){ const sn=selSnapshot(sel); const key=selKey(sel); if(REP.some(r=>r.key===key)){ toast("Bu eşleşme zaten bildirildi"); return; }
+    REP.push({key,k:sel.k,from:sel.lang,idx:sel.idx,t:Date.now(),ids:sn.ids,txt:sn.txt}); store.set("mk-rep",REP); toast("Hatalı eşleşme kaydedildi. Notlarım sayfasından dışa aktarabilirsiniz."); }
+}
+function renderNotes(){
+  const el=$("#notes"); const list=[...HL].sort((a,b)=>IDX.pos[a.k]-IDX.pos[b.k]||a.t-b.t);
+  const reps=REP.length?`<p class="rsum">${REP.length} hatalı eşleşme bildirimi kayıtlı. <button class="btn" id="repclear">Bildirimleri sil</button></p>`:"";
+  if(!list.length){ el.innerHTML=reps+`<div class="notice">Henüz altı çizili cümle yok. Bir mektupta cümleye dokunun, alttaki panelden "Altını çiz" ya da "Not ekle"yi seçin.</div>`; }
+  else el.innerHTML=reps+`<div class="notes-list">${list.map(h=>{ const [v,n]=h.k.split("-"); const who=(PEOPLE.by[h.k]||[]).map(i=>shortName(pById(i).tr)).join(", ");
+    return `<div class="panel nitem" data-key="${esc(h.key)}"><div class="nh"><a href="#m-${h.k}">${v}/${n} · ${esc(who)}</a><span>${new Date(h.t).toLocaleDateString("tr-TR")}</span></div>
+      ${h.txt.fa?`<div class="f" lang="fa">${esc(h.txt.fa)}</div>`:""}${h.txt.ar?`<div class="a" lang="ar">${esc(h.txt.ar)}</div>`:""}${h.txt.ak?`<div class="t">${esc(h.txt.ak)}</div>`:(h.txt.hk?`<div class="t">${esc(h.txt.hk)}</div>`:"")}
+      <textarea aria-label="Not" placeholder="Not">${esc(h.note||"")}</textarea><div class="na"><button class="btn" data-a="save">Notu kaydet</button><button class="btn" data-a="del">Sil</button></div></div>`; }).join("")}</div>`;
+  el.querySelectorAll(".nitem").forEach(it=>{ const key=it.dataset.key;
+    it.querySelector('[data-a="save"]').onclick=()=>{ const h=HL.find(x=>x.key===key); if(h){ h.note=it.querySelector("textarea").value.trim(); saveHL(); toast("Not kaydedildi"); } };
+    it.querySelector('[data-a="del"]').onclick=()=>{ HL=HL.filter(x=>x.key!==key); saveHL(); renderNotes(); }; });
+  const rc=$("#repclear"); if(rc) rc.onclick=()=>{ REP=[]; store.set("mk-rep",REP); renderNotes(); };
+}
+function notesText(){
+  const L=["MEKTÛBÂT · NOTLARIM",""];
+  for(const h of [...HL].sort((a,b)=>IDX.pos[a.k]-IDX.pos[b.k]||a.t-b.t)){ const [v,n]=h.k.split("-");
+    L.push(`— ${v}. defter, ${n}. mektup —`); if(h.txt.fa) L.push("FA: "+h.txt.fa); if(h.txt.ar) L.push("AR: "+h.txt.ar); if(h.txt.ak) L.push("TR (Akçiçek): "+h.txt.ak); if(h.txt.hk) L.push("TR (Hakikat): "+h.txt.hk); if(h.note) L.push("NOT: "+h.note); L.push(""); }
+  return L.join("\n");
+}
+
+/* ================= dışa aktarma ve paylaşma ================= */
+let EXP=null;
+function openExport(title,text,fname){
+  EXP={text,fname,img:null}; $("#exptitle").textContent=title;
+  $("#expbody").innerHTML=`<textarea readonly aria-label="${esc(title)}"></textarea>`; $("#expbody textarea").value=text; $("#expdlg").showModal();
+}
+async function expCopy(){ if(!EXP) return; if(EXP.img){ toast("Görseli kaydetmek için Kaydet / paylaş'ı kullanın"); return; }
+  try{ await navigator.clipboard.writeText(EXP.text); toast("Kopyalandı"); }catch(e){ const ta=$("#expbody textarea"); if(ta){ ta.focus(); ta.select(); toast("Metin seçildi; kopyalayabilirsiniz"); } } }
+async function expSave(){ if(!EXP) return;
+  if(EXP.img){
+    if(NATIVE&&NATIVE.shareImage){ NATIVE.shareImage(EXP.img.split(",")[1],EXP.fname); return; }
+    try{ const blob=await (await fetch(EXP.img)).blob(); const file=new File([blob],EXP.fname,{type:"image/png"}); if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file]}); return; } }catch(e){}
+    const a=document.createElement("a"); a.href=EXP.img; a.download=EXP.fname; document.body.appendChild(a); a.click(); a.remove(); toast("İndirme başlamadıysa görsele sağ tıklayıp (ya da basılı tutup) kaydedin"); return; }
+  if(NATIVE&&NATIVE.shareText){ NATIVE.shareText(EXP.text,EXP.fname); return; }
+  try{ if(navigator.share){ await navigator.share({text:EXP.text,title:EXP.fname}); return; } }catch(e){}
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([EXP.text],{type:"text/plain;charset=utf-8"})); a.download=EXP.fname; document.body.appendChild(a); a.click(); a.remove(); toast("İndirme başlamadıysa Kopyala'yı kullanın");
+}
+
+/* ================= cümle kartı ================= */
+function wrapText(g,text,maxW,rtl){ const words=text.split(/\s+/), lines=[]; let cur="";
+  for(const w of words){ const t=cur?cur+" "+w:w; if(g.measureText(t).width>maxW&&cur){ lines.push(cur); cur=w; } else cur=t; } if(cur) lines.push(cur); return lines; }
+async function openCard(sel){
+  const sn=selSnapshot(sel); const fa=sn.txt.fa||"", ar=sn.txt.ar||"", tr=sn.txt.ak||sn.txt.hk||"";
+  try{ await Promise.all([document.fonts.load('44px "Noto Nastaliq Urdu"',fa||"ا"),document.fonts.load('38px "Amiri"',ar||"ا"),document.fonts.load('36px "Literata"',tr||"a"),document.fonts.load('600 30px "Cormorant Garamond"',"a")]); }catch(e){}
+  const W=1080,H=1350, c=document.createElement("canvas"); c.width=W; c.height=H; const g=c.getContext("2d");
+  const paper="#f8f3e6", ink="#2b241a", gold="#7a571b", lac="#22336b";
+  g.fillStyle=paper; g.fillRect(0,0,W,H);
+  g.strokeStyle=gold; g.lineWidth=6; g.strokeRect(36,36,W-72,H-72); g.lineWidth=2; g.strokeRect(54,54,W-108,H-108);
+  const rc=document.createElement("canvas"); rosette(rc,(IDX.pos[sel.k]*2654435761)>>>0); g.drawImage(rc,W/2-70,90,140,140);
+  const clip=(t,n)=>t.length>n?t.slice(0,n).replace(/\s+\S*$/,"")+" …":t;
+  let y=300; const block=(text,font,size,lh,color,rtl,max)=>{ if(!text) return; g.font=`${size}px ${font}`; g.fillStyle=color; g.textAlign="center"; g.direction=rtl?"rtl":"ltr";
+    const lines=wrapText(g,clip(text,max),W-220,rtl); for(const ln of lines){ y+=lh; g.fillText(ln,W/2,y); } y+=46; };
+  block(fa,'"Noto Nastaliq Urdu", serif',40,96,gold,true,230);
+  block(ar,'"Amiri", serif',36,62,lac,true,260);
+  block(tr,'"Literata", Georgia, serif',34,52,ink,false,330);
+  const [v,n]=sel.k.split("-"), who=(PEOPLE.by[sel.k]||[]).map(i=>shortName(pById(i).tr)).join(", ");
+  g.direction="ltr"; g.font='600 30px "Cormorant Garamond", Georgia, serif'; g.fillStyle=gold; g.fillText(`Mektûbât-ı Rabbânî · ${v}. defter, ${n}. mektup`,W/2,H-130);
+  g.font='24px "Literata", Georgia, serif'; g.fillStyle="#6c6150"; g.fillText(who,W/2,H-92);
+  const url=c.toDataURL("image/png");
+  EXP={text:[fa,ar,tr,`Mektûbât ${v}/${n}`].filter(Boolean).join("\n\n"),fname:`mektubat-${v}-${n}.png`,img:url};
+  $("#exptitle").textContent="Cümle kartı"; $("#expbody").innerHTML=`<img class="cardimg" alt="Seçilen cümlenin üç dilli kartı" src="${url}">${y>H-170?'<p style="color:var(--warn);font-size:.82rem">Cümle uzun olduğu için kartta kısaltıldı ya da alt yazıya yaklaştı.</p>':""}`;
+  $("#expdlg").showModal();
+}
+
+/* ================= sesli okuma ================= */
+let SPK=null, ttsCb=null;
+function speak(text,onend){
+  ttsCb=onend||null;
+  if(NATIVE&&NATIVE.speak){ NATIVE.speak(text); return true; }
+  if("speechSynthesis" in window){ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang="tr-TR"; u.rate=0.95; u.onend=()=>{ const cb=ttsCb; ttsCb=null; if(cb) cb(); };
+    // ses yoksa ya da okuma başarısız olursa sıradaki cümleye atlama: dur ve haber ver
+    u.onerror=e=>{ if(e.error==="canceled"||e.error==="interrupted") return; stopSpeak(); toast("Bu cihazda Türkçe ses bulunamadı ya da okuma başlatılamadı"); };
+    speechSynthesis.speak(u); return true; }
+  toast("Bu cihazda sesli okuma desteklenmiyor"); return false;
+}
+function stopSpeak(){ ttsCb=null; if(NATIVE&&NATIVE.stopSpeak) NATIVE.stopSpeak(); else if("speechSynthesis" in window) speechSynthesis.cancel(); $$(".s.speaking").forEach(e=>e.classList.remove("speaking")); SPK=null; const b=$("#saybtn"); if(b){ b.setAttribute("aria-pressed","false"); b.textContent="Sesli oku"; } }
+function readAloud(id){
+  if(SPK){ stopSpeak(); return; }
+  const l=show.ak&&$(".col.ak .s")?"ak":($(".col.hk .s")?"hk":null);
+  if(!l){ toast("Sesli okuma için Türkçe sütunu açın"); return; }
+  const ss=[...document.querySelectorAll(`.col.${l} .s`)]; if(!ss.length) return;
+  SPK={i:0,ss}; const b=$("#saybtn"); b.setAttribute("aria-pressed","true"); b.textContent="Durdur";
+  const next=()=>{ if(!SPK) return; $$(".s.speaking").forEach(e=>e.classList.remove("speaking")); if(SPK.i>=SPK.ss.length){ stopSpeak(); return; }
+    const e=SPK.ss[SPK.i++]; e.classList.add("speaking"); e.scrollIntoView({block:"nearest"}); if(!speak(e.textContent,next)) stopSpeak(); };
+  next();
+}
+
+/* ================= kelime açıklamaları ================= */
+function buildGlossRx(){ const keys=Object.keys(GLOSS.g).sort((a,b)=>b.length-a.length).map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")); GLRX=new RegExp("(?<![a-zçğıöşü])("+keys.join("|")+")[a-zçğıöşü'-]*","g"); }
+function applyGloss(root){
+  if(!GLRX) return; const seen=new Set();
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest(".gl,.vf,.notes")?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
+  const nodes=[]; let nd; while((nd=walker.nextNode())) nodes.push(nd);
+  for(const node of nodes){ const text=node.nodeValue; if(text.length<4) continue; const {n,map}=normMap(text); GLRX.lastIndex=0; let m, hit=null;
+    while((m=GLRX.exec(n))){ if(!seen.has(m[1])){ hit=m; break; } }
+    if(!hit) continue; seen.add(hit[1]);
+    const a=map[hit.index], b=map[hit.index+hit[0].length-1]+1;
+    const mid=node.splitText(a); mid.splitText(b-a);
+    const sp=document.createElement("span"); sp.className="gl"; sp.tabIndex=0; sp.setAttribute("role","button"); sp.dataset.g=hit[1]; mid.parentNode.replaceChild(sp,mid); sp.appendChild(mid);
+  }
+}
+function showGloss(el){ const pop=$("#glpop"), d=GLOSS.g[el.dataset.g]; if(!d) return;
+  pop.innerHTML=`<b>${esc(el.textContent)}</b>${esc(d)}<small>Bu uygulama için yazılmış kısa açıklama; sözlük maddesi değildir.</small>`; pop.hidden=false;
+  const r=el.getBoundingClientRect(); pop.style.left=Math.max(8,Math.min(r.left+scrollX,scrollX+innerWidth-296))+"px"; pop.style.top=(r.bottom+scrollY+6)+"px"; }
+addEventListener("click",e=>{ if(!e.target.closest(".gl")) $("#glpop").hidden=true; });
+addEventListener("keydown",e=>{ if(e.key==="Escape") $("#glpop").hidden=true; if((e.key==="Enter"||e.key===" ")&&e.target.classList&&e.target.classList.contains("gl")){ e.preventDefault(); e.stopPropagation(); showGloss(e.target); } },true);
+
+/* ================= senkron kaydırma ================= */
+let syncSrc=null, syncLock=0, syncRaf=0;
+function setupSync(){
+  $$("#lbody .col[data-l] .cb").forEach(cb=>{
+    const mark=()=>{ syncSrc=cb; };
+    cb.addEventListener("wheel",mark,{passive:true}); cb.addEventListener("touchstart",mark,{passive:true}); cb.addEventListener("pointerdown",mark); cb.addEventListener("keydown",mark);
+    cb.addEventListener("scroll",()=>{ if(!SET.sync||syncSrc!==cb||Date.now()<syncLock||!BR) return; cancelAnimationFrame(syncRaf); syncRaf=requestAnimationFrame(()=>syncFrom(cb)); },{passive:true});
+  });
+}
+function syncFrom(cb){
+  if(cb.scrollHeight<=cb.clientHeight+4) return;
+  const lang=cb.closest(".col").dataset.l, top=cb.scrollTop+cb.offsetTop;
+  const ss=cb.querySelectorAll(".s"); let first=null; for(const e of ss){ if(e.offsetTop+e.offsetHeight>top+4){ first=e; break; } }
+  if(!first) return; const off=first.offsetTop-top; const res=mapFrom(BR,lang,+first.dataset.i);
+  for(const l in res){ if(l===lang||!res[l].ids.length) continue; const col=$(`.col.${l}`); if(!col) continue; const c2=col.querySelector(".cb"); if(c2.scrollHeight<=c2.clientHeight+4) continue;
+    const e=col.querySelector(`.s[data-i="${res[l].ids[0]}"]`); if(e) c2.scrollTop=e.offsetTop-c2.offsetTop-off; }
+}
+
+/* ================= sesler (isteğe bağlı) ================= */
+let ACTX=null;
+function sfx(kind){
+  if(!SET.sound) return;
+  try{ ACTX=ACTX||new (window.AudioContext||window.webkitAudioContext)(); const a=ACTX, t=a.currentTime;
+    const noise=(dur,f0,f1,gain)=>{ const n=a.sampleRate*dur|0, buf=a.createBuffer(1,n,a.sampleRate), d=buf.getChannelData(0); for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*(1-i/n);
+      const src=a.createBufferSource(); src.buffer=buf; const bp=a.createBiquadFilter(); bp.type="bandpass"; bp.frequency.setValueAtTime(f0,t); bp.frequency.exponentialRampToValueAtTime(f1,t+dur); const gn=a.createGain(); gn.gain.value=gain; src.connect(bp).connect(gn).connect(a.destination); src.start(t); };
+    if(kind==="stamp"){ const o=a.createOscillator(), gn=a.createGain(); o.frequency.setValueAtTime(110,t); o.frequency.exponentialRampToValueAtTime(45,t+0.18); gn.gain.setValueAtTime(0.5,t); gn.gain.exponentialRampToValueAtTime(0.001,t+0.22); o.connect(gn).connect(a.destination); o.start(t); o.stop(t+0.25); noise(0.08,900,300,0.25); }
+    else noise(0.32,2600,700,0.12);
+  }catch(e){}
+}
+
+/* ================= murâkabe arka planı: girih ================= */
+let GIR=null;
+function girihStart(seed){
+  const el=$("#mur"); let cv=el.querySelector("canvas.girih"); if(!cv){ cv=document.createElement("canvas"); cv.className="girih"; cv.setAttribute("aria-hidden","true"); }
+  const S=900; cv.width=S; cv.height=S; const g=cv.getContext("2d"); g.clearRect(0,0,S,S); g.translate(S/2,S/2);
+  const n=8+(seed%3)*2, R=S*0.47; g.strokeStyle="rgba(217,181,106,.5)"; g.lineWidth=1.3;
+  for(let ring=1;ring<=4;ring++){ const r=R*ring/4, skip=2+((seed>>ring)%3);
+    g.beginPath(); for(let i=0;i<=n;i++){ const a=(i*skip%n)*2*Math.PI/n; const x=r*Math.cos(a), y=r*Math.sin(a); i?g.lineTo(x,y):g.moveTo(x,y); } g.stroke();
+    g.beginPath(); for(let i=0;i<n;i++){ const a=i*2*Math.PI/n+Math.PI/n; g.moveTo(r*0.55*Math.cos(a),r*0.55*Math.sin(a)); g.lineTo(r*Math.cos(a+Math.PI/n),r*Math.sin(a+Math.PI/n)); g.lineTo(r*0.55*Math.cos(a+2*Math.PI/n),r*0.55*Math.sin(a+2*Math.PI/n)); } g.stroke();
+    g.beginPath(); g.arc(0,0,r,0,Math.PI*2); g.stroke(); }
+  cv.style.opacity=".16"; cv.style.objectFit="contain";
+  GIR={cv,t0:performance.now(),raf:0};
+  const tick=()=>{ if(!GIR) return; if(!reduceMotion()) cv.style.transform=`rotate(${((performance.now()-GIR.t0)/1000*1.2).toFixed(2)}deg) scale(1.25)`; else cv.style.transform="scale(1.25)"; GIR.raf=requestAnimationFrame(tick); };
+  tick();
+}
+function girihAttach(){ if(GIR){ const el=$("#mur"); if(GIR.cv.parentNode!==el) el.prepend(GIR.cv); } }
+function girihStop(){ if(GIR){ cancelAnimationFrame(GIR.raf); GIR=null; } }
+
+/* ================= Nâmehâne: mürekkep yolu ve ağın büyümesi ================= */
+let playN=null, playT=null;
+function inkFlow(){
+  if(reduceMotion()||!anim) return; const e=$("#netsvg .edge.sel"); if(!e||!e.animate) return;
+  const c=e.cloneNode(); c.setAttribute("class","inkflow"); c.removeAttribute("stroke-width"); e.parentNode.insertBefore(c,e.nextSibling);
+  const len=c.getTotalLength(); c.style.strokeDasharray=len; c.style.strokeDashoffset=len;
+  c.animate([{strokeDashoffset:len,opacity:1},{strokeDashoffset:0,opacity:1,offset:.75},{strokeDashoffset:0,opacity:0}],{duration:1300,easing:"cubic-bezier(.4,.1,.3,1)"}).onfinish=()=>c.remove();
+}
+function playNet(){
+  const b=$("#netplay");
+  if(playT){ clearInterval(playT); playT=null; playN=null; b.setAttribute("aria-pressed","false"); b.textContent="▶ Oynat"; $("#playinfo").textContent=""; renderNet(); return; }
+  selPerson=null; netDef=0; $$(".netbar [data-def]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.def==="0"));
+  playN=0; b.setAttribute("aria-pressed","true"); b.textContent="■ Durdur";
+  const step=reduceMotion()?12:2;
+  playT=setInterval(()=>{ playN=Math.min(IDX.order.length,playN+step); const k=IDX.order[playN-1], [v,n]=k.split("-");
+    renderNet(); $("#playinfo").textContent=`${v}. defter, ${n}. mektup · ${Object.keys($("#netsvg")._pos).length} alıcı`;
+    if(playN>=IDX.order.length){ clearInterval(playT); playT=null; playN=null; b.setAttribute("aria-pressed","false"); b.textContent="▶ Oynat"; } },reduceMotion()?260:70);
+}
+
+/* ================= Akçiçek ↔ Hakikat karşılaştırması ================= */
+const trStem=w=>norm(w).replace(/[^a-zçğıöşü]/g,"").slice(0,5);
+function diffMark(a,b){ const B=new Set(b.split(/\s+/).map(trStem).filter(x=>x.length>=4));
+  return a.split(/(\s+)/).map(w=>{ const st=trStem(w); return st.length>=4&&B.has(st)?`<span class="same">${esc(w)}</span>`:esc(w); }).join(""); }
+function renderKars(id){
+  const el=$("#v-kars"), [v,n]=id.split("-");
+  if(!DATA.ak||!DATA.hk||!DATA.fa){ el.innerHTML=`<div class="notice">Metinler yükleniyor…</div>`; return; }
+  const B=computeBridge(id);
+  if(!B.beads.ak||!B.beads.hk){ el.innerHTML=`<h2 class="vt">Akçiçek ↔ Hakikat</h2><div class="notice">Bu mektubun iki Türkçe tercümesi birlikte bulunmuyor. Hakikat Kitabevi tercümesi yalnız 1. defteri kapsıyor. <a href="#m-${id}">Mektuba dön</a></div>`; return; }
+  // Farsça cümleler üzerinden grupla: aynı gruba düşen Farsça cümleler tek satır olur
+  const nf=B.U.fa.flat.length, par=Array.from({length:nf},(_,i)=>i), find=x=>par[x]===x?x:(par[x]=find(par[x]));
+  for(const l of ["ak","hk"]) for(const bd of B.beads[l]) for(let i=1;i<bd.a.length;i++) par[find(bd.a[i])]=find(bd.a[0]);
+  const rows=new Map(); const row=i=>{ const r=find(i); if(!rows.has(r)) rows.set(r,{fa:[],ak:new Set(),hk:new Set()}); return rows.get(r); };
+  for(let i=0;i<nf;i++) row(i).fa.push(i);
+  for(const l of ["ak","hk"]) for(const bd of B.beads[l]) if(bd.a.length) bd.b.forEach(j=>row(bd.a[0])[l].add(j));
+  const list=[...rows.values()].sort((a,b)=>a.fa[0]-b.fa[0]);
+  const T=(l,S)=>[...S].sort((a,b)=>a-b).map(j=>B.U[l].flat[j]).join(" ").trim();
+  const who=(PEOPLE.by[id]||[]).map(i=>shortName(pById(i).tr)).join(", ");
+  el.innerHTML=`<h2 class="vt">Akçiçek ↔ Hakikat</h2><p class="lede">${v}. defter, ${n}. mektup · ${esc(who)}. İki Türkçe tercüme, Farsça asıl üzerinden cümle cümle yan yana. Altı çizili kelimeler iki tercümede de (ilk beş harfiyle) ortak olanlardır. Eşleşmeler yaklaşıktır. <a href="#m-${id}">Mektuba dön</a></p>
+    <div class="khead"><span>Akçiçek</span><span>Hakikat Kitabevi</span><span>Farsça asıl</span></div>
+    <div class="kars">${list.map(r=>{ const ak=T("ak",r.ak), hk=T("hk",r.hk), fa=r.fa.map(i=>B.U.fa.flat[i]).join(" ").trim();
+      return `<div class="panel krow"><div class="kak">${ak?diffMark(ak,hk):'<i style="color:var(--muted)">—</i>'}</div><div class="khk">${hk?diffMark(hk,ak):'<i style="color:var(--muted)">—</i>'}</div><div class="kfa" lang="fa">${esc(fa)}</div></div>`; }).join("")}</div>`;
+}
+
+/* ================= kavram birlikteliği ================= */
+function renderChord(){
+  const host=$("#chordhost"); if(!host) return;
+  const T=ATLAS.terms.filter(t=>!t.group), n=T.length, C=320, R=205;
+  const sets=T.map(t=>{ const S=new Set(); ATLAS.counts[t.id].fa.forEach((v,i)=>{ if(v) S.add(i); }); return S; });
+  const pairs=[]; for(let i=0;i<n;i++) for(let j=i+1;j<n;j++){ let inter=0; for(const x of sets[i]) if(sets[j].has(x)) inter++; const uni=sets[i].size+sets[j].size-inter; if(inter>=5) pairs.push({i,j,inter,jac:inter/uni}); }
+  pairs.sort((a,b)=>b.jac-a.jac); const cur=T.findIndex(t=>t.id===curTerm);
+  const shown=pairs.filter((p,ix)=>ix<70||p.i===cur||p.j===cur);
+  const pos=i=>{ const a=i*2*Math.PI/n-Math.PI/2; return [C+R*Math.cos(a),C+R*Math.sin(a),a]; };
+  let h=""; for(const p of shown){ const [x1,y1]=pos(p.i),[x2,y2]=pos(p.j); const on=p.i===cur||p.j===cur; h+=`<path class="${on?"on":""}" d="M${x1.toFixed(1)},${y1.toFixed(1)} Q${C},${C} ${x2.toFixed(1)},${y2.toFixed(1)}" stroke-width="${(0.6+p.jac*9).toFixed(1)}"/>`; }
+  T.forEach((t,i)=>{ const [x,y,a]=pos(i); const deg=a*180/Math.PI, flip=Math.cos(a)<0; h+=`<text class="${i===cur?"on":""}" data-id="${t.id}" tabindex="0" role="link" transform="translate(${(C+(R+8)*Math.cos(a)).toFixed(1)},${(C+(R+8)*Math.sin(a)).toFixed(1)}) rotate(${(flip?deg+180:deg).toFixed(1)})" text-anchor="${flip?"end":"start"}" dy="4">${esc(t.tr)}</text>`; });
+  const best=cur>=0?pairs.filter(p=>p.i===cur||p.j===cur).slice(0,6).map(p=>{ const o=T[p.i===cur?p.j:p.i]; return `<a class="chip" href="#atlas-${o.id}">${esc(o.tr)} · ${p.inter} mektup</a>`; }).join(""):"";
+  host.innerHTML=`<h3 style="font-family:var(--f-head);font-size:1.4rem;margin:0 0 4px">Kavramlar birlikte</h3><p style="color:var(--muted);font-size:.85rem;margin:0 0 8px">İki kavram aynı mektuplarda ne kadar sık birlikte geçiyor? Çizgi kalınlığı ortak mektup oranını gösterir (en az 5 ortak mektup; en güçlü 70 bağ${cur>=0?" ve seçili kavramın bütün bağları":""}).</p>${best?`<div class="chips" style="margin-bottom:8px">${best}</div>`:""}<svg id="chord" viewBox="0 0 640 640" role="group" aria-label="Kavramların birlikte geçme diyagramı">${h}</svg>`;
+  svgK("chord"); const sv=$("#chord"); sv.onclick=e=>{ const t=e.target.closest("text"); if(t) location.hash="atlas-"+t.dataset.id; };
+  sv.onkeydown=e=>{ const t=e.target.closest("text"); if(t&&e.key==="Enter") location.hash="atlas-"+t.dataset.id; };
+}
+
+/* ================= okuma ayarları ================= */
+const THEME0=document.documentElement.getAttribute("data-theme");
+function applySet(){
+  const d=document.documentElement;
+  if(SET.theme==="system"){ if(THEME0) d.setAttribute("data-theme",THEME0); else d.removeAttribute("data-theme"); } else d.setAttribute("data-theme",SET.theme);
+  d.style.setProperty("--lh",SET.lh); d.setAttribute("data-trfont",SET.trfont);
+  $$("#setdlg .seg").forEach(seg=>{ const k=seg.dataset.set; const cur=k==="nas"?String(nas):k==="anim"?String(anim):String(SET[k]); seg.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===cur)); });
+}
+function initSet(){
+  $$("#setdlg .seg button").forEach(b=>b.onclick=()=>{ const k=b.parentNode.dataset.set, v=b.dataset.v;
+    if(k==="nas"){ nas=v==="true"; $("#t-nas").setAttribute("aria-pressed",nas); saveUi(); }
+    else if(k==="anim"){ anim=v==="true"; $("#t-anim").setAttribute("aria-pressed",anim); saveUi(); }
+    else { SET[k]=k==="lh"?+v:(v==="true"?true:v==="false"?false:v); store.set("mk-set",SET); }
+    applySet(); if(k==="sound"&&SET.sound) sfx("stamp"); route(); });
+  $("#openSet").onclick=()=>{ applySet(); $("#setdlg").showModal(); }; $("#setclose").onclick=()=>$("#setdlg").close();
+  $("#expclose").onclick=()=>$("#expdlg").close(); $("#expcopy").onclick=expCopy; $("#expsave").onclick=expSave;
+  $("#nexp").onclick=()=>openExport("Notları dışa aktar",notesText(),"mektubat-notlar.txt");
+  $("#rexp").onclick=()=>openExport("Eşleşme bildirimlerini dışa aktar",JSON.stringify(REP,null,1),"mektubat-eslesme-bildirimleri.json");
+  $("#netplay").onclick=playNet;
+  applySet();
+}
+
+/* ================= arama ================= */
+function flat(k,L){ if(!L) return ""; const parts=[L.t||""]; if(L.m) parts.push(...L.m); if(L.not) parts.push(L.not); parts.push(...(L.p||[])); return parts.join("\n").replace(/§v[flm]§/g,""); }
+function ensureNorm(k){ if(NIDX[k]||!DATA[k]) return; const o={}; for(const id in DATA[k].L) o[id]=norm(flat(k,DATA[k].L[id])); NIDX[k]=o; }
+let sDef=0, sWho="";
+function search(){
+  const q=$("#q").value, lang=$("#slang").value; terms=parseQuery(q);
+  if(!terms.length){ route(); return; }
+  const langs=lang==="all"?ORDER.filter(k=>DATA[k]):[lang].filter(k=>DATA[k]); langs.forEach(ensureNorm);
+  const okL=id=>(!sDef||id.startsWith(sDef+"-"))&&(!sWho||(PEOPLE.by[id]||[]).includes(sWho));
+  const hits=[]; let total=0; const per={};
+  for(const id of IDX.order){ if(!okL(id)) continue; for(const k of langs){ const n=NIDX[k][id]; if(!n) continue; if(terms.every(t=>n.includes(t))){ total++; per[k]=(per[k]||0)+1; if(hits.length<300) hits.push({id,k}); } } }
+  const html=hits.map(({id,k})=>{ const text=flat(k,DATA[k].L[id]), {n,map}=normMap(text), at=n.indexOf(terms[0]);
+    const s=Math.max(0,map[at]-90), e=Math.min(text.length,map[at]+terms[0].length+150);
+    const snip=(s>0?"… ":"")+marked(text.slice(s,e).replace(/\s+/g," "),k)+(e<text.length?" …":"");
+    const [v,no]=id.split("-"); const who=(PEOPLE.by[id]||[]).map(i=>shortName(pById(i).tr)).join(", ");
+    return `<div class="resrow" data-id="${id}" data-k="${k}"><div class="rt"><a href="#m-${id}">${v}/${no}</a><span class="chip">${SRC[k].name}</span>${esc(who)}<button class="btn" data-a="tri">Üç dilde göster</button></div><div class="snip ${k}" lang="${LANGTAG(k)}">${snip}</div><div class="res3w"></div></div>`; }).join("");
+  const by=Object.keys(per).map(k=>`${SRC[k].name}: ${per[k]}`).join(" · ");
+  const ppl=[...PEOPLE.people].filter(p=>p.L.length>=3).sort((a,b)=>b.L.length-a.L.length);
+  showView("s"); $("#v-s").innerHTML=`<h2 class="vt">Arama</h2>
+    <div class="sfilters"><label for="sdef">Defter</label><select id="sdef"><option value="0">Hepsi</option><option value="1">1. defter</option><option value="2">2. defter</option><option value="3">3. defter</option></select>
+      <label for="swho">Alıcı</label><select id="swho"><option value="">Hepsi</option>${ppl.map(p=>`<option value="${p.id}">${esc(shortName(p.tr))} (${p.L.length})</option>`).join("")}</select></div>
+    <p class="rsum">${total} sonuç${total>hits.length?`, ilk ${hits.length} gösteriliyor`:""}${by?` (${by})`:""}. Harekeye, harf varyantlarına (ی/ي, ک/ك, ة/ه) ve şapkaya duyarsız.</p><div class="results">${html||`<div class="notice">«${esc(q)}» için sonuç yok.</div>`}</div>`;
+  $("#sdef").value=String(sDef); $("#swho").value=sWho;
+  $("#sdef").onchange=e=>{ sDef=+e.target.value; search(); }; $("#swho").onchange=e=>{ sWho=e.target.value; search(); };
+  $("#v-s .results").onclick=e=>{ const b=e.target.closest('[data-a="tri"]'); if(!b) return; const row=b.closest(".resrow"), host=row.querySelector(".res3w");
+    if(host.firstChild){ host.innerHTML=""; b.textContent="Üç dilde göster"; return; }
+    const id=row.dataset.id, k=row.dataset.k, B=computeBridge(id), U=B.U[k]; let j=-1;
+    if(U) for(const t of terms){ j=U.flat.findIndex(x=>norm(x).includes(t)); if(j>=0) break; }
+    if(j<0){ host.innerHTML=`<div class="res3" style="color:var(--muted)">Bu sonuç başlıkta ya da notta geçiyor; cümle karşılığı gösterilemiyor.</div>`; return; }
+    const r=mapFrom(B,k,j); const T=l=>r[l]&&r[l].ids.length&&B.U[l]?r[l].ids.map(i=>B.U[l].flat[i]).join(" ").trim():"";
+    host.innerHTML=`<div class="res3">${T("fa")?`<div class="f" lang="fa">${marked(T("fa"),"fa")}</div>`:""}${T("ar")?`<div class="a" lang="ar">${marked(T("ar"),"ar")}</div>`:""}${T("ak")?`<div class="t">${marked(T("ak"),"ak")}</div>`:""}${T("hk")?`<div class="t" style="color:var(--muted)">${marked(T("hk"),"hk")}</div>`:""}</div>`; b.textContent="Gizle"; };
+}
+
+/* ================= yönlendirme ================= */
+const VIEWS=["ag","m","atlas","kuran","seyr","tayf","divan","notlar","kars","s"];
+function showView(v){ for(const x of VIEWS) $("#v-"+x).hidden=x!==v;
+  for(const x of VIEWS){ const el=$("#tab-"+x); if(!el) continue; if(x===v) el.setAttribute("aria-current","page"); else el.removeAttribute("aria-current"); }
+  if(v!=="m") closeBridge(); }
+function route(){
+  if(!IDX||!PEOPLE||!ATLAS) return;
+  const h=location.hash.slice(1);
+  let m;
+  if((m=h.match(/^m-(\d)-(\d+)$/)) && IDX.map[m[1]+"-"+m[2]]){ showView("m"); $("#tab-m").href="#"+h; renderLetter(m[1]+"-"+m[2]); window.scrollTo(0,0); return; }
+  if((m=h.match(/^k-([\w]+)$/)) && pById(m[1])){ if(playT) playNet(); showView("ag"); selPerson=m[1]; renderNet(); renderPerson(); inkFlow(); return; }
+  if(h==="atlas"||(m=h.match(/^atlas-(\w+)$/))){ showView("atlas"); curTerm=m?m[1]:curTerm; renderAtlas(); return; }
+  if(h==="kuran"||(m=h.match(/^kuran-(\d+)$/))){ showView("kuran"); selSura=m?+m[1]:null; renderQuran(); return; }
+  if(h==="seyr"||(m=h.match(/^seyr-(\w+)$/))){ showView("seyr"); curStation=m&&ATLAS.byId[m[1]]?m[1]:null; renderSeyr(); return; }
+  if(h==="tayf"||(m=h.match(/^tayf-(\w+)$/))){ showView("tayf"); if(m&&m[1]!==curTayf){ curTayf=m[1]; tayfSel=null; } else if(!m) curTayf=null; renderTayf(); return; }
+  if(h==="divan"){ showView("divan"); renderDivan(); return; }
+  if(h==="notlar"){ showView("notlar"); renderNotes(); return; }
+  if((m=h.match(/^kars-(\d)-(\d+)$/)) && IDX.map[m[1]+"-"+m[2]]){ showView("kars"); renderKars(m[1]+"-"+m[2]); window.scrollTo(0,0); return; }
+  showView("ag"); selPerson=null; renderNet(); renderPerson();
+}
+addEventListener("hashchange",()=>{ if(SPK) stopSpeak(); if($("#q").value.trim()){ $("#q").value=""; terms=[]; } route(); });
+$("#gform").addEventListener("submit",e=>{ e.preventDefault(); const v=$("#go").value.trim(); let id=null, m=v.match(/^(\d)\s*[\/.\-]\s*(\d+)$/);
+  if(m&&IDX.map[m[1]+"-"+m[2]]) id=m[1]+"-"+m[2]; else if(/^\d+$/.test(v)){ const g=+v; id=Object.keys(IDX.map).find(k=>IDX.map[k].ak===g)||null; }
+  if(id){ $("#q").value=""; terms=[]; if(location.hash==="#m-"+id) route(); else location.hash="m-"+id; }
+  else { $("#go").setCustomValidity("Bulunamadı. Örnek: 3/40 (defter/no) ya da 451 (Akçiçek sıra no)"); $("#go").reportValidity(); setTimeout(()=>$("#go").setCustomValidity(""),2500); } });
+let tmr; $("#sform").addEventListener("submit",e=>{e.preventDefault(); search();});
+$("#q").addEventListener("input",()=>{ clearTimeout(tmr); tmr=setTimeout(search,300); });
+$("#slang").addEventListener("change",search);
+for(const k of ORDER){ const b=$("#t-"+k); b.setAttribute("aria-pressed",show[k]); b.onclick=()=>{ show[k]=!show[k]; b.setAttribute("aria-pressed",show[k]); saveUi(); if(curLetter&&!$("#v-m").hidden) renderLetter(curLetter); }; }
+$("#t-anim").setAttribute("aria-pressed",anim); $("#t-anim").onclick=()=>{ anim=!anim; $("#t-anim").setAttribute("aria-pressed",anim); saveUi(); };
+$("#t-nas").setAttribute("aria-pressed",nas); $("#t-nas").onclick=()=>{ nas=!nas; $("#t-nas").setAttribute("aria-pressed",nas); saveUi(); if(curLetter&&!$("#v-m").hidden) renderLetter(curLetter); };
+function applyFs(){ document.documentElement.style.setProperty("--fs",fs); }
+$("#fsm").onclick=()=>{ fs=Math.max(.8,+(fs-.1).toFixed(1)); applyFs(); saveUi(); };
+$("#fsp").onclick=()=>{ fs=Math.min(1.8,+(fs+.1).toFixed(1)); applyFs(); saveUi(); };
+$("#openAbout").onclick=()=>$("#about").showModal(); $("#closeAbout").onclick=()=>$("#about").close();
+applyFs(); netEvents(); heatEvents(); initSet();
+let rsz; addEventListener("resize",()=>{ clearTimeout(rsz); rsz=setTimeout(()=>{ if(!$("#v-atlas").hidden) drawHeat(); if(!$("#v-ag").hidden) renderNet(); if(!$("#v-kuran").hidden&&QURAN) renderQuran(); if(!$("#v-seyr").hidden) renderSeyr(); },150); });
+$("#tmenu").onclick=()=>{ const t=$(".top"); const o=!t.classList.contains("open"); t.classList.toggle("open",o); $("#tmenu").setAttribute("aria-expanded",o); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{ if(!$("#v-atlas").hidden) drawHeat(); if(curLetter&&!$("#v-m").hidden) rosette($("#ros"),IDX.order.indexOf(curLetter)*2654435761>>>0); });
+
+/* testler için salt okunur erişim */
+window.MK={ get IDX(){return IDX;}, get DATA(){return DATA;}, get QURAN(){return QURAN;}, get ATLAS(){return ATLAS;}, get BR(){return BR;}, get ALIGN(){return ALIGNDATA;}, get HL(){return HL;}, get READ(){return READ;}, get REP(){return REP;}, get SET(){return SET;}, search, norm, flat, units, computeBridge, mapFrom, ttsDone(){ const cb=ttsCb; ttsCb=null; if(cb) cb(); } };
+
+/* ================= yükleme ================= */
+async function getJson(u){
+  // Tek dosyalık sürümde veri sayfaya gömülüdür
+  if(window.__MK_DATA && window.__MK_DATA[u]) return window.__MK_DATA[u];
+  const r=await fetch(u); if(!r.ok) throw new Error(r.status); return r.json(); }
+(async()=>{
+  renderLoading();
+  try{ [IDX,PEOPLE,ATLAS]=await Promise.all(["data/index.json","data/people.json","data/atlas.json"].map(getJson)); }
+  catch(e){ $("#v-ag").innerHTML=`<div class="notice">Veriler yüklenemedi (${esc(e.message)}). Sayfayı yenileyin.</div>`; return; }
+  IDX.pos={}; IDX.order.forEach((k,i)=>IDX.pos[k]=i);
+  PEOPLE.byId={}; for(const p of PEOPLE.people) PEOPLE.byId[p.id]=p;
+  ATLAS.byId={}; for(const t of ATLAS.terms) ATLAS.byId[t.id]=t;
+  route();
+  // ek görünümlerin verisi (küçük dosyalar)
+  const extra=async(file,set,view,render)=>{ try{ set(await getJson(file)); if(!$("#v-"+view).hidden) render(); }catch(e){} };
+  extra("data/align.json",x=>ALIGNDATA=x,"m",()=>{ if(curLetter){ BR=null; renderLetter(curLetter); } });
+  extra("data/quran.json",x=>QURAN=x,"kuran",renderQuran);
+  extra("data/spectrum.json",x=>SPEC=x,"tayf",renderTayf);
+  extra("data/verses.json",x=>VERSES=x,"divan",renderDivan);
+  extra("data/widget.json",x=>WIDGET=x,"ag",renderPerson);
+  extra("data/glossary.json",x=>{ GLOSS=x; buildGlossRx(); },"m",()=>{ if(curLetter) renderLetter(curLetter); });
+  await Promise.all(ORDER.map(async k=>{
+    try{ DATA[k]=await getJson(SRC[k].file); loadState[k]="ok"; } catch(e){ loadState[k]="err"; }
+    renderLoading();
+    if(!$("#v-m").hidden && curLetter) renderLetter(curLetter);
+    if(!$("#v-ag").hidden && k==="ak") renderPerson();
+    if($("#q").value.trim()) search();
+  }));
+})();
+})();
+</script>

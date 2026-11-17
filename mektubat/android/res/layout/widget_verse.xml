@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/v_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:padding="14dp"
+    android:background="@drawable/widget_bg">
+
+    <TextView
+        android:id="@+id/v_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:letterSpacing="0.12"
+        android:textStyle="bold"
+        android:textColor="@color/w_gold"
+        android:text="GÜNÜN BEYTİ" />
+
+    <TextView
+        android:id="@+id/v_fa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textDirection="rtl"
+        android:textSize="18sp"
+        android:lineSpacingMultiplier="1.35"
+        android:maxLines="4"
+        android:ellipsize="end"
+        android:textColor="@color/w_gold" />
+
+    <TextView
+        android:id="@+id/v_meal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textSize="13sp"
+        android:fontFamily="serif"
+        android:lineSpacingMultiplier="1.15"
+        android:maxLines="4"
+        android:ellipsize="end"
+        android:textColor="@color/w_ink" />
+</LinearLayout>
