@@ -1,0 +1,50 @@
+name: Android APK
+
+on:
+  push:
+    branches: [main]
+    paths: ['android/**', 'site/**', 'build/tek_dosya.py', 'build/kurulum.html', '.github/workflows/apk.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apk
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Sayfayı tek dosya olarak üret
+        run: |
+          python3 build/tek_dosya.py
+          cp dist/Tedebbur.html android/app/src/main/assets/index.html
+      - name: APK derle
+        working-directory: android
+        env:
+          SURUM_KODU: ${{ github.run_number }}
+          SURUM_ADI: 1.${{ github.run_number }}
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon assembleDebug
+          cp app/build/outputs/apk/debug/app-debug.apk ../Tedebbur.apk
+          ls -l ../Tedebbur.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Tedebbur-apk
+          path: Tedebbur.apk
+      - name: Sürüm olarak yayımla
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete apk --yes --cleanup-tag 2>/dev/null || true
+          gh release create apk Tedebbur.apk --latest --target "$GITHUB_SHA" \
+            --title "Tedebbür Android (derleme ${{ github.run_number }})" \
+            --notes "Android telefon ve tabletler için kurulum dosyası. İndirip açın; ilk kurulumda Android 'bilinmeyen kaynak' izni ister. Veri uygulamanın içindedir, internetsiz çalışır."

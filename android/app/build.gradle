@@ -1,0 +1,18 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'io.github.muhammedali25.tedebbur'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'io.github.muhammedali25.tedebbur'
+        minSdk 26
+        // 34: Android 15'in zorunlu kenardan kenara düzeni sayfanın üst çubuğunu durum çubuğunun altına iter
+        targetSdk 34
+        versionCode((System.getenv('SURUM_KODU') ?: '1') as Integer)
+        versionName System.getenv('SURUM_ADI') ?: 'yerel'
+    }
+    // Sayfa 6 MB'lık tek bir HTML; sıkıştırılmadan saklanırsa WebView doğrudan okur
+    androidResources { noCompress += ['html'] }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    lint { abortOnError false }
+}

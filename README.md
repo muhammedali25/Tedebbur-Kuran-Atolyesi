@@ -9,6 +9,9 @@ nasıl üretildiği uygulamanın "Yöntem" sayfasında yazılıdır.
 iPhone ve iPad'de Safari ile açın; sayfa ana ekrana nasıl ekleneceğini kendisi gösterir.
 Eklendikten sonra uygulama gibi açılır ve internetsiz çalışır.
 
+**Android:** [Tedebbur.apk dosyasını indirin](https://github.com/muhammedali25/Tedebbur-Kuran-Atolyesi/releases/latest/download/Tedebbur.apk)
+ve açın. Her gönderimde `Android APK` iş akışı dosyayı yeniden derleyip yayımlar.
+
 ## İçinde ne var
 
 - **Oku:** Arapça metin, Hasan Basri Çantay ve Elmalılı Hamdi Yazır mealleri; her kelimenin
@@ -31,7 +34,8 @@ python3 build/tek_dosya.py           # dist/Tedebbur.html ve dist/web/
 node build/test/smoke.js && node build/test/etkilesim.js && node build/test/tek.js && node build/test/web.js
 ```
 
-Yayın, `dist/web/` içeriğinin `gh-pages` dalına konmasıyla yapılır. Sınamalar Playwright ister.
+Yayın, `dist/web/` içeriğinin `gh-pages` dalına konmasıyla yapılır. Android kabuğu `android/`
+klasöründedir: gömülü sayfayı bir WebView içinde gösteren tek ekranlı bir uygulama. Sınamalar Playwright ister.
 Tasarım kararları ve kapsam `PROMPT.md` dosyasındadır.
 
 ## Kaynaklar ve haklar
