@@ -38,26 +38,6 @@ Yayın, `dist/web/` içeriğinin `gh-pages` dalına konmasıyla yapılır. Andro
 klasöründedir: gömülü sayfayı bir WebView içinde gösteren tek ekranlı bir uygulama. Sınamalar Playwright ister.
 Tasarım kararları ve kapsam `PROMPT.md` dosyasındadır.
 
-## Mektûbât-ı Rabbânî okuyucusu
-
-Aynı depoda, `mektubat/` klasöründe ayrı bir uygulama: İmâm-ı Rabbânî'nin Mektûbât'ı; Farsça aslı,
-Arapça tercümesi ve iki Türkçe tercümesiyle yan yana, cümle cümle eşleştirilmiş olarak.
-
-**Aç:** https://muhammedali25.github.io/Tedebbur-Kuran-Atolyesi/mektubat/
-
-iPhone ve iPad'de Safari ile açın; sayfa ana ekrana nasıl ekleneceğini kendisi gösterir.
-
-**Android:** [Mektubat.apk dosyasını indirin](https://github.com/muhammedali25/Tedebbur-Kuran-Atolyesi/releases/download/mektubat-apk/Mektubat.apk)
-ve açın. `Mektubat APK` iş akışı her gönderimde dosyayı yeniden derleyip yayımlar.
-
-Derleme: `python3 mektubat/build/derle.py` (tek dosya ve web klasörü), `mektubat/build/apk.sh` (APK).
-Web yayını, `mektubat/dist/web/` içeriğinin `gh-pages` dalında `mektubat/` klasörüne konmasıyla yapılır.
-
-Metinler: Farsça asıl, Nur Ahmed Amritsarî tahkiki (Amritsar 1908–1915); Arapça, Muhammed Murad
-el-Menzelevî tercümesi; Türkçe, Abdülkadir Akçiçek ve Hakikat Kitabevi tercümeleri
-(necatiaksu.net/mektubat derlemesinden). Türkçe tercümelerin hakları mütercimlerine ve yayıncılarına
-aittir; telif süreleri dolmamıştır. Hak sahibi talep ederse ilgili metin kaldırılır.
-
 ## Kaynaklar ve haklar
 
 | Katman | Kaynak |

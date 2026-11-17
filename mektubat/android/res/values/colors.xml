@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="w_paper">#F8F3E6</color>
-    <color name="w_ink">#2B241A</color>
-    <color name="w_muted">#6C6150</color>
-    <color name="w_gold">#A2752A</color>
-    <string name="widget_verse_desc">Her gün sıradaki beyit, Farsçası ve mealiyle</string>
-    <string name="widget_desc">Her gün sıradaki cümle, Farsça aslı ve Türkçesiyle</string>
-</resources>
