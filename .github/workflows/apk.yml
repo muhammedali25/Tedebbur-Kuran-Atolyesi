@@ -25,6 +25,7 @@ jobs:
       - name: Sayfayı tek dosya olarak üret
         run: |
           python3 build/tek_dosya.py
+          mkdir -p android/app/src/main/assets
           cp dist/Tedebbur.html android/app/src/main/assets/index.html
       - name: APK derle
         working-directory: android
