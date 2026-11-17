@@ -1,0 +1,890 @@
+<title>Tedebbür Kur'an Atölyesi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Amiri+Quran&family=IBM+Plex+Sans:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+<style>
+/* Yerleşim: üstte ince başlık + sekmeler; içerik tek sütun, okuma ekranında sağda yapışkan kelime paneli. */
+:root{
+  --bg:#f5f6f9; --surface:#ffffff; --ink:#14213d; --ink2:#48546c; --muted:#6f7a90; --line:#dde2ea;
+  --accent:#1f3a6e; --gold:#8f6508; --gold-soft:#f4ecd4; --hl:#ffefb8;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#6250d6; --s0:#9aa3b5;
+  --f-ar:'Amiri Quran','Amiri','Scheherazade New','Traditional Arabic',serif;
+  --f-ar2:'Amiri','Scheherazade New','Traditional Arabic',serif;
+  --f-text:'Literata',Georgia,'Times New Roman',serif;
+  --f-ui:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0d1320; --surface:#151d2e; --ink:#e8ebf2; --ink2:#b4bdce; --muted:#8892a8; --line:#28334c;
+  --accent:#93b3ef; --gold:#dcb75f; --gold-soft:#2b2615; --hl:#51430f;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#0ca30c; --s7:#9085e9; --s0:#66708a;
+  color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0d1320; --surface:#151d2e; --ink:#e8ebf2; --ink2:#b4bdce; --muted:#8892a8; --line:#28334c;
+  --accent:#93b3ef; --gold:#dcb75f; --gold-soft:#2b2615; --hl:#51430f;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#0ca30c; --s7:#9085e9; --s0:#66708a;
+  color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--surface);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:8px 20px;flex-wrap:wrap;padding-block:10px}
+.brand{font-family:var(--f-text);font-weight:600;font-size:19px;letter-spacing:.01em;white-space:nowrap}
+.brand small{font-family:var(--f-ui);font-weight:400;font-size:12px;color:var(--muted);margin-left:8px}
+nav{display:flex;gap:2px;flex-wrap:wrap;margin-left:auto}
+nav a{padding:6px 11px;border-radius:6px;color:var(--ink2);text-decoration:none;font-weight:500;font-size:14px}
+nav a:hover{background:var(--bg)}
+nav a[aria-current="page"]{background:var(--accent);color:var(--surface)}
+main{padding-block:20px 60px}
+h1{font-family:var(--f-text);font-size:26px;line-height:1.2;margin:0;text-wrap:balance}
+h2{font-family:var(--f-text);font-size:18px;margin:0 0 4px;text-wrap:balance}
+.sub{color:var(--muted);font-size:13px;margin:0 0 12px;max-width:68ch}
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0}
+.stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.row{display:flex;gap:10px 14px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.grid2>*{min-width:0}
+select,input[type=search],input[type=number]{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:7px 10px;min-height:38px;max-width:100%}
+input[type=search]{width:100%}
+.btn{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:7px 12px;min-height:38px}
+.btn:hover{border-color:var(--accent)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.seg button{background:var(--surface);border:0;padding:6px 11px;font-size:13px;min-height:34px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
+.stats{display:flex;gap:6px 22px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.stats div{display:flex;flex-direction:column}
+.stats b{font-family:var(--f-text);font-size:22px;font-weight:600;line-height:1.15}
+.stats span{font-size:12px;color:var(--muted)}
+.ar{font-family:var(--f-ar);direction:rtl;unicode-bidi:isolate}
+.ar2{font-family:var(--f-ar2);direction:rtl;unicode-bidi:isolate}
+.chip{display:inline-flex;align-items:baseline;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px 11px;font-size:13px;min-height:32px}
+button.chip:hover{border-color:var(--gold)}
+.chip .ar2{font-size:18px;line-height:1.2}
+.chip i{font-style:normal;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.note{font-size:12.5px;color:var(--muted);max-width:72ch;margin:10px 0 0}
+.link{background:none;border:0;padding:0;color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+/* okuma */
+.reader{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}
+.ayet{padding:16px 0;border-bottom:1px solid var(--line);scroll-margin-top:120px}
+.ayet:last-child{border-bottom:0}
+.ayet.hedef{background:linear-gradient(90deg,var(--gold-soft),transparent 70%);margin-inline:-18px;padding-inline:18px}
+.ayet-no{font-size:12px;font-weight:600;color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.ayet-ar{font-size:27px;line-height:2.25;margin:2px 0 6px;text-align:right}
+.w{border-radius:5px;padding:0 3px;cursor:pointer}
+.w:hover{background:var(--gold-soft)}
+.w.sec-w{background:var(--hl)}
+.meal{font-family:var(--f-text);font-size:16px;line-height:1.65;max-width:68ch;margin:0}
+.meal-not{font-size:12px;color:var(--muted);margin:0 0 3px}
+.meal-ad{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin:8px 0 2px}
+.cift{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px 24px}
+.cift>*{min-width:0}
+.kucuk-b{font-size:13px;font-weight:600;margin:0 0 6px}
+.mini{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:center;margin:6px 0}
+.mini .ar2{font-size:24px;line-height:1.3}
+@media (max-width:600px){.mini{grid-template-columns:1fr}}
+.alt{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px}
+.alt a{padding:5px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink2);text-decoration:none;font-size:13px;min-height:32px;display:inline-flex;align-items:center}
+.alt a[aria-current="page"]{background:var(--gold-soft);border-color:var(--gold);color:var(--ink);font-weight:600}
+.tbl{border-collapse:collapse;font-size:13.5px;width:100%;font-variant-numeric:tabular-nums}
+.tbl td,.tbl th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:middle}
+.tbl th{font-size:12px;color:var(--muted);font-weight:500}
+.tbl tr[data-sec]{cursor:pointer}
+.tbl tr[data-sec]:hover,.tbl tr.secili{background:var(--gold-soft)}
+.tbl .ar2{font-size:20px;line-height:1.3}
+.tutan{background:var(--hl);border-radius:4px;padding:1px 5px;font-weight:600}
+.md{display:inline-flex;width:70px;height:8px;border-radius:4px;overflow:hidden;gap:1px;vertical-align:middle}
+.md i{display:block}
+.kalip{padding:10px 0;border-bottom:1px solid var(--line)}
+.kalip .ar{font-size:23px;line-height:2.1;text-align:right}
+details.akr{margin-top:8px}
+details.akr summary{cursor:pointer;font-size:13px;color:var(--accent);padding:4px 0}
+.akr-i{border-left:2px solid var(--line);padding:6px 0 6px 12px;margin:8px 0}
+.akr-i .meal{font-size:14px}
+.akr-i .ar{font-size:20px;line-height:2;text-align:right}
+.akr-h{display:flex;gap:6px 10px;flex-wrap:wrap;align-items:center;font-size:13px}
+.panel{position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px);max-height:calc(100vh - 90px);overflow:auto}
+.panel .kelime{font-family:var(--f-ar);font-size:38px;line-height:1.9;text-align:center;direction:rtl}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:13.5px;margin:10px 0}
+.kv dt{color:var(--muted)} .kv dd{margin:0}
+.parca{border-top:1px solid var(--line);padding:7px 0;font-size:13px;display:flex;gap:10px;align-items:baseline}
+.parca .ar2{font-size:22px;min-width:44px;text-align:center}
+.panel-kapat{display:none}
+@media (max-width:900px){
+  .reader{grid-template-columns:minmax(0,1fr)}
+  .panel{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:8;max-height:58%;border-radius:14px 14px 0 0;border-bottom:0;
+    box-shadow:0 -6px 24px rgba(0,0,0,.18);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+  .panel.kapali{display:none}
+  .panel-kapat{display:block;margin-left:auto}
+  .panel .kelime{font-size:30px}
+  .ayet-ar{font-size:24px}
+  .brand small{display:none}
+}
+/* kök */
+.kok-buyuk{font-family:var(--f-ar2);font-size:54px;line-height:1.3;direction:rtl;letter-spacing:.12em;color:var(--accent)}
+.sonuc{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px;max-height:270px;overflow:auto;background:var(--surface)}
+.sonuc button{display:flex;gap:12px;align-items:baseline;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:6px 12px;min-height:40px}
+.sonuc button:last-child{border-bottom:0}
+.sonuc button:hover{background:var(--bg)}
+.sonuc .ar2{font-size:22px;min-width:60px}
+.sonuc i{font-style:normal;color:var(--muted);font-size:12.5px}
+.gecis{padding:12px 0;border-bottom:1px solid var(--line)}
+.gecis:last-child{border-bottom:0}
+.gecis .ar{font-size:22px;line-height:2.1;text-align:right}
+.gecis .meal{font-size:14.5px}
+mark{background:var(--hl);color:inherit;border-radius:4px;padding:0 2px}
+/* grafik */
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font-family:var(--f-ui);fill:var(--muted);font-size:11px}
+.bar-row{display:grid;grid-template-columns:minmax(90px,150px) 1fr auto;gap:10px;align-items:center;padding:3px 0;font-size:13px}
+.bar-row .ad{display:flex;gap:8px;align-items:baseline;justify-content:space-between;min-width:0}
+.bar-row .ar2{font-size:20px;line-height:1.3}
+.bar-iz{background:var(--bg);border-radius:4px;height:12px;overflow:hidden}
+.bar-iz span{display:block;height:100%;background:var(--s1);border-radius:0 4px 4px 0}
+.bar-row .v{font-variant-numeric:tabular-nums;color:var(--ink2);font-size:12.5px;white-space:nowrap}
+.yigin{display:flex;height:22px;border-radius:5px;overflow:hidden;gap:2px;background:var(--surface)}
+.yigin span{display:block;min-width:1px}
+.yigin-s{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:center;font-size:12.5px;color:var(--ink2);margin:5px 0}
+.lej{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2);margin:6px 0}
+.lej i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.fas{display:flex;flex-wrap:wrap;gap:2px;direction:rtl}
+.fas span{width:19px;height:25px;display:flex;align-items:center;justify-content:center;font-family:var(--f-ar2);font-size:15px;line-height:1;border-bottom:4px solid var(--s0);background:var(--bg);border-radius:3px 3px 0 0;cursor:pointer}
+#ipucu{position:fixed;z-index:20;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;padding:6px 9px;border-radius:6px;max-width:260px;line-height:1.35}
+.yukle{color:var(--muted);padding:30px 0;text-align:center}
+.yontem{max-width:74ch;font-family:var(--f-text);font-size:15.5px;line-height:1.65}
+.yontem h2{margin-top:22px} .yontem code{font-family:ui-monospace,Menlo,monospace;font-size:13px;background:var(--bg);padding:1px 5px;border-radius:4px}
+.yontem table{border-collapse:collapse;font-family:var(--f-ui);font-size:13.5px;width:100%}
+.yontem td,.yontem th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.tablo-kap{overflow-x:auto}
+@media (prefers-reduced-motion:no-preference){ html{scroll-behavior:smooth} }
+</style>
+
+<header class="top"><div class="wrap">
+  <div class="brand">Tedebbür<small>Kur'an-ı Kerim analiz atölyesi · Çantay meali</small></div>
+  <nav id="nav">
+    <a href="#oku" data-g="oku">Oku</a><a href="#kok" data-g="kok">Kök</a><a href="#kavram" data-g="kavram">Kavram</a><a href="#sure" data-g="sure">Sure</a>
+    <a href="#harita" data-g="harita">Harita</a><a href="#ef" data-g="ef">Efendimiz</a><a href="#esma" data-g="kesif">Keşif</a><a href="#ara" data-g="ara">Ara</a><a href="#yontem" data-g="yontem">Yöntem</a>
+  </nav>
+</div></header>
+<main class="wrap" id="ana"><p class="yukle">Veri yükleniyor…</p></main>
+<div id="ipucu" hidden></div>
+
+<script>
+'use strict';
+const $ = (s, e = document) => e.querySelector(s);
+const el = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstElementChild; };
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const nf = new Intl.NumberFormat('tr-TR');
+const yuzde = (x) => (x * 100).toLocaleString('tr-TR', { maximumFractionDigits: 1 }) + '%';
+const D = {};
+let BAS = [], OCC = null, SK = [], yuklendi = null;
+
+/* ---------- veri ---------- */
+const al = (ad) => { const g = document.getElementById('veri-' + ad); return g ? Promise.resolve().then(() => JSON.parse(g.textContent)) : alAg(ad); };
+const alAg = (ad) => fetch('d/' + ad + '.json').then((r) => { if (!r.ok) throw new Error(ad + ' yüklenemedi (' + r.status + ')'); return r.json(); });
+async function cekirdek() {
+  D.core = await al('core');
+  BAS = [0]; D.core.sure.forEach((s) => BAS.push(BAS[BAS.length - 1] + s[2]));
+  SK = D.core.sure.map(() => 0);
+  D.core.rs.forEach((d) => { for (let i = 0; i < d.length; i += 2) SK[d[i]] += d[i + 1]; });
+}
+function tumVeri() {
+  if (!yuklendi) yuklendi = Promise.all([al('ar'), al('meal'), al('morph'), al('rel'), al('meal2'), al('ek')]).then(([ar, meal, morph, rel, meal2, ek]) => {
+    D.ek = ek;
+    D.ar = ar.map((a) => a.split(' ')); D.meal = meal; D.meal2 = meal2; D.morph = morph; D.rel = rel;
+    OCC = D.core.kok.map(() => []);
+    morph.w.forEach((ks, gi) => ks.forEach((w, wi) => { if (w[0] >= 0) OCC[w[0]].push(gi, wi); }));
+  });
+  return yuklendi;
+}
+const sureOf = (gi) => { let lo = 0, hi = 113; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (BAS[m] <= gi) lo = m; else hi = m - 1; } return lo; };
+const yer = (gi) => { const s = sureOf(gi); return [s + 1, gi - BAS[s] + 1]; };
+const yerAd = (gi) => { const [s, a] = yer(gi); return D.core.sure[s - 1][0] + ' ' + a; };
+const kokGoster = (r) => D.core.kok[r].split('').join(' ');
+const LAT = { 'ء': "'", 'أ': "'", 'إ': "'", 'آ': "'", 'ا': 'a', 'ب': 'b', 'ت': 't', 'ث': 's', 'ج': 'c', 'ح': 'h', 'خ': 'h', 'د': 'd', 'ذ': 'z', 'ر': 'r', 'ز': 'z', 'س': 's', 'ش': 'ş', 'ص': 's', 'ض': 'd', 'ط': 't', 'ظ': 'z', 'ع': "'", 'غ': 'ğ', 'ف': 'f', 'ق': 'k', 'ك': 'k', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ه': 'h', 'و': 'v', 'ي': 'y', 'ى': 'y', 'ئ': "'", 'ؤ': "'" };
+const lat = (k) => k.split('').map((c) => LAT[c] || '').join('-');
+const trNorm = (s) => s.replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase().replace(/[âîû]/g, (c) => ({ 'â': 'a', 'î': 'i', 'û': 'u' }[c])).replace(/[’'´`]/g, '');
+function trEsle(s, n) { // n: trNorm'lu aranan; asıl metindeki [baş, son) aralığını verir
+  let norm = ''; const yer = [];
+  for (let i = 0; i < s.length; i++) { const x = trNorm(s[i]); for (let k = 0; k < x.length; k++) { norm += x[k]; yer.push(i); } }
+  const j = norm.indexOf(n); return j < 0 ? null : [yer[j], yer[j + n.length - 1] + 1];
+}
+// Mushaf imlâsında bazı elifler hareke olarak yazılır (الصرٰط). A: o elif harfe çevrilir (الصراط), B: atılır (الرحمن).
+const arNormA = (s) => arNorm(s.replace(/\u0670/g, '\u0627'));
+function arEsle(gi, n, fn) { // aranan ifadenin değdiği kelimelerin sıra numaraları
+  const ks = D.ar[gi].map(fn), bas = []; let t = '';
+  ks.forEach((k, i) => { if (i) t += ' '; bas.push(t.length); t += k; });
+  const out = new Set(); if (!n) return out; let j = t.indexOf(n);
+  while (j >= 0) { ks.forEach((k, i) => { if (bas[i] < j + n.length && bas[i] + k.length > j) out.add(i); }); j = t.indexOf(n, j + 1); }
+  return out;
+}
+const arNorm = (s) => s.replace(/[ً-ٰٟۖ-ۭـ]/g, '').replace(/[ٱأإآ]/g, 'ا').replace(/ى/g, 'ي');
+function mealOf(gi, M = D.meal) { const u = M.u[gi]; return u < 0 ? null : { t: M.t[u], a: M.r[u][0], b: M.r[u][1] }; }
+function mealTek(gi, kisa, M) {
+  const m = mealOf(gi, M);
+  if (!m) return '<p class="meal-not">Kaynak dosyada bu ayetin (besmele) Çantay meali yok.</p>';
+  const not = m.b > m.a ? `<p class="meal-not">${yer(m.a)[1]}–${yer(m.b)[1]}. ayetler mealde birlikte çevrilmiş.</p>` : '';
+  if (m.b > m.a && gi > m.a && !kisa) return `<p class="meal-not">Meali ${yer(m.a)[1]}. ayetle birlikte verilmiş (yukarıda).</p>`;
+  return not + `<p class="meal">${esc(m.t)}</p>`;
+}
+let ikiMeal = false; try { ikiMeal = localStorage.getItem('ikiMeal') === '1'; } catch (e) { /* depolama yoksa varsayılan */ }
+function mealHtml(gi, kisa) {
+  if (!ikiMeal) return mealTek(gi, kisa, D.meal);
+  return `<div class="meal-ad">Çantay</div>${mealTek(gi, kisa, D.meal)}<div class="meal-ad">Elmalılı</div>${mealTek(gi, kisa, D.meal2)}`;
+}
+const RENK4 = ['s1', 's2', 's3', 's7'];
+function sureGrafik(adet, sira, binde, renk, mxDis, H = 90) {
+  const C = D.core, deger = adet.map((a, s) => binde ? (SK[s] ? a / SK[s] * 1000 : 0) : a);
+  const idx = [...Array(114).keys()]; if (sira === 'nuzul') idx.sort((a, b) => C.sure[a][4] - C.sure[b][4]);
+  const mx = mxDis || Math.max(...deger, 1e-9), W = 912, bw = 8;
+  let h = `<svg viewBox="0 0 ${W} ${H + 4}" role="img" aria-label="Sure sure dağılım"><line x1="0" x2="${W}" y1="${H}" y2="${H}" stroke="var(--line)"/>`;
+  idx.forEach((s, i) => { const y = Math.min(1, deger[s] / mx) * (H - 6);
+    h += `<g data-ip="${esc(C.sure[s][0])} (${s + 1}. sure, nüzul ${C.sure[s][4]})<br>${adet[s]} kez${SK[s] ? ' · binde ' + (adet[s] / SK[s] * 1000).toFixed(1) : ''}" data-git="sure-${s + 1}" style="cursor:pointer"><rect x="${i * bw}" y="0" width="${bw}" height="${H}" fill="transparent"/>${adet[s] ? `<rect x="${i * bw + 1}" y="${H - Math.max(y, 2)}" width="${bw - 2}" height="${Math.max(y, 2)}" rx="2" fill="var(--${renk})"/>` : ''}</g>`; });
+  return h + '</svg>';
+}
+
+/* ---------- gramer etiketleri ---------- */
+const ET = { N: 'isim', V: 'fiil', P: 'harf', PREF: 'ön ek', SUFF: 'son ek', PRON: 'zamir', DET: 'belirlilik takısı (el-)', CONJ: 'atıf (bağlaç)', PERF: 'mâzî (geçmiş)', IMPF: 'muzâri (şimdiki/geniş)', IMPV: 'emir', PASS: 'meçhul', 'MOOD:IND': 'merfû', 'MOOD:SUBJ': 'mansûb', 'MOOD:JUS': 'meczûm', NOM: 'merfû', ACC: 'mansûb', GEN: 'mecrûr', INDEF: 'nekre', PN: 'özel isim', ADJ: 'sıfat', ACT_PCPL: "ism-i fâil", PASS_PCPL: "ism-i mef'ûl", VN: 'mastar', REL: 'ism-i mevsûl', DEM: 'işaret ismi', NEG: 'olumsuzluk', COND: 'şart', INTG: 'soru', VOC: 'nidâ', EMPH: "te'kid", T: 'zaman zarfı', LOC: 'mekân zarfı', REM: 'istînâf', RES: 'hasr', SUB: 'mastar harfi', CERT: 'tahkik', FUT: 'gelecek', PRO: 'nehiy', PRP: "ta'lil (amaç)", CIRC: 'hâl', SUP: 'zâid', PREV: 'kâffe', RSLT: 'cevap', RET: 'idrâb', EXP: 'istisna', CAUS: 'sebep', EXL: 'tafsil', AMD: 'istidrâk', ANS: 'cevap', INC: 'ibtidâ', INT: 'tefsir', EXH: 'tahdîd', SUR: 'müfâcee', AVR: "red' (kellâ)", INL: 'mukattaa harfi', NV: 'isim-fiil', EQ: 'tesviye', COM: 'maiyyet', ATT: 'tenbih', DIST: 'uzaklık lâmı', ADDR: 'hitap kâfı', M: 'eril', F: 'dişil', MS: 'eril tekil', FS: 'dişil tekil', MD: 'eril ikil', FD: 'dişil ikil', MP: 'eril çoğul', FP: 'dişil çoğul', D: 'ikil' };
+const SAY = { S: 'tekil', D: 'ikil', P: 'çoğul' }, CINS = { M: 'eril', F: 'dişil' };
+function etiketTr(et) {
+  const p = et.split('|').filter(Boolean), tur = p.shift(); const out = [ET[tur] || tur];
+  for (const x of p) {
+    if (x === 'P') { out.push('harf-i cer'); continue; }
+    let m = x.match(/^([123])([MF]?)([SDP])$/);
+    if (m) { out.push(`${m[1]}. şahıs ${m[2] ? CINS[m[2]] + ' ' : ''}${SAY[m[3]]}`); continue; }
+    m = x.match(/^VF:(\d+)$/); if (m) { out.push(m[1] + '. bâb'); continue; }
+    m = x.match(/^FAM:(.+)$/); if (m) { out.push(`<span class="ar2">${esc(m[1])}</span> ailesi`); continue; }
+    if (ET[x] && ET[x] !== out[0]) out.push(ET[x]); else if (!ET[x]) out.push(esc(x));
+  }
+  return out.join(' · ');
+}
+
+/* ---------- ipucu ---------- */
+const ipucu = $('#ipucu');
+document.addEventListener('pointermove', (e) => {
+  const t = e.target.closest && e.target.closest('[data-ip]');
+  if (!t) { ipucu.hidden = true; return; }
+  ipucu.innerHTML = t.dataset.ip; ipucu.hidden = false;
+  const w = ipucu.offsetWidth, h = ipucu.offsetHeight;
+  ipucu.style.left = Math.max(6, Math.min(innerWidth - w - 6, e.clientX + 12)) + 'px';
+  ipucu.style.top = (e.clientY + 18 + h > innerHeight ? e.clientY - h - 10 : e.clientY + 18) + 'px';
+});
+let ipZ;
+document.addEventListener('pointerdown', (e) => {
+  if (e.pointerType === 'mouse') return; const t = e.target.closest && e.target.closest('[data-ip]'); clearTimeout(ipZ);
+  if (!t) { ipucu.hidden = true; return; }
+  ipucu.innerHTML = t.dataset.ip; ipucu.hidden = false; const w = ipucu.offsetWidth, h = ipucu.offsetHeight;
+  ipucu.style.left = Math.max(6, Math.min(innerWidth - w - 6, e.clientX - w / 2)) + 'px'; ipucu.style.top = Math.max(6, e.clientY - h - 16) + 'px';
+  ipZ = setTimeout(() => { ipucu.hidden = true; }, 3500);
+});
+
+/* ---------- yönlendirme ---------- */
+const KESIF = [['esma', 'Esmâ çiftleri'], ['nida', 'Nidâ'], ['soru', 'Sorular'], ['dua', 'Dualar'], ['dogum', 'Kelimelerin doğumu'], ['isim', 'İsimler'], ['kalip', 'Kalıplar'], ['sayim', 'Sayım denetçisi']];
+const ROTALAR = ['oku', 'kok', 'kavram', 'sure', 'harita', 'ef', 'ara', 'yontem', ...KESIF.map((k) => k[0])];
+const altNav = (liste, aktif, on = '') => `<div class="alt">${liste.map(([k, ad]) => `<a href="#${on}${k}"${String(k) === String(aktif) ? ' aria-current="page"' : ''}>${ad}</a>`).join('')}</div>`;
+const kesifNav = (aktif) => altNav(KESIF, aktif);
+const ana = $('#ana');
+const git = (h) => { if (location.hash === '#' + h) rota(); else location.hash = h; };
+document.addEventListener('click', (e) => { const t = e.target.closest('[data-git]'); if (t) { e.preventDefault(); git(t.dataset.git); } });
+async function rota() {
+  const p = (location.hash.slice(1) || 'oku').split('-').filter((x, i) => i === 0 || /^\d+$/.test(x));
+  const g = ROTALAR.includes(p[0]) ? p[0] : 'oku';
+  const ust = KESIF.some((k) => k[0] === g) ? 'kesif' : g;
+  document.querySelectorAll('#nav a').forEach((a) => a.dataset.g === ust ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+  ipucu.hidden = true;
+  try {
+    if (!D.core) await cekirdek();
+    { if (!D.morph) ana.innerHTML = '<p class="yukle">Metin, meal ve kelime çözümlemesi yükleniyor…</p>'; await tumVeri(); }
+    scrollTo({ top: 0, behavior: 'instant' });
+    ({ oku: gOku, kok: gKok, kavram: gKavram, sure: gSure, harita: gHarita, isim: gIsim, kalip: gKalip, ara: gAra, yontem: gYontem, ef: gEf, esma: gEsma, nida: gNida, soru: gSoru, dua: gDua, dogum: gDogum, sayim: gSayim })[g](p.slice(1).map(Number));
+  } catch (err) { ana.innerHTML = `<div class="sec"><h2>Veri yüklenemedi</h2><p class="sub">${esc(err.message)}. Sayfayı yenileyin.</p></div>`; }
+}
+addEventListener('hashchange', () => { rota(); });
+const sureSecenek = (sec) => D.core.sure.map((s, i) => `<option value="${i + 1}"${i + 1 === sec ? ' selected' : ''}>${i + 1}. ${esc(s[0])}</option>`).join('');
+
+/* ---------- OKU ---------- */
+function ayetArHtml(gi, vurgu) {
+  return D.ar[gi].map((w, wi) => `<span class="w${vurgu && vurgu(wi) ? ' sec-w' : ''}" data-w="${gi}:${wi}" tabindex="0" role="button">${w}</span>`).join(' ');
+}
+function ortakKok(a, b) { const sa = new Set(D.morph.w[a].map((w) => w[0]).filter((r) => r >= 0)); return [...new Set(D.morph.w[b].map((w) => w[0]).filter((r) => r >= 0 && sa.has(r)))]; }
+let bekleyenKelime = null;
+function gOku([s = 1, a = 0], koru) {
+  s = Math.min(114, Math.max(1, s || 1));
+  const S = D.core.sure[s - 1], n = S[2];
+  ana.innerHTML = `<div class="reader"><div class="stack">
+    <div class="sec"><div class="row">
+      <select id="oku-sure" aria-label="Sure">${sureSecenek(s)}</select>
+      <input id="oku-ayet" type="number" min="1" max="${n}" placeholder="Ayet" aria-label="Ayete git" style="width:92px">
+      <button class="btn" id="oku-git">Git</button>
+      <button class="btn" data-git="sure-${s}">Sure analizi</button>
+      <button class="btn" id="oku-iki" aria-pressed="${ikiMeal}">${ikiMeal ? 'Yalnız Çantay' : 'Elmalılı ile karşılaştır'}</button>
+    </div>
+    <h1 style="margin-top:14px">${esc(S[0])} <span class="ar2" style="font-size:26px;color:var(--gold)">${S[1]}</span></h1>
+    <p class="sub" style="margin:4px 0 0">${n} ayet · ${S[3] ? 'Mekkî' : 'Medenî'} · nüzul sırası ${S[4]}. Bir kelimeye dokunun: kökü, çekimi ve Kur'an'daki diğer geçişleri açılır.</p></div>
+    <div class="sec" id="ayetler"></div><button class="btn" id="oku-daha" hidden>Sonraki ayetler</button></div>
+    <aside class="sec panel kapali" id="panel"></aside></div>`;
+  const kutu = $('#ayetler'); let son = 0;
+  const ekle = (kadar) => {
+    const h = [];
+    for (let i = son; i < Math.min(n, kadar); i++) {
+      const gi = BAS[s - 1] + i, rel = D.rel[gi];
+      h.push(`<div class="ayet" id="a${i + 1}"><div class="ayet-no">${s}:${i + 1}</div><div class="ayet-ar ar">${ayetArHtml(gi)}</div>${mealHtml(gi)}
+        ${rel.length ? `<details class="akr" data-gi="${gi}"><summary>Akraba ayetler (${rel.length})</summary></details>` : ''}</div>`);
+    }
+    kutu.insertAdjacentHTML('beforeend', h.join('')); son = Math.min(n, kadar);
+    $('#oku-daha').hidden = son >= n;
+  };
+  ekle(koru ? koru.son : Math.max(25, a + 8));
+  $('#oku-daha').onclick = () => ekle(son + 40);
+  $('#oku-sure').onchange = (e) => git('oku-' + e.target.value);
+  $('#oku-iki').onclick = () => { ikiMeal = !ikiMeal; try { localStorage.setItem('ikiMeal', ikiMeal ? '1' : '0'); } catch (e) { /* yok say */ }
+    const gor = [...kutu.children].find((x) => x.getBoundingClientRect().bottom > 90); gOku([s, a], { son, capa: gor ? gor.id : null }); };
+  const ayeteGit = () => { const v = +$('#oku-ayet').value; if (v >= 1 && v <= n) git(`oku-${s}-${v}`); };
+  $('#oku-git').onclick = ayeteGit; $('#oku-ayet').onkeydown = (e) => { if (e.key === 'Enter') ayeteGit(); };
+  kutu.addEventListener('toggle', (e) => {
+    const d = e.target; if (!d.open || d.dataset.dolu) return; d.dataset.dolu = 1;
+    const gi = +d.dataset.gi;
+    d.insertAdjacentHTML('beforeend', D.rel[gi].map(([j, sk]) => {
+      const ok = ortakKok(gi, j), [js, ja] = yer(j);
+      return `<div class="akr-i"><div class="akr-h"><button class="link" data-git="oku-${js}-${ja}">${esc(yerAd(j))}</button>
+        <span class="chip" data-ip="IDF ağırlıklı kök kosinüsü. Anlam aynılığı değil, kök ortaklığı ölçer."><i>yakınlık</i> ${sk}%</span>
+        ${ok.map((r) => `<button class="chip" data-git="kok-${r}"><span class="ar2">${kokGoster(r)}</span></button>`).join('')}</div>
+        <div class="ar">${ayetArHtml(j, (wi) => ok.includes(D.morph.w[j][wi][0]))}</div>${mealHtml(j, true)}</div>`;
+    }).join('') + '<p class="note">Sıralama, iki ayetin ortak köklerine göre hesaplanır; nadir kökler daha çok ağırlık taşır. En az iki ortak kök aranır.</p>');
+  }, true);
+  const kaydir = (h) => { h.scrollIntoView({ block: 'start', behavior: 'instant' }); const adres = location.hash; if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (location.hash === adres && h.isConnected) h.scrollIntoView({ block: 'start', behavior: 'instant' }); }); };
+  if (a >= 1 && a <= n) $('#a' + a).classList.add('hedef');
+  if (koru) { if (koru.capa && $('#' + koru.capa)) $('#' + koru.capa).scrollIntoView({ block: 'start', behavior: 'instant' }); }
+  else if (a >= 1 && a <= n) kaydir($('#a' + a));
+  else { scrollTo(0, 0); if (innerWidth > 900) { const ilk = D.morph.w[BAS[s - 1]].findIndex((w) => w[0] >= 0); if (ilk >= 0) kelimeAc(BAS[s - 1], ilk); } }
+  if (bekleyenKelime) { const [bg, bw] = bekleyenKelime; bekleyenKelime = null; if (sureOf(bg) === s - 1 && $('#a' + (bg - BAS[s - 1] + 1))) kelimeAc(bg, bw); }
+}
+document.addEventListener('click', (e) => { const w = e.target.closest('.w'); if (w) { const [gi, wi] = w.dataset.w.split(':').map(Number); kelimeAc(gi, wi); } });
+document.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('w')) { e.preventDefault(); e.target.click(); } });
+function kelimeAc(gi, wi) {
+  const p = $('#panel'); if (!p) { const [s, a] = yer(gi); bekleyenKelime = [gi, wi]; git(`oku-${s}-${a}`); return; }
+  document.querySelectorAll('#ayetler > .ayet > .ayet-ar .sec-w').forEach((x) => x.classList.remove('sec-w'));
+  const sp = document.querySelector(`#ayetler > .ayet > .ayet-ar [data-w="${gi}:${wi}"]`); if (sp) sp.classList.add('sec-w');
+  const w = D.morph.w[gi][wi], metin = D.ar[gi][wi], r = w[0], l = w[1];
+  let poz = 0; const par = [];
+  for (let i = 2; i < w.length; i += 2) { const parca = metin.substr(poz, w[i + 1]); poz += w[i + 1]; par.push(`<div class="parca"><span class="ar2">${parca}</span><span>${etiketTr(D.morph.et[w[i]])}</span></div>`); }
+  const kars = r >= 0 ? D.core.karsilik[r].slice(0, 5) : [];
+  p.classList.remove('kapali');
+  p.innerHTML = `<div class="row"><span class="ayet-no">${esc(yerAd(gi))} · ${wi + 1}. kelime</span><button class="btn panel-kapat" id="pk" aria-label="Kapat">Kapat</button></div>
+    <div class="kelime">${metin}</div>
+    <dl class="kv">
+      <dt>Kök</dt><dd>${r >= 0 ? `<button class="chip" data-git="kok-${r}"><span class="ar2">${kokGoster(r)}</span><i>${esc(lat(D.core.kok[r]))}</i></button>` : 'Kökü yok (harf, zamir ya da kökü işaretlenmemiş kelime)'}</dd>
+      ${l >= 0 ? `<dt>Lemma</dt><dd><span class="ar2" style="font-size:20px">${D.core.lem[l][0]}</span> <span style="color:var(--muted)">· ${nf.format(D.core.lemN[l])} kez</span></dd>` : ''}
+      ${r >= 0 ? `<dt>Kökün geçişi</dt><dd>${nf.format(D.core.kokN[r])} kelime, ${nf.format(D.core.kokDf[r])} ayet</dd>` : ''}
+      ${kars.length ? `<dt>Mealde izi</dt><dd>${kars.map((k) => esc(k[0])).join(', ')}</dd>` : ''}
+    </dl>
+    <div style="font-size:12px;color:var(--muted);margin-top:10px">Kelimenin parçaları</div>${par.join('')}
+    ${r >= 0 ? `<button class="btn" data-git="kok-${r}" style="margin-top:12px;width:100%">Kökün tüm geçişlerini aç</button>` : ''}`;
+  const pk = $('#pk'); if (pk) pk.onclick = () => p.classList.add('kapali');
+}
+
+/* ---------- KÖK ---------- */
+let kokSira = 'mushaf', kokOlcu = 'adet';
+function kokAra(q) {
+  q = q.trim(); if (!q) return [];
+  const a = arNorm(q).replace(/\s/g, ''), t = trNorm(q), l = t.replace(/[^a-zçğıöşü]/g, '');
+  const out = [];
+  D.core.kok.forEach((k, r) => {
+    let puan = 0, neden = '';
+    if (/[؀-ۿ]/.test(q)) { if (arNorm(k) === a) puan = 3; else if (arNorm(k).includes(a)) puan = 1; }
+    else {
+      if (lat(k).replace(/[-']/g, '') === l) puan = 3;
+      const m = D.core.karsilik[r].find((x) => x[0].startsWith(t.slice(0, 5)) && t.length >= 3);
+      if (m) { puan = Math.max(puan, 2); neden = m[0]; }
+    }
+    if (puan) out.push([puan, r, neden]);
+  });
+  return out.sort((x, y) => y[0] - x[0] || D.core.kokN[y[1]] - D.core.kokN[x[1]]).slice(0, 40);
+}
+function gKok([r]) {
+  if (!(r >= 0 && r < D.core.kok.length)) r = D.core.kok.indexOf('رحم');
+  const C = D.core, k = C.kok[r], rs = C.rs[r], sureSay = rs.length / 2;
+  const lemSay = new Map(); const occ = OCC[r];
+  for (let i = 0; i < occ.length; i += 2) { const l = D.morph.w[occ[i]][occ[i + 1]][1]; lemSay.set(l, (lemSay.get(l) || 0) + 1); }
+  const lemler = [...lemSay].sort((a, b) => b[1] - a[1]);
+  ana.innerHTML = `<div class="stack">
+    <div class="sec"><label for="kok-q" style="font-size:13px;color:var(--muted)">Kök ara: Arapça (رحم), Latin harfle (rhm) ya da mealdeki bir kelimeyle (sabır, cennet, adalet)</label>
+      <input id="kok-q" type="search" placeholder="Kök ya da Türkçe kelime" autocomplete="off" style="margin-top:6px"><div id="kok-s"></div></div>
+    <div class="sec"><div class="row" style="justify-content:space-between;align-items:flex-end">
+      <div><div class="kok-buyuk">${kokGoster(r)}</div><div style="color:var(--muted)">${esc(lat(k))}</div></div>
+      <div class="stats"><div><b>${nf.format(C.kokN[r])}</b><span>kelime</span></div><div><b>${nf.format(C.kokDf[r])}</b><span>ayet</span></div><div><b>${sureSay}</b><span>sure</span></div><div><b>${lemler.length}</b><span>türev (lemma)</span></div></div></div>
+      <div class="row" style="margin-top:10px"><button class="btn" id="kok-kav">Kavram haritasına ekle</button></div></div>
+    <div class="sec"><div class="row" style="justify-content:space-between"><h2>Sure sure dağılım</h2>
+      <div class="row"><div class="seg" id="kok-sira"><button data-v="mushaf">Mushaf sırası</button><button data-v="nuzul">Nüzul sırası</button></div>
+      <div class="seg" id="kok-olcu"><button data-v="adet">Adet</button><button data-v="binde">Binde</button></div></div></div>
+      <p class="sub" id="kok-da"></p><div id="kok-grafik"></div></div>
+    <div class="grid2">
+      <div class="sec"><h2>Yoldaş kökler</h2><p class="sub">Aynı ayette tesadüfle açıklanamayacak sıklıkta birlikte geçen kökler. Sayı, birlikte geçtikleri ayet adedidir.</p>
+        <div class="chips">${C.yoldas[r].length ? C.yoldas[r].map(([q, j, g]) => `<button class="chip" data-git="kok-${q}" data-ip="${j} ayette birlikte · G² = ${g}"><span class="ar2">${kokGoster(q)}</span><i>${j}</i></button>`).join('') : '<span class="note">Bu kök için eşiği geçen yoldaş yok (en az 3 ortak ayet ve G² ≥ 10,83 aranır).</span>'}</div></div>
+      <div class="sec"><h2>Meallerdeki izi</h2><p class="sub">Kökün geçtiği ayetlerin mealinde beklenenden sık görülen kelimeler, iki mütercim yan yana. Sözlük karşılığı değildir; mealin istatistik izidir. Sayılar: birlikte geçtiği birim / kelimenin toplam birimi.</p>
+        <div class="cift">${[['Çantay', C.karsilik[r]], ['Elmalılı', C.karsilik2[r]]].map(([ad, kz]) => { const jmx = Math.max(1, ...kz.map((q) => q[1])); return `<div><p class="kucuk-b">${ad}</p>${kz.length ? kz.map(([w, j, df, g]) => `<div class="bar-row" style="grid-template-columns:minmax(70px,110px) 1fr auto" data-ip="«${esc(w)}» gövdesi bu mealde ${df} birimde geçiyor; ${j} tanesinde bu kök var · G² = ${g}"><div class="ad"><span>${esc(w)}</span></div><div class="bar-iz"><span style="width:${(j / jmx * 100).toFixed(1)}%"></span></div><div class="v">${j} / ${df}</div></div>`).join('') : '<span class="note">Yeterli veri yok.</span>'}</div>`; }).join('')}</div></div></div>
+    <div class="sec"><h2>Türevler</h2><p class="sub">Bu kökten gelen kelimeler (lemma) ve kaçar kez geçtikleri. Birine dokunarak aşağıdaki listeyi süzün.</p>
+      <div class="chips" id="kok-lem"><button class="chip" data-l="-2" aria-pressed="true">Tümü <i>${nf.format(C.kokN[r])}</i></button>${lemler.map(([l, n]) => `<button class="chip" data-l="${l}"><span class="ar2">${l >= 0 ? C.lem[l][0] : '—'}</span><i>${nf.format(n)}</i></button>`).join('')}</div></div>
+    <div class="sec"><h2>Geçişler</h2><div id="kok-gec"></div><button class="btn" id="kok-daha" hidden>Daha fazla göster</button></div></div>`;
+  $('#kok-kav').onclick = () => { if (!kavSec.includes(r)) kavSec = [...kavSec, r].slice(-4); git('kavram-' + kavSec.join('-')); };
+  // arama
+  const q = $('#kok-q'), ks = $('#kok-s');
+  q.oninput = () => { const s = kokAra(q.value); ks.innerHTML = q.value.trim() ? (s.length ? `<div class="sonuc" style="margin-top:8px">${s.map(([, x, ned]) => `<button data-git="kok-${x}"><span class="ar2">${kokGoster(x)}</span><span>${esc(lat(C.kok[x]))}</span><i>${nf.format(C.kokN[x])} kelime${ned ? ' · mealde «' + esc(ned) + '»' : ''}</i></button>`).join('')}</div>` : '<p class="note">Eşleşen kök bulunamadı. Türkçe aramalar mealdeki kelime izleri üzerinden yapılır; her kelimenin izi yoktur.</p>') : ''; };
+  // dağılım
+  const ciz = () => {
+    document.querySelectorAll('#kok-sira button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.v === kokSira));
+    document.querySelectorAll('#kok-olcu button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.v === kokOlcu));
+    const adet = new Array(114).fill(0); for (let i = 0; i < rs.length; i += 2) adet[rs[i]] = rs[i + 1];
+    const deger = adet.map((a, s) => kokOlcu === 'adet' ? a : (SK[s] ? a / SK[s] * 1000 : 0));
+    const sira = [...Array(114).keys()]; if (kokSira === 'nuzul') sira.sort((a, b) => C.sure[a][4] - C.sure[b][4]);
+    const mx = Math.max(...deger, 1e-9), W = 912, H = 150, bw = 8;
+    const tepe = deger.indexOf(mx);
+    let h = `<svg viewBox="0 0 ${W} ${H + 22}" role="img" aria-label="Kökün sure sure dağılımı">`;
+    [0, 0.5, 1].forEach((f) => { h += `<line x1="0" x2="${W}" y1="${H - f * H}" y2="${H - f * H}" stroke="var(--line)" stroke-width="1"/>`; });
+    sira.forEach((s, i) => {
+      const y = deger[s] / mx * (H - 8), ip = `${esc(C.sure[s][0])} (${s + 1}. sure, nüzul ${C.sure[s][4]})<br>${adet[s]} kelime${SK[s] ? ' · binde ' + (adet[s] / SK[s] * 1000).toFixed(1) : ''}`;
+      h += `<g data-ip="${ip}" data-git="sure-${s + 1}" style="cursor:pointer"><rect x="${i * bw}" y="0" width="${bw}" height="${H}" fill="transparent"/>${adet[s] ? `<rect x="${i * bw + 1}" y="${H - Math.max(y, 2)}" width="${bw - 2}" height="${Math.max(y, 2)}" rx="2" fill="var(--s1)"/>` : ''}</g>`;
+    });
+    h += `<text x="0" y="${H + 16}">${kokSira === 'nuzul' ? 'İlk inen' : '1. Fâtiha'}</text><text x="${W}" y="${H + 16}" text-anchor="end">${kokSira === 'nuzul' ? 'Son inen' : '114. Nâs'}</text>
+      <text x="${W - 4}" y="11" text-anchor="end">en yüksek: ${kokOlcu === 'adet' ? nf.format(mx) + ' kelime' : 'binde ' + mx.toFixed(1)} (${esc(C.sure[tepe][0])})</text></svg>`;
+    $('#kok-grafik').innerHTML = h;
+    $('#kok-da').textContent = kokOlcu === 'adet' ? 'Her çubuk bir sure; yükseklik kökün o suredeki kelime sayısı. Uzun sureler doğal olarak öne çıkar.' : 'Her çubuk bir sure; yükseklik kökün suredeki köklü her bin kelimede kaç kez geçtiği. Kısa surelerde tek geçiş bile yüksek görünür.';
+  };
+  $('#kok-sira').onclick = (e) => { if (e.target.dataset.v) { kokSira = e.target.dataset.v; ciz(); } };
+  $('#kok-olcu').onclick = (e) => { if (e.target.dataset.v) { kokOlcu = e.target.dataset.v; ciz(); } };
+  ciz();
+  // geçişler
+  let suz = -2, gost = 0; const gec = $('#kok-gec');
+  const liste = () => { const o = []; for (let i = 0; i < occ.length; i += 2) if (suz === -2 || D.morph.w[occ[i]][occ[i + 1]][1] === suz) o.push(occ[i], occ[i + 1]); return o; };
+  const doldur = (sifirla) => {
+    const o = liste(); if (sifirla) { gec.innerHTML = ''; gost = 0; }
+    const h = []; let son = -1, say = 0;
+    while (gost < o.length && say < 25) {
+      const gi = o[gost]; if (gi !== son) { const [s, a] = yer(gi); say++; son = gi;
+        h.push(`<div class="gecis"><button class="link" data-git="oku-${s}-${a}">${esc(yerAd(gi))}</button><div class="ar">${ayetArHtml(gi, (wi) => D.morph.w[gi][wi][0] === r && (suz === -2 || D.morph.w[gi][wi][1] === suz))}</div>${mealHtml(gi, true)}</div>`); }
+      gost += 2; while (gost < o.length && o[gost] === son) gost += 2;
+    }
+    gec.insertAdjacentHTML('beforeend', h.join('')); $('#kok-daha').hidden = gost >= o.length;
+  };
+  $('#kok-lem').onclick = (e) => { const b = e.target.closest('[data-l]'); if (!b) return; suz = +b.dataset.l; document.querySelectorAll('#kok-lem [data-l]').forEach((x) => x.setAttribute('aria-pressed', x === b)); doldur(true); };
+  $('#kok-daha').onclick = () => doldur(false);
+  doldur(true); scrollTo(0, 0);
+}
+
+/* ---------- SURE ---------- */
+const FAS_RENK = { 'ن': 's1', 'م': 's2', 'ا': 's3', 'ر': 's4', 'د': 's5', 'ب': 's6', 'ه': 's7' };
+const yigin = (parcalar) => `<div class="yigin">${parcalar.map(([ad, v, c]) => v > 0 ? `<span style="flex:${v};background:var(--${c})" data-ip="${ad}: ${nf.format(v)}"></span>` : '').join('')}</div>`;
+function gSure([s = 1]) {
+  s = Math.min(114, Math.max(1, s || 1));
+  const C = D.core, S = C.sure[s - 1], g = C.gram[s - 1], rit = C.ritim[s - 1], fas = C.fasila[s - 1];
+  const T = C.gram.reduce((a, b) => a.map((x, i) => x + b[i]), new Array(9).fill(0));
+  const pm = C.parmak[s - 1], pmx = pm.length ? pm[0][2] : 1;
+  const oran = (a, b) => b ? yuzde(a / b) : '—';
+  const profil = (ad, x) => `<div class="yigin-s"><span>${ad}</span>${yigin([['Mâzî', x[2], 's1'], ['Muzâri', x[3], 's2'], ['Emir', x[4], 's3']])}</div>`;
+  const sahis = (ad, x) => `<div class="yigin-s"><span>${ad}</span>${yigin([['1. şahıs', x[6], 's1'], ['2. şahıs', x[7], 's2'], ['3. şahıs', x[8], 's3']])}</div>`;
+  const fsay = {}; for (const c of fas) fsay[c] = (fsay[c] || 0) + 1;
+  const ftop = Object.entries(fsay).sort((a, b) => b[1] - a[1]);
+  const rmx = Math.max(...rit), n = rit.length, bw = Math.max(2, Math.min(14, 900 / n)), W = bw * n, H = 110;
+  ana.innerHTML = `<div class="stack">
+    <div class="sec"><div class="row"><select id="sure-sec" aria-label="Sure">${sureSecenek(s)}</select><button class="btn" data-git="oku-${s}">Sureyi oku</button></div>
+      <div class="row" style="justify-content:space-between;align-items:flex-end;margin-top:14px">
+      <div><h1>${esc(S[0])} <span class="ar2" style="font-size:26px;color:var(--gold)">${S[1]}</span></h1><p class="sub" style="margin:4px 0 0">${s}. sure · ${S[3] ? 'Mekkî' : 'Medenî'} · nüzul sırası ${S[4]}</p></div>
+      <div class="stats"><div><b>${S[2]}</b><span>ayet</span></div><div><b>${nf.format(g[0])}</b><span>kelime</span></div><div><b>${(g[0] / S[2]).toLocaleString('tr-TR', { maximumFractionDigits: 1 })}</b><span>kelime / ayet</span></div><div><b>${nf.format(g[1])}</b><span>fiil</span></div></div></div></div>
+    <div class="grid2">
+      <div class="sec"><h2>Parmak izi</h2><p class="sub">Bu sureyi Kur'an'ın geri kalanından ayıran kökler: surede, başka yerlerdeki oranına göre beklenenden sık geçenler. Çubuk G² değeridir.</p>
+        ${pm.length ? pm.map(([r, a, v]) => `<div class="bar-row" data-git="kok-${r}" style="cursor:pointer" data-ip="Surede ${a} kez; Kur'an genelinde ${nf.format(C.kokN[r])} kez · G² = ${v}"><div class="ad"><span class="ar2">${kokGoster(r)}</span><span style="color:var(--muted);font-size:12px">${esc(lat(C.kok[r]))}</span></div><div class="bar-iz"><span style="width:${(v / pmx * 100).toFixed(1)}%"></span></div><div class="v">${a} kez</div></div>`).join('') : '<p class="note">Bu surede eşiği (G² ≥ 10,83) geçen ayırt edici kök yok. Çok kısa surelerde istatistik güç yetersiz kalır.</p>'}</div>
+      <div class="stack">
+        <div class="sec"><h2>Fiil ve hitap profili</h2><p class="sub">Suredeki ${nf.format(g[1])} fiilin zamana ve şahsa göre dağılımı; altında Kur'an geneli.${g[1] < 20 ? ' Fiil sayısı 20\'den az: oranları ihtiyatla okuyun.' : ''}</p>
+          <div class="lej"><span><i style="background:var(--s1)"></i>Mâzî ${oran(g[2], g[1])}</span><span><i style="background:var(--s2)"></i>Muzâri ${oran(g[3], g[1])}</span><span><i style="background:var(--s3)"></i>Emir ${oran(g[4], g[1])}</span></div>
+          ${profil('Bu sure', g)}${profil('Kur\'an', T)}
+          <div class="lej" style="margin-top:14px"><span><i style="background:var(--s1)"></i>1. şahıs ${oran(g[6], g[6] + g[7] + g[8])}</span><span><i style="background:var(--s2)"></i>2. şahıs ${oran(g[7], g[6] + g[7] + g[8])}</span><span><i style="background:var(--s3)"></i>3. şahıs ${oran(g[8], g[6] + g[7] + g[8])}</span></div>
+          ${sahis('Bu sure', g)}${sahis('Kur\'an', T)}
+          <p class="note">Meçhul fiil: ${g[5]} (${oran(g[5], g[1])}); Kur'an geneli ${oran(T[5], T[1])}. Şahıs, fiilin çekim şahsıdır; kimin konuştuğuna dair yorum içermez.</p></div>
+        <div class="sec"><h2>Komşu sureler</h2><p class="sub">Kök dağılımı en çok benzeyen altı sure (TF-IDF kosinüsü, 0 ile 1 arası).</p>
+          <div class="chips">${C.komsu[s - 1].map(([t, v]) => `<button class="chip" data-git="sure-${t + 1}">${esc(C.sure[t][0])}<i>${v.toFixed(2).replace('.', ',')}</i></button>`).join('')}</div></div>
+      </div></div>
+    <div class="sec"><h2>Fâsıla şeridi</h2><p class="sub">Her kutu bir ayetin son harfi, sağdan sola ayet sırasıyla. Ses örgüsünün değiştiği yerler renk kırılması olarak görünür. En sık: ${ftop.slice(0, 4).map(([c, v]) => `<span class="ar2">${c}</span> ${v}`).join(' · ')}.</p>
+      <div class="fas">${[...fas].map((c, i) => `<span style="border-bottom-color:var(--${FAS_RENK[c] || 's0'})" data-git="oku-${s}-${i + 1}" data-ip="${i + 1}. ayet">${c}</span>`).join('')}</div>
+      <p class="note">Harf, ayetin son kelimesinin yazıdaki son harfidir (ة → ه, ى → ا olarak alınır). Vakıf hâlindeki okunuşun tam karşılığı değildir; tecvid ayrıntısı içermez.</p></div>
+    <div class="sec"><h2>Ayet ritmi</h2><p class="sub">Her çubuk bir ayet; yükseklik kelime sayısı. En uzun ayet ${rmx} kelime.</p>
+      <div class="tablo-kap"><svg viewBox="0 0 ${W} ${H + 18}" style="min-width:${Math.min(W, 520)}px" role="img" aria-label="Ayet başına kelime sayısı">
+        <line x1="0" x2="${W}" y1="${H}" y2="${H}" stroke="var(--line)"/>
+        ${rit.map((v, i) => `<g data-ip="${i + 1}. ayet: ${v} kelime" data-git="oku-${s}-${i + 1}" style="cursor:pointer"><rect x="${i * bw}" y="0" width="${bw}" height="${H}" fill="transparent"/><rect x="${i * bw + (bw > 4 ? 1 : 0)}" y="${H - v / rmx * (H - 4)}" width="${bw > 4 ? bw - 2 : bw - 0.5}" height="${v / rmx * (H - 4)}" rx="${bw > 5 ? 2 : 0}" fill="var(--s1)"/></g>`).join('')}
+        <text x="0" y="${H + 14}">1. ayet</text><text x="${W}" y="${H + 14}" text-anchor="end">${n}. ayet</text></svg></div></div></div>`;
+  $('#sure-sec').onchange = (e) => git('sure-' + e.target.value); scrollTo(0, 0);
+}
+
+/* ---------- HARİTA ---------- */
+let hX = 'nuzul', hY = 'uzun', hSec = -1;
+const HY = { uzun: ['Ortalama ayet uzunluğu (kelime)', (g, S) => g[0] / S[2], false], emir: ['Emir fiillerin payı', (g) => g[1] ? g[4] / g[1] : null, true], hitap: ['2. şahıs fiillerin payı', (g) => (g[6] + g[7] + g[8]) ? g[7] / (g[6] + g[7] + g[8]) : null, true], mazi: ['Mâzî fiillerin payı', (g) => g[1] ? g[2] / g[1] : null, true] };
+function gHarita() {
+  const C = D.core;
+  ana.innerHTML = `<div class="stack"><div class="sec"><h1>Sure haritası</h1><p class="sub" style="margin-top:6px">114 sure, seçtiğiniz iki ölçüme göre. Daire büyüklüğü surenin kelime sayısıdır. Bir sureye dokunun: kök dağılımı en yakın altı komşusuna çizgi çekilir.</p>
+    <div class="row"><label>Yatay <select id="h-x"><option value="nuzul">Nüzul sırası</option><option value="mushaf">Mushaf sırası</option></select></label>
+    <label>Dikey <select id="h-y">${Object.entries(HY).map(([k, v]) => `<option value="${k}">${v[0]}</option>`).join('')}</select></label></div>
+    <div class="lej" style="margin-top:12px"><span><i style="background:var(--s1);border-radius:50%"></i>Mekkî (${C.sure.filter((x) => x[3]).length})</span><span><i style="background:var(--s2);border-radius:50%"></i>Medenî (${C.sure.filter((x) => !x[3]).length})</span></div>
+    <div class="tablo-kap"><div id="h-g" style="min-width:560px"></div></div><div id="h-b"></div>
+    <p class="note" id="h-n"></p></div>
+    <div class="sec"><h2>Mekkî–Medenî kök kayması</h2><p class="sub">Hangi kökler Mekkî surelerde, hangileri Medenî surelerde oranca daha sık? Çubuk G² değeridir; sağdaki sayılar kökün iki dönemde köklü her bin kelimedeki sıklığıdır (Mekkî → Medenî). Sınıflama sure düzeyindedir; Mekkî surelerdeki Medenî ayetler ayrılmamıştır.</p>
+      <div class="cift">${[['Mekkî surelerde öne çıkanlar', C.kayma.mekki, 's1'], ['Medenî surelerde öne çıkanlar', C.kayma.medeni, 's2']].map(([ad, L, c]) => `<div><p class="kucuk-b">${ad}</p>${L.map(([r, m, d, g]) => `<div class="bar-row" style="grid-template-columns:minmax(80px,120px) 1fr auto;cursor:pointer" data-git="kok-${r}" data-ip="Mekkî surelerde ${nf.format(m)}, Medenî surelerde ${nf.format(d)} kez · G² = ${g}"><div class="ad"><span class="ar2">${kokGoster(r)}</span><span style="color:var(--muted);font-size:12px">${esc(lat(C.kok[r]))}</span></div><div class="bar-iz"><span style="width:${(g / L[0][3] * 100).toFixed(1)}%;background:var(--${c})"></span></div><div class="v">${(m / C.kayma.tM * 1000).toFixed(1).replace('.', ',')} → ${(d / C.kayma.tD * 1000).toFixed(1).replace('.', ',')}</div></div>`).join('')}</div>`).join('')}</div></div></div>`;
+  $('#h-x').value = hX; $('#h-y').value = hY;
+  const ciz = () => {
+    const [ad, fn, oranMi] = HY[hY], W = 900, H = 440, L = 46, B = 34, T = 14, R = 14;
+    const ys = C.sure.map((S, i) => fn(C.gram[i], S)), xs = C.sure.map((S, i) => hX === 'nuzul' ? S[4] : i + 1);
+    const ymx = Math.max(...ys.filter((v) => v !== null)) * 1.06;
+    const px = (v) => L + (v - 1) / 113 * (W - L - R), py = (v) => H - B - v / ymx * (H - B - T);
+    const rr = (i) => 3 + Math.sqrt(C.gram[i][0] / 6140) * 13;
+    const fmt = (v) => oranMi ? yuzde(v) : v.toLocaleString('tr-TR', { maximumFractionDigits: 1 });
+    let h = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Sure haritası">`;
+    for (let k = 0; k <= 4; k++) { const v = ymx / 1.06 * k / 4; h += `<line x1="${L}" x2="${W - R}" y1="${py(v)}" y2="${py(v)}" stroke="var(--line)"/><text x="${L - 6}" y="${py(v) + 4}" text-anchor="end">${fmt(v)}</text>`; }
+    [1, 20, 40, 60, 80, 100, 114].forEach((v) => { h += `<text x="${px(v)}" y="${H - B + 16}" text-anchor="middle">${v}</text>`; });
+    h += `<text x="${(L + W - R) / 2}" y="${H - 2}" text-anchor="middle">${hX === 'nuzul' ? 'Nüzul sırası (geleneksel tertip)' : 'Mushaf sırası'}</text>`;
+    if (hSec >= 0 && ys[hSec] !== null) C.komsu[hSec].forEach(([t]) => { if (ys[t] !== null) h += `<line x1="${px(xs[hSec])}" y1="${py(ys[hSec])}" x2="${px(xs[t])}" y2="${py(ys[t])}" stroke="var(--gold)" stroke-width="1.5"/>`; });
+    const sira = [...Array(114).keys()].sort((a, b) => C.gram[b][0] - C.gram[a][0]);
+    sira.forEach((i) => {
+      if (ys[i] === null) return; const S = C.sure[i], az = oranMi && C.gram[i][1] < 20;
+      h += `<circle cx="${px(xs[i])}" cy="${py(ys[i])}" r="${rr(i)}" fill="var(--${S[3] ? 's1' : 's2'})" fill-opacity="${az ? 0.22 : 0.72}" stroke="var(--${i === hSec ? 'ink' : 'surface'})" stroke-width="${i === hSec ? 2.5 : 1.5}" data-h="${i}" style="cursor:pointer" data-ip="<b>${esc(S[0])}</b> · ${S[3] ? 'Mekkî' : 'Medenî'}<br>${ad}: ${fmt(ys[i])}<br>${S[2]} ayet, ${nf.format(C.gram[i][0])} kelime, ${C.gram[i][1]} fiil"/>`;
+    });
+    if (hSec >= 0 && ys[hSec] !== null) h += `<text x="${px(xs[hSec])}" y="${py(ys[hSec]) - rr(hSec) - 5}" text-anchor="middle" style="fill:var(--ink);font-weight:600;font-size:12px">${esc(C.sure[hSec][0])}</text>`;
+    $('#h-g').innerHTML = h + '</svg>';
+    $('#h-n').textContent = (oranMi ? '20\'den az fiili olan surelerde oran güvenilmezdir; bu sureler soluk çizilir. ' : '') + 'Nüzul sırası, Mısır mushafında esas alınan geleneksel tertiptir; kesin tarihlendirme değildir ve bazı sureler farklı dönemlerde inen ayetler içerir.';
+    $('#h-b').innerHTML = hSec >= 0 ? `<div class="row" style="margin-top:10px"><strong>${esc(C.sure[hSec][0])}</strong><button class="btn" data-git="sure-${hSec + 1}">Sure analizi</button><span style="color:var(--muted);font-size:13px">Komşuları:</span>${C.komsu[hSec].map(([t, v]) => `<button class="chip" data-h="${t}">${esc(C.sure[t][0])}<i>${v.toFixed(2).replace('.', ',')}</i></button>`).join('')}</div>` : '';
+  };
+  ana.onclick = (e) => { const t = e.target.closest('[data-h]'); if (t && $('#h-g')) { hSec = +t.dataset.h; ciz(); } };
+  $('#h-x').onchange = (e) => { hX = e.target.value; ciz(); }; $('#h-y').onchange = (e) => { hY = e.target.value; ciz(); };
+  if (hSec < 0) hSec = 11; ciz(); scrollTo(0, 0);
+}
+
+/* ---------- KAVRAM ---------- */
+let kavSec = [], kavSira = 'nuzul';
+const KUME = [['sabır · şükür · tevekkül', ['صبر', 'شكر', 'وكل']], ['iman · amel · salâh', ['أمن', 'عمل', 'صلح']], ['havf · recâ · muhabbet', ['خوف', 'رجو', 'حبب']], ['adl · kıst · zulüm', ['عدل', 'قسط', 'ظلم']], ['ilim · akıl · tefekkür', ['علم', 'عقل', 'فكر']]];
+function gKavram(ids) {
+  const C = D.core; ids = [...new Set(ids.filter((r) => r >= 0 && r < C.kok.length))].slice(0, 4);
+  if (!ids.length) ids = kavSec.length ? kavSec : KUME[0][1].map((k) => C.kok.indexOf(k)).filter((r) => r >= 0);
+  kavSec = ids;
+  const adet = ids.map((r) => { const a = new Array(114).fill(0), d = C.rs[r]; for (let i = 0; i < d.length; i += 2) a[d[i]] = d[i + 1]; return a; });
+  const mx = Math.max(...adet.map((a) => Math.max(...a.map((v, s) => SK[s] >= 200 ? v / SK[s] * 1000 : 0))), 1e-9);
+  const kume = ids.map((r) => { const m = new Set(); for (let i = 0; i < OCC[r].length; i += 2) m.add(OCC[r][i]); return m; });
+  const say = new Map(); kume.forEach((m) => m.forEach((gi) => say.set(gi, (say.get(gi) || 0) + 1)));
+  const ortak = [...say].filter(([, n]) => n >= 2).sort((x, y) => y[1] - x[1] || x[0] - y[0]);
+  let cift = '';
+  for (let i = 0; i < ids.length; i++) for (let j = i + 1; j < ids.length; j++) { let o = 0; kume[i].forEach((gi) => { if (kume[j].has(gi)) o++; });
+    cift += `<tr><td><span class="ar2" style="font-size:19px">${kokGoster(ids[i])}</span> + <span class="ar2" style="font-size:19px">${kokGoster(ids[j])}</span></td><td>${o}</td><td>${(kume[i].size * kume[j].size / 6236).toLocaleString('tr-TR', { maximumFractionDigits: 1 })}</td></tr>`; }
+  ana.innerHTML = `<div class="stack">
+    <div class="sec"><h1>Kavram haritası</h1><p class="sub" style="margin-top:6px">Bir kavramı çoğu zaman tek kök taşımaz. En çok dört kök seçin; Kur'an boyunca nasıl birlikte seyrettiklerini ve hangi ayetlerde buluştuklarını görün.</p>
+      <div class="chips" style="margin-bottom:10px">${ids.map((r, i) => `<span class="chip"><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--${RENK4[i]})"></i><span class="ar2">${kokGoster(r)}</span><i>${esc(lat(C.kok[r]))} · ${nf.format(C.kokN[r])}</i>${ids.length > 1 ? `<button class="link" data-cik="${r}" aria-label="Çıkar" style="text-decoration:none">✕</button>` : ''}</span>`).join('')}</div>
+      ${ids.length < 4 ? `<input id="kav-q" type="search" placeholder="Kök ekle: Arapça, Latin harfle ya da mealdeki kelimeyle" autocomplete="off"><div id="kav-s"></div>` : '<p class="note" style="margin:0">Dört kök seçili. Yenisini eklemek için birini çıkarın.</p>'}
+      <p class="kucuk-b" style="margin-top:14px">Örnek kümeler</p><div class="chips">${KUME.map(([ad, ks]) => `<button class="chip" data-git="kavram-${ks.map((k) => C.kok.indexOf(k)).filter((r) => r >= 0).join('-')}">${ad}</button>`).join('')}</div></div>
+    <div class="sec"><div class="row" style="justify-content:space-between"><h2>Sure sure seyir</h2><div class="seg" id="kav-sira"><button data-v="mushaf" aria-pressed="${kavSira === 'mushaf'}">Mushaf sırası</button><button data-v="nuzul" aria-pressed="${kavSira === 'nuzul'}">Nüzul sırası</button></div></div>
+      <p class="sub">Her satır bir kök; çubuk yüksekliği kökün suredeki köklü her bin kelimede kaç kez geçtiği. Bütün satırlar aynı ölçekte (tepe: binde ${mx.toFixed(1).replace('.', ',')}); 200'den az köklü kelimesi olan kısa sureler ölçeği belirlemez, çubukları tepede kesilir.</p>
+      ${ids.map((r, i) => `<div class="mini"><div><span class="ar2">${kokGoster(r)}</span> <span style="color:var(--muted);font-size:12px">${esc(lat(C.kok[r]))}</span></div>${sureGrafik(adet[i], kavSira, true, RENK4[i], mx, 64)}</div>`).join('')}
+      <div class="row" style="justify-content:space-between;color:var(--muted);font-size:11px"><span>${kavSira === 'nuzul' ? 'İlk inen' : '1. Fâtiha'}</span><span>${kavSira === 'nuzul' ? 'Son inen' : '114. Nâs'}</span></div></div>
+    ${ids.length > 1 ? `<div class="sec"><h2>Buluştukları ayetler</h2><p class="sub">Seçili köklerden en az ikisinin birlikte geçtiği ${nf.format(ortak.length)} ayet; en çok kökü barındıran en üstte.</p>
+      <div class="tablo-kap"><table class="yontem" style="font-family:var(--f-ui);font-size:13.5px;max-width:520px;margin-bottom:10px"><tr><th>Çift</th><th>Birlikte (ayet)</th><th>Bağımsız olsalar beklenen</th></tr>${cift}</table></div>
+      <div id="kav-l"></div><button class="btn" id="kav-daha" hidden>Daha fazla göster</button></div>` : ''}</div>`;
+  ana.querySelectorAll('[data-cik]').forEach((b) => { b.onclick = () => git('kavram-' + ids.filter((r) => r !== +b.dataset.cik).join('-')); });
+  $('#kav-sira').onclick = (e) => { if (e.target.dataset.v) { kavSira = e.target.dataset.v; gKavram(ids); } };
+  const q = $('#kav-q'); if (q) q.oninput = () => { const sn = kokAra(q.value).filter(([, x]) => !ids.includes(x));
+    $('#kav-s').innerHTML = q.value.trim() ? (sn.length ? `<div class="sonuc" style="margin-top:8px">${sn.map(([, x, ned]) => `<button data-git="kavram-${[...ids, x].join('-')}"><span class="ar2">${kokGoster(x)}</span><span>${esc(lat(C.kok[x]))}</span><i>${nf.format(C.kokN[x])} kelime${ned ? ' · mealde «' + esc(ned) + '»' : ''}</i></button>`).join('')}</div>` : '<p class="note">Eşleşen kök bulunamadı.</p>') : ''; };
+  if (ids.length > 1) { let g = 0; const doldur = () => { const h = ortak.slice(g, g + 20).map(([gi, n]) => { const [su, a] = yer(gi);
+      return `<div class="gecis"><div class="akr-h"><button class="link" data-git="oku-${su}-${a}">${esc(yerAd(gi))}</button><span class="chip"><i>${n} kök birlikte</i></span></div><div class="ar">${ayetArHtml(gi, (wi) => ids.includes(D.morph.w[gi][wi][0]))}</div>${mealHtml(gi, true)}</div>`; }).join('');
+      $('#kav-l').insertAdjacentHTML('beforeend', h); g += 20; $('#kav-daha').hidden = g >= ortak.length; };
+    $('#kav-daha').onclick = doldur; doldur(); }
+}
+
+/* ---------- İSİMLER ---------- */
+function gIsim([i = 1]) {
+  const C = D.core; if (!(i >= 0 && i < C.isim.length)) i = 1;
+  const [arAd, trAd, n, ayetN, kokr, sd, es, duz] = C.isim[i];
+  const adet = new Array(114).fill(0); for (let k = 0; k < sd.length; k += 2) adet[sd[k]] = sd[k + 1];
+  ana.innerHTML = `<div class="stack"><div>${kesifNav('isim')}</div>
+    <div class="sec"><h1>Özel isimler</h1><p class="sub" style="margin-top:6px">Çözümleme verisinde özel isim olarak işaretli ${C.isim.length} ad: peygamberler, kavimler, yerler, kitaplar. Sayı, adın özel isim olarak kaç kez geçtiğidir.</p>
+      <div class="chips" style="max-height:210px;overflow:auto">${C.isim.map((x, k) => `<button class="chip" data-git="isim-${k}" aria-pressed="${k === i}"${k === i ? ' style="border-color:var(--gold);background:var(--gold-soft)"' : ''}>${esc(x[1] || '')} <span class="ar2">${x[0]}</span><i>${nf.format(x[2])}</i></button>`).join('')}</div></div>
+    <div class="sec"><div class="row" style="justify-content:space-between;align-items:flex-end"><div><h1>${esc(trAd)} <span class="ar2" style="font-size:30px;color:var(--gold)">${arAd}</span></h1></div>
+      <div class="stats"><div><b>${nf.format(n)}</b><span>kez</span></div><div><b>${nf.format(ayetN)}</b><span>ayet</span></div><div><b>${sd.length / 2}</b><span>sure</span></div></div></div>
+      <p class="sub" style="margin-top:12px">Sure sure dağılım (mushaf sırası, adet). En çok: ${[...adet.keys()].sort((a, b) => adet[b] - adet[a]).slice(0, 3).filter((s) => adet[s]).map((s) => `${esc(C.sure[s][0])} ${adet[s]}`).join(' · ')}.</p>
+      ${sureGrafik(adet, 'mushaf', false, 's1', 0, 100)}</div>
+    <div class="sec"><h2>Birlikte anıldığı kökler</h2><p class="sub">Bu adın geçtiği ayetlerde tesadüften sık görülen kökler. Sayı, birlikte geçtikleri ayet adedidir.</p>
+      <div class="chips">${es.length ? es.map(([q, j, g]) => `<button class="chip" data-git="kok-${q}" data-ip="${j} ayette birlikte · G² = ${g}"><span class="ar2">${kokGoster(q)}</span><i>${esc((C.karsilik[q][0] || [''])[0])} · ${j}</i></button>`).join('') : '<span class="note">Eşiği geçen kök yok (en az 2 ortak ayet ve G² ≥ 10,83 aranır). Az geçen adlarda bu beklenir.</span>'}</div>
+      <p class="note">Çipteki Türkçe kelime, o kökün Çantay mealindeki en güçlü izidir; kökün anlamı değildir.</p></div>
+    <div class="sec"><h2>Geçtiği ayetler</h2>${duz.length ? '<div id="is-l"></div><button class="btn" id="is-daha" hidden>Daha fazla göster</button>' : `<p class="sub">Lafzatullah ${nf.format(n)} kez geçer; tümü kök sayfasında listelenir.</p><button class="btn" data-git="kok-${kokr}">Kök sayfasını aç</button>`}</div></div>`;
+  if (duz.length) { const ay = []; for (let k = 0; k < duz.length; k += 2) { if (!ay.length || ay[ay.length - 1][0] !== duz[k]) ay.push([duz[k], []]); ay[ay.length - 1][1].push(duz[k + 1]); }
+    let g = 0; const doldur = () => { $('#is-l').insertAdjacentHTML('beforeend', ay.slice(g, g + 20).map(([gi, ws]) => { const [su, a] = yer(gi);
+      return `<div class="gecis"><button class="link" data-git="oku-${su}-${a}">${esc(yerAd(gi))}</button><div class="ar">${ayetArHtml(gi, (wi) => ws.includes(wi))}</div>${mealHtml(gi, true)}</div>`; }).join('')); g += 20; $('#is-daha').hidden = g >= ay.length; };
+    $('#is-daha').onclick = doldur; doldur(); }
+  scrollTo(0, 0);
+}
+
+/* ---------- KALIPLAR ---------- */
+let kalSira = 'agirlik';
+function gKalip() {
+  const C = D.core;
+  const L = C.kalip.map((k, i) => i); if (kalSira === 'sik') L.sort((a, b) => C.kalip[b][1] - C.kalip[a][1] || C.kalip[b][0] - C.kalip[a][0]); if (kalSira === 'uzun') L.sort((a, b) => C.kalip[b][0] - C.kalip[a][0] || C.kalip[b][1] - C.kalip[a][1]);
+  ana.innerHTML = `<div class="stack"><div>${kesifNav('kalip')}</div><div class="sec"><h1>Tekrarlanan ifadeler</h1><p class="sub" style="margin-top:6px">Kur'an'da kelimesi kelimesine, harekesiyle aynı biçimde yinelenen diziler. Ölçüte uyan ${nf.format(C.kalipToplam)} diziden öne çıkan ${C.kalip.length} tanesi.</p>
+    <div class="seg" id="kal-sira">${[['agirlik', 'Uzunluk × tekrar'], ['sik', 'En sık'], ['uzun', 'En uzun']].map(([v, ad]) => `<button data-v="${v}" aria-pressed="${kalSira === v}">${ad}</button>`).join('')}</div></div>
+    <div class="sec"><div id="kal-l"></div><button class="btn" id="kal-daha">Daha fazla göster</button></div></div>`;
+  let g = 0; const doldur = () => { $('#kal-l').insertAdjacentHTML('beforeend', L.slice(g, g + 30).map((i) => { const [n, c, ss, d] = C.kalip[i];
+    return `<div class="kalip"><div class="ar">${D.ar[d[0]].slice(d[1], d[1] + n).join(' ')}</div><details class="akr" data-k="${i}"><summary>${n} kelime · ${c} kez · ${ss} sure</summary></details></div>`; }).join('')); g += 30; $('#kal-daha').hidden = g >= L.length; };
+  $('#kal-daha').onclick = doldur; doldur();
+  $('#kal-sira').onclick = (e) => { if (e.target.dataset.v) { kalSira = e.target.dataset.v; gKalip(); } };
+  $('#kal-l').addEventListener('toggle', (e) => { const dt = e.target; if (!dt.open || dt.dataset.dolu) return; dt.dataset.dolu = 1; const [n, c, , d] = C.kalip[+dt.dataset.k];
+    const yerler = [...new Set(d.filter((_, k) => k % 2 === 0))];
+    dt.insertAdjacentHTML('beforeend', `<div class="chips" style="margin:6px 0">${yerler.map((gi) => { const [su, a] = yer(gi); return `<button class="chip" data-git="oku-${su}-${a}">${esc(yerAd(gi))}</button>`; }).join('')}</div>${c > d.length / 2 ? `<p class="note">İlk ${d.length / 2} geçiş gösteriliyor.</p>` : ''}${yerler.length < d.length / 2 ? '<p class="note">Bazı ayetlerde ifade birden çok kez geçer.</p>' : ''}
+      <p class="meal-not">İlk geçtiği ayetin meali (${esc(yerAd(d[0]))}; ifadenin değil, ayetin tamamının meali):</p>${mealHtml(d[0], true)}`); }, true);
+  scrollTo(0, 0);
+}
+
+/* ---------- ortak yardımcılar ---------- */
+const izi = (r) => r >= 0 ? ((D.core.karsilik[r][0] || [''])[0]) : '';
+const ayetAdet = (ayetler) => { const a = new Array(114).fill(0); ayetler.forEach((gi) => a[sureOf(gi)]++); return a; };
+const cift2 = (duz, adim = 2) => { const o = []; for (let i = 0; i < duz.length; i += adim) { if (!o.length || o[o.length - 1][0] !== duz[i]) o.push([duz[i], []]); o[o.length - 1][1].push(duz[i + 1]); } return o; };
+const mdCubuk = ([m, d]) => `<span class="md" data-ip="Mekkî surelerde ${m}, Medenî surelerde ${d} ayet"><i style="flex:${m};background:var(--s1)"></i><i style="flex:${d};background:var(--s2)"></i></span>`;
+const esCip = (es) => es.length ? es.map(([q, j, g]) => `<button class="chip" data-git="kok-${q}" data-ip="${j} ayette birlikte · G² = ${g}"><span class="ar2">${kokGoster(q)}</span><i>${esc(izi(q))} · ${j}</i></button>`).join('') : '<span class="note">Eşiği geçen kök yok.</span>';
+function ayetListe(kap, dizi, adim = 20) {
+  kap.innerHTML = '<div></div><button class="btn" hidden>Daha fazla göster</button>'; const [ic, dg] = kap.children; let g = 0;
+  const doldur = () => { ic.insertAdjacentHTML('beforeend', dizi.slice(g, g + adim).map(([gi, ws, ek]) => { const [su, a] = yer(gi);
+    return `<div class="gecis"><div class="akr-h"><button class="link" data-git="oku-${su}-${a}">${esc(yerAd(gi))}</button>${ek || ''}</div><div class="ar">${ayetArHtml(gi, (wi) => ws.includes(wi))}</div>${mealHtml(gi, true)}</div>`; }).join('')); g += adim; dg.hidden = g >= dizi.length; };
+  dg.onclick = doldur; doldur(); if (!dizi.length) ic.innerHTML = '<p class="note">Gösterilecek ayet yok.</p>';
+}
+const LEJ_MD = '<div class="lej"><span><i style="background:var(--s1)"></i>Mekkî</span><span><i style="background:var(--s2)"></i>Medenî</span></div>';
+const UYARI = '<p class="note">Tekil hitapların hepsi Resûlullah\'a yönelik değildir; bir kısmı kıssa içinde başka birine ya da genel olarak insana söylenir. Veri muhatabı ayırmaz. Ayrıntı Yöntem sayfasında.</p>';
+
+/* ---------- EFENDİMİZ ---------- */
+const EF = [[0, 'De ki'], [1, 'Emirler ve yasaklar'], [2, 'Rabbüke'], [3, 'Sesleniş'], [4, 'Allah ve Resulü'], [5, 'Peygamberler aynası']];
+let efGizle = true, efFiil = null;
+function gEf([b = 0, arg]) {
+  const C = D.core, E = D.ek; b = EF[b] ? b : 0;
+  const bas = `<div>${altNav(EF, b, 'ef-')}</div>`;
+  const dagilim = (ayetler, renk = 's1') => `<p class="sub">Sure sure dağılım, nüzul sırasıyla (ayet adedi).</p>${sureGrafik(ayetAdet(ayetler), 'nuzul', false, renk, 0, 90)}<div class="row" style="justify-content:space-between;color:var(--muted);font-size:11px"><span>İlk inen</span><span>Son inen</span></div>`;
+  if (b === 0) {
+    const ay = cift2(E.kul);
+    ana.innerHTML = `<div class="stack">${bas}<div class="sec"><div class="row" style="justify-content:space-between;align-items:flex-end"><div><h1>De ki <span class="ar" style="font-size:34px;color:var(--gold)">قُلْ</span></h1><p class="sub" style="margin:6px 0 0">Kur'an'da Resûlullah'a söyletilen sözler: "kul" emrinin geçtiği her yer.</p></div>
+      <div class="stats"><div><b>${E.kul.length / 2}</b><span>kez</span></div><div><b>${ay.length}</b><span>ayet</span></div><div><b>${E.kulMd[0]}</b><span>Mekkî surelerde</span></div><div><b>${E.kulMd[1]}</b><span>Medenî surelerde</span></div></div></div>${dagilim(ay.map((x) => x[0]))}</div>
+      <div class="sec"><h2>"De ki"den sonra ne geliyor?</h2><p class="sub">Ayette "kul"dan sonraki kelimelerde, Kur'an'ın geri kalanına göre beklenenden sık geçen kökler; iki dönem ayrı. Sayı, kökün bu bölümlerde kaç kez geçtiğidir.</p>
+        <div class="cift">${[['Mekkî surelerde', E.kulSonra.mekki], ['Medenî surelerde', E.kulSonra.medeni]].map(([ad, L]) => `<div><p class="kucuk-b">${ad}</p><div class="chips">${L.map(([r, a, g]) => `<button class="chip" data-git="kok-${r}" data-ip="${a} kez · G² = ${g}"><span class="ar2">${kokGoster(r)}</span><i>${esc(izi(r))} · ${a}</i></button>`).join('')}</div></div>`).join('')}</div>
+        <p class="note">Çipteki Türkçe kelime kökün Çantay mealindeki en güçlü izidir, anlamı değildir.</p></div>
+      <div class="sec"><h2>Ayetler</h2><div id="ef-l"></div></div></div>`;
+    ayetListe($('#ef-l'), ay);
+  } else if (b === 1) {
+    const say = new Map(); let top = 0, gizli = 0;
+    for (let i = 0; i < E.emir.length; i += 5) { const [gi, wi, l, tip, akt] = E.emir.slice(i, i + 5); if (D.morph.w[gi][wi][0] === C.kok.indexOf('قول') && tip === 0 && C.lem[l][0] === C.lem[D.morph.w[E.kul[0]][E.kul[1]][1]][0]) continue;
+      if (akt) gizli++; if (akt && efGizle) continue; top++; const k = l + ':' + tip; if (!say.has(k)) say.set(k, { l, tip, m: 0, d: 0, yer: [] }); const o = say.get(k); C.sure[sureOf(gi)][3] ? o.m++ : o.d++; o.yer.push(gi, wi); }
+    const L = [...say.values()].sort((x, y) => (y.m + y.d) - (x.m + x.d));
+    const sec = L.find((o) => o.l + ':' + o.tip === efFiil) || L[0];
+    ana.innerHTML = `<div class="stack">${bas}<div class="sec"><h1>Tekil hitapla gelen emirler ve yasaklar</h1><p class="sub" style="margin-top:6px">"Sabret", "tesbih et", "üzülme", "acele etme": tekil "sen"e yönelen emir ve nehiy fiilleri ("De ki" hariç; onun kendi sayfası var). ${nf.format(top)} hitap gösteriliyor.</p>
+      <label class="row" style="font-size:13.5px"><input type="checkbox" id="ef-g"${efGizle ? ' checked' : ''}> Ayette öncesinde "dedi/dediler" geçen ${gizli} hitabı gizle (kıssa içi olabilir)</label>${UYARI}</div>
+      <div class="sec"><h2>Fiiller</h2><p class="sub">Bir satıra dokunun; geçtiği ayetler altta açılır. Çubuk Mekkî/Medenî dağılımıdır.</p>
+        <div class="tablo-kap" style="max-height:420px;overflow:auto"><table class="tbl"><tr><th>Fiil</th><th>Tür</th><th>Mealde izi</th><th>Adet</th><th>Dönem</th></tr>
+        ${L.map((o) => `<tr data-sec="${o.l}:${o.tip}"${o === sec ? ' class="secili"' : ''}><td><span class="ar2">${C.lem[o.l][0]}</span></td><td>${o.tip ? 'yasak' : 'emir'}</td><td>${esc(izi(C.lem[o.l][1]))}</td><td>${o.m + o.d}</td><td>${mdCubuk([o.m, o.d])}</td></tr>`).join('')}</table></div>${LEJ_MD}</div>
+      <div class="sec"><h2><span class="ar2" style="font-size:24px">${sec ? C.lem[sec.l][0] : ''}</span> · ${sec ? (sec.tip ? 'yasak' : 'emir') : ''}</h2>${sec ? dagilim(cift2(sec.yer).map((x) => x[0])) : ''}<div id="ef-l" style="margin-top:10px"></div></div></div>`;
+    $('#ef-g').onchange = (e) => { efGizle = e.target.checked; gEf([1]); };
+    ana.querySelectorAll('tr[data-sec]').forEach((tr) => { tr.onclick = () => { efFiil = tr.dataset.sec; const y = scrollY; gEf([1]); scrollTo(0, y); }; });
+    if (sec) ayetListe($('#ef-l'), cift2(sec.yer));
+    return;
+  } else if (b === 2) {
+    const ay = cift2(E.rabbuke);
+    ana.innerHTML = `<div class="stack">${bas}<div class="sec"><div class="row" style="justify-content:space-between;align-items:flex-end"><div><h1>Rabbüke <span class="ar" style="font-size:34px;color:var(--gold)">رَبُّكَ</span></h1><p class="sub" style="margin:6px 0 0">"Senin Rabbin": Rab kelimesine tekil "sen" zamirinin bitiştiği her yer.</p></div>
+      <div class="stats"><div><b>${E.rabbuke.length / 2}</b><span>kez</span></div><div><b>${ay.length}</b><span>ayet</span></div><div><b>${E.rabbukeMd[0]}</b><span>Mekkî surelerde</span></div><div><b>${E.rabbukeMd[1]}</b><span>Medenî surelerde</span></div></div></div>${dagilim(ay.map((x) => x[0]))}${UYARI}</div>
+      <div class="sec"><h2>Hangi köklerle birlikte geliyor?</h2><p class="sub">"Rabbüke" geçen ayetlerde tesadüften sık görülen kökler.</p><div class="chips">${esCip(E.rabbukeEs)}</div></div>
+      <div class="sec"><h2>Ayetler</h2><div id="ef-l"></div></div></div>`;
+    ayetListe($('#ef-l'), ay);
+  } else if (b === 3) {
+    const G = E.nida.filter((x) => x[5]);
+    ana.innerHTML = `<div class="stack">${bas}<div class="sec"><h1>Doğrudan sesleniş</h1><p class="sub" style="margin-top:6px">Kur'an Resûlullah'a adıyla değil, vasfıyla seslenir. Nidâ edatıyla yapılan ${G.reduce((a, x) => a + x[2], 0)} sesleniş ve her birinin ardından gelen söz.</p>
+      <div class="stats">${G.map((x) => `<div><b>${x[2]}</b><span>${esc(x[1])}</span></div>`).join('')}</div></div>
+      ${G.map((x, i) => `<div class="sec"><h2>${esc(x[1])} · ${x[2]} kez</h2><p class="sub">Mekkî surelerde ${x[4][0]}, Medenî surelerde ${x[4][1]}.</p><div id="ef-n${i}"></div></div>`).join('')}</div>`;
+    G.forEach((x, i) => ayetListe($('#ef-n' + i), cift2(x[6]).map(([gi, ws]) => [gi, ws.flatMap((w) => Array.from({ length: x[3] }, (_, k) => w + k))]), 15));
+  } else if (b === 4) {
+    const ay = cift2(E.ar.yer).map(([gi, ws]) => [gi, ws.flatMap((w) => [w, w + 1])]);
+    ana.innerHTML = `<div class="stack">${bas}<div class="sec"><div class="row" style="justify-content:space-between;align-items:flex-end"><div><h1>Allah ve Resulü <span class="ar" style="font-size:30px;color:var(--gold)">ٱللَّهَ وَرَسُولَهُ</span></h1><p class="sub" style="margin:6px 0 0">Lafzatullahın hemen ardından "ve Resulü" geldiği yerler.</p></div>
+      <div class="stats"><div><b>${E.ar.yer.length / 2}</b><span>kez</span></div><div><b>${ay.length}</b><span>ayet</span></div><div><b>${E.ar.md[0]}</b><span>Mekkî surelerde</span></div><div><b>${E.ar.md[1]}</b><span>Medenî surelerde</span></div></div></div>${dagilim(ay.map((x) => x[0]), 's2')}</div>
+      <div class="sec"><h2>Hangi fiil ve kavramlarla bağlanıyor?</h2><p class="sub">Bu ayetlerde tesadüften sık görülen kökler.</p><div class="chips">${esCip(E.ar.es)}</div></div>
+      <div class="sec"><h2>Ayetler</h2><div id="ef-l"></div></div></div>`;
+    ayetListe($('#ef-l'), ay);
+  } else {
+    const sira = [...Array(114).keys()].sort((x, y) => C.sure[x][4] - C.sure[y][4]), cw = 7, rh = 18, L = 96, W = L + 114 * cw;
+    const sat = E.ayna.map(([idx]) => { const x = C.isim[idx], a = new Array(114).fill(0); for (let k = 0; k < x[5].length; k += 2) a[x[5][k]] = x[5][k + 1]; return [idx, x, a]; });
+    const mx = Math.max(...sat.map((r) => Math.max(...r[2])));
+    let h = `<svg viewBox="0 0 ${W} ${sat.length * rh + 22}" style="min-width:700px" role="img" aria-label="Peygamber adlarının nüzul sırasına göre geçtiği sureler">`;
+    sat.forEach(([idx, x, a], ri) => { h += `<text x="${L - 6}" y="${ri * rh + 13}" text-anchor="end" style="fill:var(--ink);cursor:pointer" data-git="isim-${idx}">${esc(x[1])} · ${x[2]}</text><line x1="${L}" x2="${W}" y1="${ri * rh + rh - 0.5}" y2="${ri * rh + rh - 0.5}" stroke="var(--line)" stroke-width="0.5"/>`;
+      sira.forEach((s, ci) => { if (a[s]) h += `<rect x="${L + ci * cw}" y="${ri * rh + 2}" width="${cw - 1}" height="${rh - 5}" rx="1.5" fill="var(--${C.sure[s][3] ? 's1' : 's2'})" fill-opacity="${(0.3 + 0.7 * Math.sqrt(a[s] / mx)).toFixed(2)}" data-ip="${esc(x[1])} · ${esc(C.sure[s][0])} (nüzul ${C.sure[s][4]}): ${a[s]} kez" data-git="sure-${s + 1}" style="cursor:pointer"/>`; }); });
+    h += `<text x="${L}" y="${sat.length * rh + 16}">İlk inen</text><text x="${W}" y="${sat.length * rh + 16}" text-anchor="end">Son inen</text></svg>`;
+    ana.innerHTML = `<div class="stack">${bas}<div class="sec"><h1>Peygamberler aynası</h1><p class="sub" style="margin-top:6px">Hangi peygamberin adı hangi dönemde anılmış? Her satır bir peygamber, her sütun bir sure (nüzul sırasıyla). Koyuluk adın o surede kaç kez geçtiğidir.</p>${LEJ_MD}<div class="tablo-kap">${h}</div>
+      <p class="note">Yalnız adın açıkça geçtiği yerler sayılır; kıssanın adsız devam eden ayetleri sayılmaz. Veride özel isim olarak işaretli 23 peygamber adı yer alır (Zülkifl işaretli değildir).</p></div>
+      <div class="sec"><h2>Hitap ayetleriyle ortak kökler</h2><p class="sub">Peygamberin adının geçtiği ayetlerde ve Resûlullah'a hitap eden ${nf.format(E.hitapAyet)} ayette (De ki, Rabbüke, Ey Nebi/Resul) birlikte öne çıkan kökler. Bu ölçüm zayıftır: çoğu peygamberde eşiği geçen ortak kök yoktur.</p>
+        <table class="tbl">${sat.filter((r, i) => E.ayna[i][1].length).map(([idx, x]) => `<tr><td style="white-space:nowrap">${esc(x[1])}</td><td><div class="chips">${E.ayna.find((q) => q[0] === idx)[1].map((q) => `<button class="chip" data-git="kok-${q}"><span class="ar2">${kokGoster(q)}</span><i>${esc(izi(q))}</i></button>`).join('')}</div></td></tr>`).join('')}</table></div></div>`;
+  }
+  scrollTo(0, 0);
+}
+
+/* ---------- KEŞİF: esmâ çiftleri ---------- */
+let esmaTum = false;
+function gEsma() {
+  const C = D.core, L = D.ek.cift.map((c, i) => [c, i]).filter(([c]) => esmaTum || c[3]);
+  ana.innerHTML = `<div class="stack"><div>${kesifNav('esma')}</div><div class="sec"><h1>${esmaTum ? 'Ayet sonu çiftleri' : 'Esmâ çiftleri'}</h1><p class="sub" style="margin-top:6px">Ayetleri kapatan isim çiftleri: en az üç ayetin sonunda aynı sırayla geçen ${L.length} çift. Her çiftin altında, o ayetlerin içinde tesadüften sık görülen kökler var: hangi çift hangi tür ayeti kapatıyor?</p>
+    <div class="seg" id="es-t"><button aria-pressed="${!esmaTum}" data-v="0">Yalnız ilâhî isim çiftleri</button><button aria-pressed="${esmaTum}" data-v="1">Bütün ayet sonu çiftleri</button></div>${LEJ_MD}</div>
+    <div class="sec" id="es-l">${L.map(([c, i]) => `<div class="kalip"><div class="row" style="justify-content:space-between"><div class="ar" style="font-size:25px;line-height:1.8">${C.lem[c[0]][0]} ${C.lem[c[1]][0]}</div><div class="row"><span class="chip"><i>${c[2]} ayet</i></span>${mdCubuk(c[4])}</div></div>
+      <div class="chips" style="margin:4px 0">${c[5].length ? esCip(c[5]) : '<span class="note" style="margin:0">Ayet içinde eşiği geçen kök yok.</span>'}</div><details class="akr" data-c="${i}"><summary>Ayetleri göster</summary><div></div></details></div>`).join('')}</div></div>`;
+  $('#es-t').onclick = (e) => { if (e.target.dataset.v) { esmaTum = e.target.dataset.v === '1'; gEsma(); } };
+  $('#es-l').addEventListener('toggle', (e) => { const d = e.target; if (!d.open || d.dataset.dolu) return; d.dataset.dolu = 1; const c = D.ek.cift[+d.dataset.c];
+    ayetListe(d.lastElementChild, c[6].map((gi) => { const n = D.ar[gi].length; return [gi, [n - 2, n - 1]]; }), 10); }, true);
+  scrollTo(0, 0);
+}
+
+/* ---------- KEŞİF: nidâ ---------- */
+let nidaSec = 0;
+function gNida([i]) {
+  const C = D.core, N = D.ek.nida; if (i >= 0 && i < N.length) nidaSec = i; const x = N[nidaSec];
+  ana.innerHTML = `<div class="stack"><div>${kesifNav('nida')}</div><div class="sec"><h1>Nidâ haritası</h1><p class="sub" style="margin-top:6px">Kur'an kime sesleniyor? Nidâ edatıyla yapılan ${N.reduce((a, q) => a + q[2], 0)} sesleniş, ${N.length} muhatap. Bir kısmı Allah'ın hitabı, bir kısmı kıssalardaki kişilerin birbirine seslenişidir.</p>${LEJ_MD}
+    <div class="tablo-kap" style="max-height:380px;overflow:auto"><table class="tbl"><tr><th>Sesleniş</th><th></th><th>Adet</th><th>Dönem</th></tr>${N.map((q, k) => `<tr data-sec="${k}"${k === nidaSec ? ' class="secili"' : ''}><td>${esc(q[1] || '—')}</td><td><span class="ar2">${q[0]}</span></td><td>${q[2]}</td><td>${mdCubuk(q[4])}</td></tr>`).join('')}</table></div></div>
+    <div class="sec"><h2>${esc(x[1] || '')} <span class="ar2" style="font-size:22px">${x[0]}</span> · ${x[2]} kez</h2>${sureGrafik(ayetAdet(x[6].filter((_, k) => k % 2 === 0)), 'nuzul', false, 's1', 0, 70)}<div class="row" style="justify-content:space-between;color:var(--muted);font-size:11px"><span>İlk inen</span><span>Son inen</span></div><div id="ni-l" style="margin-top:10px"></div></div></div>`;
+  ana.querySelectorAll('tr[data-sec]').forEach((tr) => { tr.onclick = () => { const y = scrollY; gNida([+tr.dataset.sec]); scrollTo(0, y); }; });
+  ayetListe($('#ni-l'), cift2(x[6]).map(([gi, ws]) => [gi, ws.flatMap((w) => Array.from({ length: x[3] }, (_, k) => w + k))]));
+}
+
+/* ---------- KEŞİF: sorular ---------- */
+let soruSec = 0;
+const SORU_TR = { 'أ': 'mi? (hemze)', 'ما': 'ne?', 'هَل': 'mi? (hel)', 'أَيّ': 'hangi?', 'مَن': 'kim?', 'كَيْف': 'nasıl?', 'أَنَّى': 'nereden, nasıl?', 'ماذا': 'ne?', 'أَيْن': 'nerede?', 'مَتَى': 'ne zaman?', 'أَيّان': 'ne zaman?', 'كَم': 'kaç, nice?' };
+function gSoru([i]) {
+  const C = D.core, S = D.ek.soru; if (i >= 0 && i < S.length) soruSec = i; const x = S[soruSec], mx = S[0][1];
+  const pay = D.ek.soruSure.map((n, s) => [s, n, n / C.sure[s][2]]).filter((q) => C.sure[q[0]][2] >= 20).sort((a, b) => b[2] - a[2]).slice(0, 10);
+  const trAd = (k) => SORU_TR[k.normalize('NFC')] || SORU_TR[Object.keys(SORU_TR).find((q) => q.normalize('NFD') === k.normalize('NFD'))] || '';
+  ana.innerHTML = `<div class="stack"><div>${kesifNav('soru')}</div><div class="sec"><h1>Kur'an'ın soruları</h1><p class="sub" style="margin-top:6px">${nf.format(S.reduce((a, q) => a + q[1], 0))} soru edatı, ${nf.format(D.ek.soruSure.reduce((a, b) => a + b, 0))} ayette. Bir kısmı cevap bekleyen değil, düşündüren sorulardır; veri bu ayrımı yapmaz.</p>
+    <div class="grid2"><div><p class="kucuk-b">Soru türleri</p>${S.map((q, k) => `<div class="bar-row" data-sec="${k}" style="cursor:pointer;grid-template-columns:minmax(120px,170px) 1fr auto${k === soruSec ? ';background:var(--gold-soft)' : ''}"><div class="ad"><span class="ar2">${q[0]}</span><span style="font-size:12px;color:var(--muted)">${trAd(q[0])}</span></div><div class="bar-iz"><span style="width:${(q[1] / mx * 100).toFixed(1)}%"></span></div><div class="v">${q[1]}</div></div>`).join('')}</div>
+    <div><p class="kucuk-b">Soru yoğunluğu en yüksek sureler</p><p class="note" style="margin:0 0 6px">İçinde soru geçen ayetlerin payı; en az 20 ayetli sureler.</p>${pay.map(([s, n, p]) => `<div class="bar-row" data-git="sure-${s + 1}" style="cursor:pointer;grid-template-columns:minmax(90px,120px) 1fr auto"><div class="ad"><span>${esc(C.sure[s][0])}</span></div><div class="bar-iz"><span style="width:${(p / pay[0][2] * 100).toFixed(1)}%;background:var(--s3)"></span></div><div class="v">${yuzde(p)} · ${n} ayet</div></div>`).join('')}</div></div></div>
+    <div class="sec"><h2><span class="ar2" style="font-size:24px">${x[0]}</span> ${trAd(x[0])} · ${x[1]} kez</h2><div id="so-l"></div></div></div>`;
+  ana.querySelectorAll('[data-sec]').forEach((r) => { r.onclick = () => { const y = scrollY; gSoru([+r.dataset.sec]); scrollTo(0, y); }; });
+  ayetListe($('#so-l'), cift2(x[2]));
+}
+
+/* ---------- KEŞİF: dualar ---------- */
+function gDua() {
+  const C = D.core, d = D.ek.dua, say = new Map(), ay = [];
+  for (let i = 0; i < d.length; i += 5) { say.set(d[i + 3], (say.get(d[i + 3]) || 0) + 1); ay.push([d[i], [d[i + 1], d[i + 2]]]); }
+  const L = [...say].sort((a, b) => b[1] - a[1]);
+  ana.innerHTML = `<div class="stack"><div>${kesifNav('dua')}</div><div class="sec"><h1>Dualar atlası</h1><p class="sub" style="margin-top:6px">"Rabbi", "Rabbenâ" ya da "Allahümme" diye seslenip ardından bir istekte bulunan ${ay.length} dua. İlk istek fiiline göre sayılmıştır.</p>
+    <p class="kucuk-b">Ne isteniyor?</p><div class="chips">${L.map(([l, n]) => `<button class="chip" data-git="kok-${C.lem[l][1]}"><span class="ar2">${C.lem[l][0]}</span><i>${esc(izi(C.lem[l][1]))} · ${n}</i></button>`).join('')}</div>
+    <p class="sub" style="margin-top:14px">Sure sure dağılım (mushaf sırası).</p>${sureGrafik(ayetAdet(ay.map((x) => x[0])), 'mushaf', false, 's3', 0, 70)}
+    <p class="note">İstek fiili sonraki ayete taşan ya da emir kipi kullanmayan yakarışlar burada yoktur. Çipteki Türkçe kelime kökün Çantay mealindeki izidir.</p></div>
+    <div class="sec"><h2>Dualar</h2><div id="du-l"></div></div></div>`;
+  ayetListe($('#du-l'), ay); scrollTo(0, 0);
+}
+
+/* ---------- KEŞİF: kelimelerin doğumu ---------- */
+let dogSec = -1;
+function gDogum([i]) {
+  const C = D.core, dg = D.ek.dogum; if (i >= 1 && i <= 114) dogSec = i - 1;
+  const sira = [...Array(114).keys()].sort((a, b) => C.sure[a][4] - C.sure[b][4]);
+  const yeni = new Array(114).fill(0).map(() => []); dg.forEach((s, r) => { if (s >= 0) yeni[s].push(r); });
+  yeni.forEach((l) => l.sort((a, b) => C.kokN[b] - C.kokN[a]));
+  if (dogSec < 0) dogSec = sira.find((s) => !C.sure[s][3]);
+  let kum = 0; const egri = sira.map((s) => (kum += yeni[s].length)); const R = C.kok.length;
+  const medIlk = sira.findIndex((s) => !C.sure[s][3]), mekkeSon = egri[medIlk - 1];
+  const W = 912, H = 170, bw = 8, mxY = Math.max(...yeni.map((l) => l.length));
+  const yol = egri.map((v, k) => `${k ? 'L' : 'M'}${k * bw + bw / 2},${H - v / R * (H - 6)}`).join('');
+  const medDogan = C.kok.map((_, r) => r).filter((r) => dg[r] >= 0 && !C.sure[dg[r]][3]).sort((a, b) => C.kokN[b] - C.kokN[a]);
+  ana.innerHTML = `<div class="stack"><div>${kesifNav('dogum')}</div><div class="sec"><h1>Kelimelerin doğum tarihi</h1><p class="sub" style="margin-top:6px">Her kökün, geleneksel nüzul sırasına göre ilk göründüğü sure. Eğri, o ana kadar duyulmuş kök sayısıdır; çubuklar her surenin getirdiği yeni kökler.</p>
+    <div class="stats" style="margin-bottom:12px"><div><b>${nf.format(R)}</b><span>kök</span></div><div><b>${nf.format(mekkeSon)}</b><span>ilk Medenî sureden önce duyulmuş</span></div><div><b>${nf.format(medDogan.length)}</b><span>ilk kez Medenî bir surede</span></div></div>${LEJ_MD}
+    <svg viewBox="0 0 ${W} ${H + 20}" role="img" aria-label="Nüzul sırasına göre kök dağarcığının büyümesi">${[0.25, 0.5, 0.75, 1].map((f) => `<line x1="0" x2="${W}" y1="${H - f * (H - 6)}" y2="${H - f * (H - 6)}" stroke="var(--line)"/><text x="2" y="${H - f * (H - 6) - 3}">${nf.format(Math.round(R * f))} kök</text>`).join('')}
+      ${sira.map((s, k) => `<g data-d="${s}" style="cursor:pointer" data-ip="${esc(C.sure[s][0])} (nüzul ${C.sure[s][4]})<br>${yeni[s].length} yeni kök · o ana dek ${nf.format(egri[k])}"><rect x="${k * bw}" y="0" width="${bw}" height="${H}" fill="${s === dogSec ? 'var(--gold-soft)' : 'transparent'}"/>${yeni[s].length ? `<rect x="${k * bw + 1}" y="${H - Math.max(2, yeni[s].length / mxY * 70)}" width="${bw - 2}" height="${Math.max(2, yeni[s].length / mxY * 70)}" rx="2" fill="var(--${C.sure[s][3] ? 's1' : 's2'})"/>` : ''}</g>`).join('')}
+      <path d="${yol}" fill="none" stroke="var(--ink)" stroke-width="2" pointer-events="none"/><text x="0" y="${H + 15}">İlk inen</text><text x="${W}" y="${H + 15}" text-anchor="end">Son inen</text></svg>
+    <p class="note">Çubuk yüksekliği kendi ölçeğindedir (en yüksek ${mxY} yeni kök). Sıra sure düzeyinde ve gelenekseldir; bir kökün "doğduğu" sure bu tertibe bağlıdır.</p></div>
+    <div class="sec"><div class="row"><h2>${esc(C.sure[dogSec][0])} ile gelen ${yeni[dogSec].length} yeni kök</h2><button class="btn" data-git="sure-${dogSec + 1}">Sure analizi</button></div><p class="sub">Grafikte bir sureye dokunun. Sayı, kökün Kur'an genelindeki toplam geçişidir.</p>
+      <div class="chips">${yeni[dogSec].length ? yeni[dogSec].map((r) => `<button class="chip" data-git="kok-${r}"><span class="ar2">${kokGoster(r)}</span><i>${esc(izi(r))} · ${nf.format(C.kokN[r])}</i></button>`).join('') : '<span class="note">Bu sure yeni kök getirmiyor.</span>'}</div></div>
+    <div class="sec"><h2>İlk kez Medenî bir surede duyulan kökler</h2><p class="sub">En sık geçen 40 tanesi; yanında doğduğu sure.</p>
+      <div class="chips">${medDogan.slice(0, 40).map((r) => `<button class="chip" data-git="kok-${r}" data-ip="İlk: ${esc(C.sure[dg[r]][0])}"><span class="ar2">${kokGoster(r)}</span><i>${esc(izi(r))} · ${nf.format(C.kokN[r])} · ${esc(C.sure[dg[r]][0])}</i></button>`).join('')}</div></div></div>`;
+  ana.querySelectorAll('[data-d]').forEach((g) => { g.onclick = () => { const y = scrollY; gDogum([+g.dataset.d + 1]); scrollTo(0, y); }; });
+}
+
+/* ---------- KEŞİF: sayım denetçisi ---------- */
+const CEKIM = { PERF: 'mâzî', IMPF: 'muzâri', IMPV: 'emir' };
+function gSayim() {
+  const C = D.core;
+  const cekim = (e) => { const [z, s] = e.split(' '); const m = (s || '').match(/^([123])([MF]?)([SDP])$/); return (CEKIM[z] || z) + (m ? ` · ${m[1]}. şahıs ${m[2] ? CINS[m[2]] + ' ' : ''}${SAY[m[3]]}` : ''); };
+  const hucre = (v, idd) => v === idd ? `<span class="tutan">${v}</span>` : (v || '');
+  ana.innerHTML = `<div class="stack"><div>${kesifNav('sayim')}</div><div class="sec"><h1>Sayım denetçisi</h1><p class="sub" style="margin-top:6px">Kur'an'daki kelime sayılarına dair yaygın iddialar, açık bir sayımla yan yana. Her kökün bütün türevleri, isimlerde eril ve dişil ayrı olmak üzere, ayrı satırda sayılır; iddia edilen sayıya eşit hücreler işaretlenir. Bir sayının "tutması" hangi kelimelerin, hangi çekimlerin sayıldığına bağlıdır; burada hüküm verilmez, sayım gösterilir.</p></div>
+    ${D.ek.sayim.map(([baslik, ks]) => `<div class="sec"><h2>${esc(baslik)}</h2><div class="grid2">${ks.map(([ad, r, idd, top, sat]) => { const tutan = sat.filter(([l, t, e, a, b, c]) => [a, b, c, a + b + c].includes(idd)).length || (top === idd ? 1 : 0);
+      return `<div><p class="kucuk-b">${esc(ad)} · yaygın iddia: ${idd} <button class="chip" data-git="kok-${r}" style="margin-left:6px"><span class="ar2">${kokGoster(r)}</span><i>kök toplamı ${hucre(top, idd) || 0}</i></button></p>
+        <div class="tablo-kap"><table class="tbl"><tr><th>Kelime</th><th>Tür</th><th>Tekil</th><th>İkil</th><th>Çoğul</th><th>Toplam</th><th data-ip="Kelimeye zamir ya da başka bir ek bitişmiş olanlar (toplamın içinde)">Ekli</th></tr>
+        ${sat.slice(0, 9).map(([l, t, e, a, b, c, ek]) => `<tr><td><span class="ar2">${l >= 0 ? C.lem[l][0] : '—'}</span></td><td>${t === 'V' ? cekim(e) : 'isim' + (e ? ' · ' + e : '')}</td><td>${t === 'V' ? '' : hucre(a, idd)}</td><td>${hucre(b, idd)}</td><td>${hucre(c, idd)}</td><td>${hucre(a + b + c, idd)}</td><td>${ek || ''}</td></tr>`).join('')}
+        ${sat.length > 9 ? `<tr><td colspan="7" style="color:var(--muted)">ve ${sat.length - 9} satır daha (toplam ${sat.slice(9).reduce((x, q) => x + q[3] + q[4] + q[5], 0)} geçiş)</td></tr>` : ''}</table></div>
+        <p class="note">${tutan ? `İddia edilen ${idd} sayısı işaretli hücrede karşılanıyor.` : `Tek bir satır ya da kök toplamı ${idd} sayısını vermiyor; bu sayıya ancak bazı geçişleri sayım dışı bırakan ya da birleştiren bir kuralla ulaşılabilir.`}</p></div>`; }).join('')}</div></div>`).join('')}
+    <div class="sec"><p class="note" style="margin:0">İddia edilen sayılar yaygın anlatımdan alınmıştır; kaynakları ve sayım kuralları iddia sahiplerine aittir. Buradaki sayım Quranic Arabic Corpus çözümlemesine dayanır; başka bir çözümleme bazı kelimeleri farklı köke ya da lemmaya bağlayabilir.</p></div></div>`;
+  scrollTo(0, 0);
+}
+
+/* ---------- ARA ---------- */
+let araQ = '', araM = 1, MN = {}, AN = null;
+function gAra() {
+  ana.innerHTML = `<div class="stack"><div class="sec"><h1>Ara</h1><p class="sub" style="margin-top:6px">Seçtiğiniz mealde ya da Arapça metinde arayın. Şapka (â, î, û), büyük-küçük harf ve hareke farkı gözetilmez. Kelime parçası da eşleşir. Arapça metin mushaf imlâsıyladır: «الصلاة» mushafta «الصلوة» yazılır; bulamazsanız Kök sekmesinden arayın.</p>
+    <div class="row"><select id="ara-m" aria-label="Meal"><option value="1">Çantay meali</option><option value="2"${araM === 2 ? ' selected' : ''}>Elmalılı meali</option></select></div>
+    <input id="ara-q" type="search" placeholder="örn. sabredenler, emanet, الصراط" autocomplete="off" value="${esc(araQ)}" style="margin-top:8px"><div id="ara-o" class="note"></div></div><div class="sec" id="ara-s" hidden></div></div>`;
+  const q = $('#ara-q'); let z;
+  const calis = () => {
+    araQ = q.value; const s = araQ.trim(), kutu = $('#ara-s'), M = araM === 2 ? D.meal2 : D.meal;
+    if (s.length < 2) { kutu.hidden = true; $('#ara-o').textContent = s ? 'En az iki harf yazın.' : ''; return; }
+    const arMi = /[\u0600-\u06FF]/.test(s), bul = [];
+    if ((arMi ? arNorm(s) : trNorm(s)).replace(/\s/g, '').length < 2) { kutu.hidden = true; $('#ara-o').textContent = 'Aranacak en az iki harf yazın.'; return; }
+    if (arMi) { if (!AN) AN = D.ar.map((a) => [arNormA(a.join(' ')), arNorm(a.join(' '))]); const n = arNorm(s).replace(/\s+/g, ' '); AN.forEach((t, gi) => { if (t[0].includes(n) || t[1].includes(n)) bul.push(gi); }); }
+    else { if (!MN[araM]) MN[araM] = M.t.map(trNorm); const n = trNorm(s); MN[araM].forEach((t, u) => { if (t.includes(n)) bul.push(M.r[u][0]); }); }
+    $('#ara-o').textContent = `${nf.format(bul.length)} ${arMi ? 'ayette' : 'meal biriminde'} bulundu${bul.length > 60 ? '; ilk 60 gösteriliyor.' : '.'}`;
+    kutu.hidden = !bul.length;
+    const n = arMi ? arNorm(s).replace(/\s+/g, ' ') : trNorm(s);
+    kutu.innerHTML = bul.slice(0, 60).map((gi) => { const [su, a] = yer(gi);
+      let m = arMi ? mealHtml(gi, true) : mealTek(gi, true, M);
+      if (!arMi) { const mm = mealOf(gi, M); if (mm) { const e = trEsle(mm.t, n); if (e) m = `<p class="meal">${esc(mm.t.slice(0, e[0]))}<mark>${esc(mm.t.slice(e[0], e[1]))}</mark>${esc(mm.t.slice(e[1]))}</p>`; } }
+      let av = null; if (arMi) { av = arEsle(gi, n, arNormA); if (!av.size) av = arEsle(gi, n, arNorm); }
+      return `<div class="gecis"><button class="link" data-git="oku-${su}-${a}">${esc(yerAd(gi))}</button><div class="ar">${ayetArHtml(gi, av ? (wi) => av.has(wi) : null)}</div>${m}</div>`; }).join('');
+  };
+  q.oninput = () => { clearTimeout(z); z = setTimeout(calis, 220); };
+  $('#ara-m').onchange = (e) => { araM = +e.target.value; calis(); };
+  if (araQ) calis(); q.focus();
+}
+
+/* ---------- YÖNTEM ---------- */
+function gYontem() {
+  const C = D.core, n = C.sayim, hap = C.kokN.filter((x) => x === 1).length;
+  const grup = (M) => { const g = M.r.filter(([x, y]) => y > x); return `${g.length} grup, ${g.reduce((t, [x, y]) => t + y - x + 1, 0)} ayet`; };
+  ana.innerHTML = `<div class="sec"><div class="yontem"><h1>Yöntem, kaynaklar ve sınırlar</h1>
+  <p>Bu atölye tefsir yapmaz, hüküm çıkarmaz. Yaptığı tek şey saymak ve oranlamaktır. Ekrandaki her sayı ya kaynak veriden sayılmıştır ya da aşağıda formülü yazılı bir hesaptan çıkar. Ebced, sayı mucizesi türünden iddialar kapsam dışıdır.</p>
+  <h2>Veri</h2><div class="tablo-kap"><table>
+  <tr><th>Katman</th><th>Kaynak</th><th>Sayım</th></tr>
+  <tr><td>Arapça metin ve kelime çözümlemesi</td><td>Quranic Arabic Corpus morfolojisi v0.4 (K. Dukes), mustafa0x düzeltmeli çatalı</td><td>${nf.format(n.ayet)} ayet, ${nf.format(n.kelime)} kelime, ${nf.format(n.kok)} kök, ${nf.format(n.lemma)} lemma</td></tr>
+  <tr><td>Türkçe meal</td><td>Hasan Basri Çantay, <i>Kur'ân-ı Hakîm ve Meâl-i Kerîm</i>; sayısal metin qurandatabase.org kaynaklı (fawazahmed0/quran-api derlemesi)</td><td>${nf.format(n.mealBirim)} meal birimi</td></tr>
+  <tr><td>Karşılaştırma meali</td><td>Elmalılı Muhammed Hamdi Yazır (ö. 1942); Tanzil'in dağıttığı sayısal metin (fawazahmed0/quran-api derlemesi)</td><td>${nf.format(n.mealBirim2)} meal birimi</td></tr>
+  <tr><td>Sure üst verisi</td><td>quran-meta (Tanzil üst verisi)</td><td>ayet sayısı, Mekkî/Medenî, nüzul sırası</td></tr></table></div>
+  <p>Köklü kelime sayısı ${nf.format(n.koklu)}'dir; geri kalanlar harf, zamir ve kökü işaretlenmemiş kelimelerdir. Arapça metin, çözümleme verisindeki kelime parçalarının birleştirilmesiyle gösterilir; bu yüzden <strong>vakıf işaretleri ve secde işaretleri yoktur</strong>. Tilavet için mushaf kullanın.</p>
+  <h2>Kaynak üzerinde yapılan düzeltmeler</h2><ul>${C.duzeltme.map((d) => `<li>${esc(d)}</li>`).join('')}</ul>
+  <p>Çantay bazı ayetleri birlikte çevirmiştir (${grup(D.meal)}); Elmalılı metninde de böyle gruplar vardır (${grup(D.meal2)}). Bu ayetlerin meali bir kez gösterilir ve birlikte çevrildiği belirtilir. İki mealde ayet kayması, her ayetin kökleri ile kendi mealinin ve komşu ayetlerin mealinin kelime izleri karşılaştırılarak istatistikle tarandı; kayma belirtisi bulunmadı. Bu tarama tek tek okumanın yerini tutmaz.</p>
+  <h2>Hesaplar</h2>
+  <p><strong>G² (log-olabilirlik).</strong> İki olayın birlikte görülme sayısını, bağımsız olsalardı beklenen sayıyla karşılaştırır: <code>G² = 2 · Σ O · ln(O / E)</code>, 2×2 tablonun dört hücresi üzerinden. Eşik ${String(n.g2Esik).replace('.', ',')} alınmıştır (1 serbestlik derecesinde p = 0,001). Binlerce karşılaştırma yapıldığı için bu eşik tek tek sonuçların kesinliğini göstermez; bir sıralama süzgecidir.</p>
+  <p><strong>Sure parmak izi.</strong> Kökün suredeki sayısı ile Kur'an'ın geri kalanındaki sayısı, köklü kelime toplamlarına göre karşılaştırılır. Yalnız surede oranı daha yüksek olan kökler listelenir.</p>
+  <p><strong>Yoldaş kökler.</strong> Birim ayettir. İki kökün birlikte geçtiği ayet sayısı en az 3 olmalı ve beklenenden fazla olmalıdır.</p>
+  <p><strong>Meallerdeki iz.</strong> Çantay ve Elmalılı için ayrı ayrı hesaplanır. Birim meal birimidir. Meal küçük harfe çevrilir, şapkalar ve kesme işaretleri atılır, <em>parantez içleri hesaba katılmaz</em> (bunlar mütercimin açıklamalarıdır) ve her kelimenin ilk beş harfi gövde sayılır. Bu kaba bir gövdelemedir: farklı kelimeler aynı gövdeye düşebilir. Sonuç bir sözlük değildir; kökün geçtiği yerlerde mealin hangi kelimeleri kullandığının istatistik izidir. ${nf.format(C.karsilik.filter((k) => k.length).length)} kök için iz bulunmuştur.</p>
+  <p><strong>Akraba ayetler.</strong> Her ayet, içindeki köklerin kümesiyle temsil edilir; her kök <code>ln(6236 / kökün geçtiği ayet sayısı)</code> ile ağırlıklanır, iki ayetin kosinüs benzerliği alınır. En az iki ortak kök ve en az ${String(n.akrabaEsik).replace('.', ',')} benzerlik aranır, en yakın altı ayet gösterilir. Kelime sırası, harfler ve anlam hesaba girmez; uzun ayetler bu ölçümde dezavantajlıdır.</p>
+  <p><strong>Komşu sureler.</strong> Her sure, köklerinin <code>ln(1 + sayı) · ln(114 / kökün geçtiği sure sayısı)</code> ağırlıklı vektörüyle temsil edilir; kosinüs benzerliği alınır. İki boyutlu bir benzerlik haritası (MDS) denenmiş, ilk iki eksen yapının yalnız %10,7'sini taşıdığı için yanıltıcı bulunup çıkarılmıştır.</p>
+  <p><strong>Kavram haritası.</strong> Seçilen köklerin sure sure sıklığı aynı ölçekte (binde) çizilir. Çift tablosunda "beklenen", iki kök bağımsız olsaydı birlikte geçecekleri ayet sayısıdır: <code>ayet₁ · ayet₂ / 6236</code>. Örnek kümeler yalnız başlangıç önerisidir; kavramı hangi köklerin taşıdığına siz karar verirsiniz.</p>
+  <p><strong>Mekkî–Medenî kök kayması.</strong> Kökün Mekkî surelerdeki toplamı ile Medenî surelerdeki toplamı, iki dönemin köklü kelime toplamlarına göre G² ile karşılaştırılır. Sınıflama sure düzeyindedir.</p>
+  <p><strong>Özel isimler.</strong> Çözümleme verisinde özel isim (PN) işaretli ${C.isim.length} lemma. Yalnız özel isim olarak işaretlenen geçişler sayılır; aynı kişi zamirle ya da lakapla anıldığında sayılmaz. "Birlikte anıldığı kökler" ayet düzeyinde G² ile bulunur (en az 2 ortak ayet). Türkçe adlar tarafımızdan yazılmıştır.</p>
+  <p><strong>Tekrarlanan ifadeler.</strong> Aynı ayet içinde kalan, harekesiyle birebir aynı kelime dizileri. En az 4 kelime; 4-5 kelimelik diziler en az 3 kez, daha uzunları en az 2 kez geçmelidir. Bir dizi, aynı sayıda geçen daha uzun bir dizinin parçasıysa ayrıca listelenmez. Bu ölçüte uyan ${nf.format(C.kalipToplam)} diziden kelime sayısı × tekrar çarpımı en yüksek ${C.kalip.length} tanesi gösterilir. Ayet sınırını aşan tekrarlar ve tek harf farkı olan benzerlikler yakalanmaz.</p>
+  <p><strong>Efendimiz sekmesi.</strong> "De ki": <span class="ar2">قال</span> fiilinin tekil ikinci şahıs emri. "Tekil hitap": tekil eril ikinci şahıs emir fiilleri ile nehiy edatından sonra gelen aynı şahıstaki fiiller. <em>Bu hitapların hepsi Resûlullah'a yönelik değildir</em>; bir kısmı kıssa içinde başka birine, bir kısmı genel olarak insana söylenir. Veri muhatabı ayırmaz. Yardımcı olarak, ayette o kelimeden önce bir "dedi/dediler" fiili geçiyorsa hitap "söz aktarımı" diye işaretlenir ve varsayılan olarak gizlenir; bu kaba bir süzgeçtir, iki yönde de yanılır. "Rabbüke": <span class="ar2">ربب</span> köküne tekil eril "sen" zamiri bitişmiş kelimeler; aynı uyarı geçerlidir. "Allah ve Resulü": lafzatullahın hemen ardından atıf vâvıyla gelen tekil <span class="ar2">رسول</span>. "Peygamberler aynası"ndaki ortak kökler, hem o peygamberin adının geçtiği ayetlerde hem de hitap ayetlerinde (De ki, Rabbüke, Ey Nebi/Resul) G² eşiğini geçen köklerdir; yalnız 24 kök hitap tarafında eşiği geçtiği için bu ölçüm zayıftır ve çoğu peygamberde boş çıkar.</p>
+  <p><strong>Esmâ çiftleri.</strong> Ayetin son iki kelimesi; ikisi de köklü isim, ikisi de zamirsiz, belirlilik durumları aynı. "Esmâ" süzgeci, iki kelimenin de tarafımızdan yazılmış bir ilâhî isim listesinde bulunmasına bakar; kelimenin o ayette kimi nitelediği denetlenmez.</p>
+  <p><strong>Nidâ.</strong> Veride nidâ işaretli ${D.ek ? nf.format(D.ek.nida.reduce((a, x) => a + x[2], 0)) : ''} kelime, seslenilenin lemmasına göre gruplanır. Türkçe karşılıklar tarafımızdan yazılmıştır. Nidâ edatı olmadan yapılan seslenişler ("Rabbenâ") burada sayılmaz.</p>
+  <p><strong>Sorular.</strong> Veride soru işaretli edat ve isimler. Bir kısmı belâgat sorusudur (inkâr, takrir); veri bu ayrımı yapmaz.</p>
+  <p><strong>Dualar.</strong> Ayette "Rabbi", "Rabbenâ" ya da "Allahümme" seslenişi ve ardından tekil ikinci şahıs bir emir ya da nehiy fiili aranır. İstek fiili başka ayete taşan dualar ve emir kipi kullanmayan yakarışlar yakalanmaz.</p>
+  <p><strong>Kelimelerin doğumu.</strong> Her kök için, geleneksel nüzul sırasına göre ilk geçtiği sure. Sıra sure düzeyindedir ve gelenekseldir; bir kökün "doğduğu" sure bu sıraya bağlıdır.</p>
+  <p><strong>Sayım denetçisi.</strong> Yaygın sayım iddiaları, kökün her lemması ve çekimi ayrı satırda sayılarak gösterilir. İddia edilen sayıya eşit satır varsa işaretlenir. İddia sahiplerinin hangi sayım kuralını kullandığı bilinmediğinden hüküm verilmez; iddia edilen sayılar yaygın anlatımdan alınmıştır.</p>
+  <p><strong>Fiil profili.</strong> Çözümleme verisindeki fiil etiketleri sayılır. Şahıs, fiilin çekim şahsıdır.</p>
+  <p><strong>Fâsıla.</strong> Ayetin son kelimesinin yazıdaki son harfi (ة → ه, ى → ا, hemzeli elifler → ا).</p>
+  <p><strong>Tek geçen kökler.</strong> Kur'an'da yalnız bir kelimede geçen kök sayısı ${hap}'dur (${nf.format(n.kok)} kökün ${yuzde(hap / n.kok)}'i).</p>
+  <h2>Bilinen sınırlar</h2><ul>
+  <li>Kök ve gramer etiketleri bir çözümleme ekibinin kararlarıdır; sarf-nahiv ihtilaflarında tek bir görüşü yansıtır.</li>
+  <li>Nüzul sırası gelenekseldir, kesin tarih değildir.</li>
+  <li>İstatistik yakınlık anlam yakınlığı değildir. Buradaki her liste, okunacak ayetleri öne çıkaran bir işarettir; sonucu söyleyen ayetin kendisidir.</li>
+  <li>Hasan Basri Çantay 1964'te vefat etmiştir; mealin telif süresi dolmamış olabilir. Bu sayfa kişisel inceleme içindir. Elmalılı'nın eseri kamu malıdır; buradaki metin Tanzil'in dağıttığı sürümdür ve özgün baskıyla karşılaştırılmamıştır.</li></ul></div></div>`;
+  scrollTo(0, 0);
+}
+rota();
+</script>
